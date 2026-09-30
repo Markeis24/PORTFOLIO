@@ -1,0 +1,1882 @@
+/* =========================================================
+   GIOVANNA OS
+   Windows 2000 / XP inspired interface
+========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: Tahoma, Verdana, Arial, sans-serif;
+    font-size: 12px;
+}
+
+body {
+    background: #245edb;
+    color: #111;
+}
+
+/* =========================================================
+   BOOT SCREEN
+========================================================= */
+
+#boot-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background:
+        radial-gradient(circle at center, #123b79 0%, #06152e 55%, #020711 100%);
+
+    color: white;
+}
+
+.boot-content {
+    width: 520px;
+}
+
+.boot-logo {
+    font-family: "Courier New", monospace;
+    font-size: 38px;
+    font-weight: bold;
+    letter-spacing: 4px;
+    margin-bottom: 4px;
+}
+
+.boot-version {
+    color: #80bfff;
+    font-family: "Courier New", monospace;
+    margin-bottom: 42px;
+}
+
+.boot-line {
+    font-family: "Courier New", monospace;
+    margin-bottom: 10px;
+}
+
+.boot-progress {
+    width: 100%;
+    height: 18px;
+    padding: 2px;
+
+    border: 1px solid #6688aa;
+    background: #050b13;
+}
+
+#boot-progress-bar {
+    width: 0%;
+    height: 100%;
+
+    background:
+        repeating-linear-gradient(
+            90deg,
+            #2765c7 0px,
+            #2765c7 12px,
+            #5e9cff 12px,
+            #5e9cff 16px
+        );
+}
+
+#boot-status {
+    margin-top: 10px;
+
+    color: #a9c9ef;
+    font-family: "Courier New", monospace;
+}
+
+/* =========================================================
+   DESKTOP
+========================================================= */
+
+#desktop {
+    position: fixed;
+    inset: 0;
+
+    background-image: url("img/bliss.jpg");
+    background-size: cover;
+    background-position: center;
+
+    overflow: hidden;
+}
+
+/* subtle CRT effect */
+
+#desktop::after {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    pointer-events: none;
+    z-index: 9000;
+
+    background:
+        repeating-linear-gradient(
+            to bottom,
+            rgba(255, 255, 255, 0.025) 0px,
+            rgba(255, 255, 255, 0.025) 1px,
+            rgba(0, 0, 0, 0.025) 2px,
+            rgba(0, 0, 0, 0.025) 3px
+        );
+}
+
+/* =========================================================
+   DESKTOP ICONS
+========================================================= */
+
+.desktop-icons {
+    position: absolute;
+    top: 18px;
+    left: 12px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 17px;
+
+    width: 90px;
+
+    z-index: 20;
+}
+
+.desktop-icon {
+    width: 82px;
+
+    padding: 4px 2px;
+
+    text-align: center;
+
+    color: white;
+
+    cursor: default;
+
+    text-shadow:
+        1px 1px 2px #000,
+        -1px 0 1px #000;
+}
+
+.desktop-icon:hover {
+    background: rgba(20, 70, 150, 0.45);
+    outline: 1px dotted white;
+}
+
+.desktop-icon-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 44px;
+    height: 44px;
+
+    margin: 0 auto 4px;
+
+    font-size: 32px;
+
+    filter:
+        drop-shadow(1px 2px 1px rgba(0, 0, 0, 0.7));
+}
+
+.desktop-icon span {
+    display: block;
+
+    line-height: 14px;
+
+    word-break: break-word;
+}
+
+/* =========================================================
+   GENERIC WINDOWS
+========================================================= */
+
+.os-window {
+    position: absolute;
+
+    width: 650px;
+    min-width: 320px;
+    min-height: 220px;
+
+    top: 100px;
+    left: 170px;
+
+    display: none;
+
+    background: #ece9d8;
+
+    border: 1px solid #003399;
+
+    box-shadow:
+        3px 3px 10px rgba(0, 0, 0, 0.45),
+        inset 1px 1px 0 white,
+        inset -1px -1px 0 #777;
+
+    z-index: 100;
+}
+
+.os-window.active-window {
+    display: block;
+}
+
+/* =========================================================
+   WINDOW TITLEBAR
+========================================================= */
+
+.window-titlebar {
+    height: 27px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 2px 3px 2px 7px;
+
+    color: white;
+
+    font-weight: bold;
+
+    background:
+        linear-gradient(
+            to bottom,
+            #5fa2ed 0%,
+            #2877d5 45%,
+            #0a4bb4 100%
+        );
+
+    border-bottom: 1px solid #00317e;
+
+    cursor: default;
+    user-select: none;
+}
+
+.window-title {
+    overflow: hidden;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+    text-shadow: 1px 1px #16457d;
+}
+
+.window-controls {
+    display: flex;
+    gap: 2px;
+}
+
+.window-controls button {
+    width: 19px;
+    height: 19px;
+
+    padding: 0;
+
+    border: 1px solid #fff;
+
+    background:
+        linear-gradient(
+            135deg,
+            #eaf4ff,
+            #6ca8e9
+        );
+
+    color: #063b86;
+
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+
+    line-height: 15px;
+
+    box-shadow:
+        inset -1px -1px #4775ad,
+        inset 1px 1px white;
+
+    cursor: pointer;
+}
+
+.window-controls button:active {
+    box-shadow:
+        inset 1px 1px #4775ad,
+        inset -1px -1px white;
+}
+
+/* =========================================================
+   MENUS
+========================================================= */
+
+.window-menu {
+    height: 24px;
+
+    display: flex;
+    align-items: center;
+
+    padding-left: 7px;
+
+    gap: 18px;
+
+    background: #ece9d8;
+
+    border-bottom: 1px solid #aaa;
+}
+
+.window-menu span {
+    cursor: default;
+}
+
+.window-menu span:first-letter {
+    text-decoration: underline;
+}
+
+.window-menu span:hover {
+    background: #316ac5;
+    color: white;
+}
+
+/* =========================================================
+   TOOLBAR
+========================================================= */
+
+.window-toolbar {
+    height: 40px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 4px;
+
+    padding: 5px;
+
+    background: #ece9d8;
+
+    border-bottom: 1px solid #aaa;
+}
+
+.window-toolbar button {
+    width: 28px;
+    height: 27px;
+
+    border: 1px solid #999;
+
+    background:
+        linear-gradient(
+            #fff,
+            #d6d6d6
+        );
+
+    box-shadow:
+        inset 1px 1px white,
+        inset -1px -1px #888;
+
+    cursor: pointer;
+}
+
+.window-toolbar button:active {
+    box-shadow:
+        inset 1px 1px #888,
+        inset -1px -1px white;
+}
+
+.toolbar-address {
+    height: 26px;
+
+    flex: 1;
+
+    display: flex;
+    align-items: center;
+
+    padding: 0 7px;
+
+    border: 1px solid #888;
+
+    background: white;
+
+    box-shadow:
+        inset 1px 1px #aaa;
+}
+
+/* =========================================================
+   WINDOW CONTENT
+========================================================= */
+
+.window-content {
+    padding: 14px;
+
+    background: #fff;
+
+    overflow: auto;
+}
+
+.window-statusbar {
+    height: 22px;
+
+    display: flex;
+    align-items: center;
+
+    padding: 0 7px;
+
+    background: #ece9d8;
+
+    border-top: 1px solid #aaa;
+
+    color: #333;
+}
+
+/* =========================================================
+   COMPUTER
+========================================================= */
+
+.computer-content {
+    min-height: 380px;
+}
+
+.computer-content h2 {
+    margin-top: 0;
+}
+
+.computer-section {
+    margin-top: 20px;
+}
+
+.computer-section h3 {
+    font-size: 12px;
+    margin-bottom: 10px;
+}
+
+.computer-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.computer-item {
+    width: 105px;
+
+    padding: 10px;
+
+    text-align: center;
+
+    cursor: pointer;
+}
+
+.computer-item:hover {
+    background: #dcecff;
+    outline: 1px dotted #316ac5;
+}
+
+.computer-item div {
+    font-size: 36px;
+    margin-bottom: 7px;
+}
+
+.computer-item span {
+    display: block;
+}
+
+/* =========================================================
+   PROJECTS
+========================================================= */
+
+.projects-content {
+    min-height: 390px;
+}
+
+.projects-header {
+    margin-bottom: 18px;
+}
+
+.projects-header h2 {
+    margin: 0 0 4px;
+}
+
+.projects-header p {
+    margin: 0;
+    color: #555;
+}
+
+.project-grid {
+    display: grid;
+
+    grid-template-columns: repeat(4, 1fr);
+
+    gap: 22px;
+}
+
+.project-item {
+    padding: 12px 6px;
+
+    text-align: center;
+
+    cursor: pointer;
+
+    border: 1px solid transparent;
+}
+
+.project-item:hover {
+    border: 1px dotted #316ac5;
+    background: #e4efff;
+}
+
+.project-icon {
+    font-size: 44px;
+
+    margin-bottom: 8px;
+}
+
+.project-name {
+    font-weight: bold;
+}
+
+.project-type {
+    margin-top: 3px;
+
+    color: #666;
+
+    font-size: 10px;
+}
+
+/* =========================================================
+   PROJECT WINDOWS
+========================================================= */
+
+.project-window {
+    width: 700px;
+}
+
+.project-app {
+    min-height: 430px;
+
+    background: #fafafa;
+}
+
+.app-header {
+    display: flex;
+    align-items: center;
+
+    gap: 14px;
+
+    margin-bottom: 14px;
+}
+
+.app-icon {
+    width: 55px;
+    height: 55px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 38px;
+
+    border: 1px solid #777;
+
+    background:
+        linear-gradient(
+            135deg,
+            #fff,
+            #c7d8eb
+        );
+
+    box-shadow:
+        inset 1px 1px white,
+        2px 2px 3px rgba(0, 0, 0, 0.25);
+}
+
+.app-header h1 {
+    margin: 0;
+
+    font-size: 20px;
+
+    color: #154e9b;
+}
+
+.app-header p {
+    margin: 4px 0 0;
+
+    color: #555;
+}
+
+.project-app hr {
+    border: none;
+    border-top: 1px solid #ccc;
+}
+
+.project-app h3 {
+    color: #174f9c;
+
+    margin-top: 20px;
+}
+
+.project-app li {
+    margin-bottom: 5px;
+}
+
+.tech-list {
+    display: flex;
+    flex-wrap: wrap;
+
+    gap: 6px;
+
+    margin-top: 12px;
+}
+
+.tech-list span {
+    padding: 4px 8px;
+
+    border: 1px solid #7e9bc7;
+
+    background:
+        linear-gradient(
+            #edf6ff,
+            #c9ddf5
+        );
+
+    color: #164f98;
+
+    font-size: 11px;
+}
+
+/* =========================================================
+   XP BUTTON
+========================================================= */
+
+.xp-button {
+    min-width: 100px;
+    min-height: 25px;
+
+    padding: 3px 12px;
+
+    border: 1px solid #003c9d;
+
+    background:
+        linear-gradient(
+            #fff,
+            #e2e2e2
+        );
+
+    box-shadow:
+        inset 1px 1px white,
+        inset -1px -1px #888;
+
+    cursor: pointer;
+}
+
+.xp-button:hover {
+    background:
+        linear-gradient(
+            #fff,
+            #d4e8ff
+        );
+}
+
+.xp-button:active {
+    box-shadow:
+        inset 1px 1px #777;
+}
+
+/* =========================================================
+   API 3
+========================================================= */
+
+.ipem-app {
+    background: #101827;
+    color: #dce7f5;
+}
+
+.ipem-app .app-header h1 {
+    color: #70aefc;
+}
+
+.ipem-app .app-header p {
+    color: #9bb3d1;
+}
+
+.ipem-app hr {
+    border-color: #334258;
+}
+
+.ipem-app h3 {
+    color: #72b0ff;
+}
+
+.dashboard-grid {
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 10px;
+
+    margin: 20px 0;
+}
+
+.dashboard-card {
+    display: flex;
+    flex-direction: column;
+
+    gap: 5px;
+
+    padding: 12px;
+
+    background: #182337;
+
+    border: 1px solid #334967;
+}
+
+.dashboard-card strong {
+    color: #76b5ff;
+    margin-bottom: 5px;
+}
+
+.dashboard-card span {
+    color: #b5c8df;
+}
+
+/* =========================================================
+   ESTAÇÃO-TI
+========================================================= */
+
+.station-app {
+    background:
+        linear-gradient(
+            135deg,
+            #08142b,
+            #122e57
+        );
+
+    color: #dcecff;
+}
+
+.station-app .app-header h1 {
+    color: #8ec5ff;
+}
+
+.station-app .app-header p {
+    color: #a5c6e9;
+}
+
+.station-app hr {
+    border-color: #365780;
+}
+
+.station-app h3 {
+    color: #8ec5ff;
+}
+
+.waveform {
+    height: 100px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 5px;
+
+    margin: 25px 0;
+
+    border: 1px solid #36577e;
+
+    background: #061021;
+}
+
+.waveform span {
+    width: 5px;
+
+    height: 20px;
+
+    background: #59a9ff;
+
+    box-shadow: 0 0 6px #2685e5;
+
+    animation: waveform 0.8s infinite alternate;
+}
+
+.waveform span:nth-child(2) {
+    animation-delay: .1s;
+}
+
+.waveform span:nth-child(3) {
+    animation-delay: .2s;
+}
+
+.waveform span:nth-child(4) {
+    animation-delay: .3s;
+}
+
+.waveform span:nth-child(5) {
+    animation-delay: .15s;
+}
+
+.waveform span:nth-child(6) {
+    animation-delay: .4s;
+}
+
+.waveform span:nth-child(7) {
+    animation-delay: .25s;
+}
+
+@keyframes waveform {
+    from {
+        height: 15px;
+    }
+
+    to {
+        height: 70px;
+    }
+}
+
+.player-controls {
+    display: flex;
+    justify-content: center;
+
+    gap: 5px;
+
+    margin-bottom: 20px;
+}
+
+.player-controls button {
+    width: 45px;
+    height: 27px;
+
+    border: 1px solid #6b8eaf;
+
+    background: #1b365d;
+
+    color: white;
+
+    cursor: pointer;
+}
+
+/* =========================================================
+   ABOUT.EXE
+========================================================= */
+
+#about-window {
+    width: 620px;
+}
+
+.about-content {
+    min-height: 430px;
+
+    background:
+        linear-gradient(
+            #ffffff,
+            #f4f4f4
+        );
+}
+
+.about-top {
+    display: flex;
+    align-items: center;
+
+    gap: 15px;
+
+    padding: 12px;
+
+    margin-bottom: 15px;
+
+    border: 1px solid #9aaec6;
+
+    background:
+        linear-gradient(
+            #f7fbff,
+            #d9e8f8
+        );
+}
+
+.about-avatar {
+    width: 70px;
+    height: 70px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 45px;
+
+    border: 1px solid #71869d;
+
+    background:
+        radial-gradient(
+            circle at 35% 25%,
+            white,
+            #b9d4ed
+        );
+
+    box-shadow:
+        inset 1px 1px white,
+        2px 2px 3px rgba(0, 0, 0, .25);
+}
+
+.about-name {
+    font-size: 20px;
+
+    font-weight: bold;
+
+    color: #174f9d;
+}
+
+.about-role {
+    margin-top: 5px;
+
+    color: #555;
+}
+
+.about-status {
+    margin-top: 7px;
+
+    color: #16802c;
+
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.about-box {
+    margin-top: 14px;
+
+    border: 1px solid #a7a7a7;
+
+    background: white;
+}
+
+.about-box-title {
+    padding: 5px 8px;
+
+    color: white;
+
+    font-weight: bold;
+
+    background:
+        linear-gradient(
+            #5a94d5,
+            #285da6
+        );
+}
+
+.about-box p {
+    margin: 10px 12px;
+
+    line-height: 1.5;
+}
+
+.system-info {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 8px;
+
+    padding: 12px;
+}
+
+.system-info strong {
+    color: #315e96;
+}
+
+.about-links {
+    display: flex;
+    justify-content: flex-end;
+
+    gap: 7px;
+
+    margin-top: 15px;
+}
+
+/* =========================================================
+   SKILLS.EXE
+========================================================= */
+
+#skills-window {
+    width: 820px;
+    height: 610px;
+
+    background: #ece9d8;
+}
+
+.skills-layout {
+    display: flex;
+
+    height: calc(100% - 73px);
+
+    min-height: 500px;
+}
+
+/* ---------------------------------------------------------
+   SIDEBAR
+--------------------------------------------------------- */
+
+.skills-sidebar {
+    width: 190px;
+
+    flex-shrink: 0;
+
+    padding: 13px 10px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #dceeff 0%,
+            #edf6ff 70%,
+            #d7e8f9 100%
+        );
+
+    border-right: 1px solid #8fa9c4;
+}
+
+.skills-side-title {
+    margin: 4px 6px 9px;
+
+    color: #174f9b;
+
+    font-weight: bold;
+
+    font-size: 11px;
+}
+
+.skills-side-button,
+.skills-side-link {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+
+    padding: 7px;
+
+    border: none;
+
+    background: transparent;
+
+    text-align: left;
+
+    cursor: pointer;
+
+    color: #174f9b;
+}
+
+.skills-side-button:hover,
+.skills-side-link:hover {
+    text-decoration: underline;
+}
+
+.skills-side-button.active {
+    font-weight: bold;
+
+    color: #111;
+}
+
+.skills-side-button span {
+    font-size: 18px;
+}
+
+.skills-side-separator {
+    height: 1px;
+
+    margin: 13px 5px;
+
+    background: #a9bed5;
+}
+
+/* ---------------------------------------------------------
+   MAIN
+--------------------------------------------------------- */
+
+.skills-main {
+    flex: 1;
+
+    overflow-y: auto;
+
+    padding: 15px;
+
+    background: white;
+}
+
+.skills-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    margin-bottom: 15px;
+}
+
+.skills-heading h1 {
+    margin: 0;
+
+    font-size: 18px;
+
+    font-weight: normal;
+
+    color: #174f9b;
+}
+
+.skills-heading p {
+    margin: 4px 0 0;
+
+    color: #555;
+}
+
+.show-updates {
+    white-space: nowrap;
+
+    color: #444;
+}
+
+.skills-sort {
+    display: flex;
+    align-items: center;
+
+    gap: 5px;
+
+    margin-bottom: 8px;
+
+    padding-bottom: 8px;
+
+    border-bottom: 1px solid #ccc;
+
+    color: #555;
+}
+
+.skills-sort select {
+    font-family: Tahoma, sans-serif;
+    font-size: 11px;
+}
+
+/* ---------------------------------------------------------
+   PROGRAM ITEMS
+--------------------------------------------------------- */
+
+.skill-program {
+    display: flex;
+    align-items: center;
+
+    min-height: 66px;
+
+    padding: 8px;
+
+    border-bottom: 1px solid #ddd;
+
+    background: white;
+}
+
+.skill-program:hover {
+    background: #edf5ff;
+}
+
+.skill-program-icon {
+    width: 48px;
+    height: 48px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-right: 11px;
+
+    border: 1px solid #8d8d8d;
+
+    background:
+        linear-gradient(
+            135deg,
+            #fff,
+            #cdddf0
+        );
+
+    color: #1556a4;
+
+    font-size: 17px;
+    font-weight: bold;
+
+    box-shadow:
+        inset 1px 1px white,
+        1px 1px 2px rgba(0, 0, 0, .25);
+}
+
+.skill-program-info {
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 3px;
+}
+
+.skill-program-info strong {
+    color: #174f9b;
+}
+
+.skill-program-info span {
+    color: #444;
+}
+
+.skill-program-info small {
+    color: #777;
+}
+
+.change-button {
+    min-width: 95px;
+    height: 25px;
+
+    border: 1px solid #888;
+
+    background:
+        linear-gradient(
+            #fff,
+            #ddd
+        );
+
+    box-shadow:
+        inset 1px 1px white,
+        inset -1px -1px #888;
+
+    font-family: Tahoma, sans-serif;
+    font-size: 11px;
+
+    cursor: pointer;
+}
+
+.change-button:hover {
+    border-color: #316ac5;
+
+    background:
+        linear-gradient(
+            #fff,
+            #d9eaff
+        );
+}
+
+/* =========================================================
+   BROWSER
+========================================================= */
+
+.browser-content {
+    min-height: 400px;
+
+    background: white;
+}
+
+.browser-page {
+    min-height: 360px;
+
+    padding: 30px;
+
+    border: 1px solid #ccc;
+
+    background:
+        linear-gradient(
+            #fff,
+            #eef6ff
+        );
+}
+
+.browser-page h1 {
+    color: #174f9b;
+
+    font-size: 26px;
+}
+
+.browser-page h2 {
+    color: #315e96;
+}
+
+/* =========================================================
+   MEDIA PLAYER
+========================================================= */
+
+#media-window {
+    width: 500px;
+
+    background: #111;
+
+    border-color: #111;
+}
+
+.media-titlebar {
+    background:
+        linear-gradient(
+            #4e5664,
+            #171b21
+        );
+
+    border-color: #080a0d;
+}
+
+.media-player-content {
+    padding: 10px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #555,
+            #151515
+        );
+
+    color: white;
+}
+
+.media-screen {
+    position: relative;
+
+    height: 210px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+
+    border: 2px solid #222;
+
+    background:
+        radial-gradient(
+            circle,
+            #244c80,
+            #050a12 70%
+        );
+}
+
+.media-visualizer {
+    position: absolute;
+
+    inset: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 5px;
+
+    opacity: .7;
+}
+
+.media-visualizer span {
+    width: 7px;
+    height: 30px;
+
+    background: #55aaff;
+
+    animation: media-bars .8s infinite alternate;
+}
+
+.media-visualizer span:nth-child(2) {
+    animation-delay: .1s;
+}
+
+.media-visualizer span:nth-child(3) {
+    animation-delay: .2s;
+}
+
+.media-visualizer span:nth-child(4) {
+    animation-delay: .3s;
+}
+
+.media-visualizer span:nth-child(5) {
+    animation-delay: .4s;
+}
+
+@keyframes media-bars {
+    from {
+        height: 15px;
+    }
+
+    to {
+        height: 110px;
+    }
+}
+
+.media-title,
+.media-subtitle {
+    position: relative;
+    z-index: 2;
+
+    text-shadow:
+        0 0 5px #000;
+}
+
+.media-title {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.media-subtitle {
+    margin-top: 6px;
+
+    color: #b7d9ff;
+}
+
+.media-controls {
+    display: flex;
+    justify-content: center;
+
+    gap: 4px;
+
+    margin-top: 9px;
+}
+
+.media-controls button {
+    width: 45px;
+    height: 28px;
+
+    border: 1px solid #888;
+
+    background:
+        linear-gradient(
+            #777,
+            #252525
+        );
+
+    color: white;
+
+    cursor: pointer;
+}
+
+.media-progress {
+    height: 8px;
+
+    margin-top: 9px;
+
+    border: 1px solid #777;
+
+    background: #050505;
+}
+
+.media-progress div {
+    width: 32%;
+    height: 100%;
+
+    background: #3187db;
+}
+
+.media-status {
+    margin-top: 6px;
+
+    text-align: right;
+
+    color: #aaa;
+
+    font-family: monospace;
+}
+
+/* =========================================================
+   START MENU
+========================================================= */
+
+#start-menu {
+    position: absolute;
+
+    left: 0;
+    bottom: 30px;
+
+    width: 390px;
+
+    display: none;
+
+    z-index: 9500;
+
+    border: 1px solid #174b91;
+
+    background: #fff;
+
+    box-shadow:
+        3px 3px 8px rgba(0, 0, 0, .45);
+}
+
+#start-menu.open {
+    display: block;
+}
+
+.start-header {
+    height: 58px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 7px 10px;
+
+    color: white;
+
+    background:
+        linear-gradient(
+            #5b9de8,
+            #1f62bb
+        );
+}
+
+.start-avatar {
+    width: 40px;
+    height: 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 28px;
+
+    background: white;
+
+    border: 1px solid #174b91;
+}
+
+.start-header strong,
+.start-header span {
+    display: block;
+}
+
+.start-header strong {
+    font-size: 15px;
+}
+
+.start-header span {
+    margin-top: 2px;
+
+    font-size: 10px;
+
+    color: #d9ebff;
+}
+
+.start-body {
+    display: flex;
+
+    min-height: 280px;
+}
+
+.start-column {
+    flex: 1;
+
+    padding: 7px;
+
+    border-right: 1px solid #ddd;
+}
+
+.start-column.right {
+    background: #eef5ff;
+
+    border-right: none;
+}
+
+.start-column button {
+    width: 100%;
+
+    display: block;
+
+    padding: 8px;
+
+    border: none;
+
+    background: transparent;
+
+    text-align: left;
+
+    font-family: Tahoma, sans-serif;
+    font-size: 11px;
+
+    cursor: pointer;
+}
+
+.start-column button:hover {
+    color: white;
+
+    background: #316ac5;
+}
+
+.start-footer {
+    display: flex;
+    justify-content: flex-end;
+
+    gap: 4px;
+
+    padding: 6px;
+
+    background: #dce8f5;
+
+    border-top: 1px solid #b2bfd0;
+}
+
+.start-footer button {
+    border: none;
+
+    background: transparent;
+
+    font-family: Tahoma, sans-serif;
+    font-size: 11px;
+
+    cursor: pointer;
+}
+
+/* =========================================================
+   TASKBAR
+========================================================= */
+
+#taskbar {
+    position: absolute;
+
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    height: 31px;
+
+    display: flex;
+    align-items: center;
+
+    z-index: 9800;
+
+    background:
+        linear-gradient(
+            #3d8de0,
+            #1357b7
+        );
+
+    border-top: 1px solid #6ea9ec;
+
+    box-shadow:
+        inset 0 1px rgba(255, 255, 255, .45);
+}
+
+#start-button {
+    height: 29px;
+
+    min-width: 87px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 5px;
+
+    padding: 0 9px;
+
+    border: none;
+
+    border-right: 1px solid #0a3f8f;
+
+    border-radius: 0 10px 10px 0;
+
+    background:
+        linear-gradient(
+            #64c25a,
+            #2b8e29
+        );
+
+    color: white;
+
+    font-family: Tahoma, sans-serif;
+
+    cursor: pointer;
+
+    text-shadow: 1px 1px #236b1e;
+}
+
+#start-button:hover {
+    background:
+        linear-gradient(
+            #79d66d,
+            #329e30
+        );
+}
+
+.windows-logo {
+    font-size: 18px;
+}
+
+#taskbar-programs {
+    flex: 1;
+
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+
+    gap: 3px;
+
+    padding: 2px 5px;
+}
+
+.taskbar-button {
+    min-width: 125px;
+    max-width: 180px;
+
+    height: 25px;
+
+    overflow: hidden;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+    border: 1px solid #124c9a;
+
+    background:
+        linear-gradient(
+            #4f96dc,
+            #2868b9
+        );
+
+    color: white;
+
+    text-align: left;
+
+    padding: 0 8px;
+
+    font-family: Tahoma, sans-serif;
+    font-size: 11px;
+
+    cursor: pointer;
+}
+
+.taskbar-button.active {
+    background:
+        linear-gradient(
+            #174e9a,
+            #103b77
+        );
+
+    box-shadow:
+        inset 1px 1px #0a2a57;
+}
+
+#taskbar-tray {
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+
+    padding: 0 10px;
+
+    color: white;
+
+    background:
+        linear-gradient(
+            #2f80d0,
+            #1556aa
+        );
+
+    border-left: 1px solid #174b91;
+}
+
+.tray-icon {
+    font-size: 12px;
+}
+
+#clock {
+    min-width: 43px;
+
+    text-align: center;
+
+    font-family: Tahoma, sans-serif;
+    font-size: 11px;
+}
+
+/* =========================================================
+   MAXIMIZED WINDOW
+========================================================= */
+
+.os-window.maximized {
+    top: 0 !important;
+    left: 0 !important;
+
+    width: 100% !important;
+    height: calc(100% - 31px) !important;
+
+    max-width: none;
+
+    max-height: none;
+}
+
+/* =========================================================
+   SCROLLBARS
+========================================================= */
+
+::-webkit-scrollbar {
+    width: 15px;
+    height: 15px;
+}
+
+::-webkit-scrollbar-track {
+    background: #ece9d8;
+}
+
+::-webkit-scrollbar-thumb {
+    border: 1px solid #777;
+
+    background:
+        linear-gradient(
+            90deg,
+            #d9e4f0,
+            #aebed0
+        );
+}
+
+::-webkit-scrollbar-button {
+    height: 15px;
+    width: 15px;
+
+    background: #d4d0c8;
+
+    border: 1px solid #888;
+}
+
+/* =========================================================
+   RESPONSIVE FALLBACK
+========================================================= */
+
+@media (max-width: 900px) {
+
+    .os-window {
+        left: 100px;
+
+        width: calc(100% - 120px);
+    }
+
+    #skills-window {
+        width: calc(100% - 40px);
+
+        left: 20px;
+    }
+
+    .project-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+@media (max-width: 650px) {
+
+    .desktop-icons {
+        display: none;
+    }
+
+    .os-window {
+        left: 5px;
+        top: 20px;
+
+        width: calc(100% - 10px);
+
+        height: calc(100% - 60px);
+    }
+
+    .skills-sidebar {
+        width: 135px;
+    }
+
+    .skill-program {
+        align-items: flex-start;
+    }
+
+    .change-button {
+        display: none;
+    }
+
+    .project-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}

@@ -1,0 +1,1630 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>GIOVANNA OS</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- =========================================================
+         BOOT SCREEN
+    ========================================================== -->
+
+    <div id="boot-screen">
+
+        <div class="boot-content">
+
+            <div class="boot-logo">
+                GIOVANNA OS
+            </div>
+
+            <div class="boot-version">
+                Personal Development Environment
+            </div>
+
+            <div class="boot-line">
+                Starting system...
+            </div>
+
+            <div class="boot-progress">
+                <div id="boot-progress-bar"></div>
+            </div>
+
+            <div id="boot-status">
+                Initializing system...
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================================
+         DESKTOP
+    ========================================================== -->
+
+    <main id="desktop">
+
+        <!-- =====================================================
+             DESKTOP ICONS
+        ====================================================== -->
+
+        <div class="desktop-icons">
+
+            <div class="desktop-icon" data-window="computer-window">
+                <div class="desktop-icon-image">💻</div>
+                <span>My Computer</span>
+            </div>
+
+            <div class="desktop-icon" data-window="projects-window">
+                <div class="desktop-icon-image">📁</div>
+                <span>Projects</span>
+            </div>
+
+            <div class="desktop-icon" data-window="about-window">
+                <div class="desktop-icon-image">👩🏻‍💻</div>
+                <span>About Me</span>
+            </div>
+
+            <div class="desktop-icon" data-window="skills-window">
+                <div class="desktop-icon-image">⚙️</div>
+                <span>Skills</span>
+            </div>
+
+            <div class="desktop-icon" data-window="internet-window">
+                <div class="desktop-icon-image">🌐</div>
+                <span>Internet</span>
+            </div>
+
+            <div class="desktop-icon" data-window="media-window">
+                <div class="desktop-icon-image">🎵</div>
+                <span>Media Player</span>
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             MY COMPUTER
+        ====================================================== -->
+
+        <section class="os-window" id="computer-window">
+
+            <div class="window-titlebar">
+
+                <div class="window-title">
+                    💻 My Computer
+                </div>
+
+                <div class="window-controls">
+                    <button class="window-minimize">_</button>
+                    <button class="window-maximize">□</button>
+                    <button class="window-close">X</button>
+                </div>
+
+            </div>
+
+            <div class="window-menu">
+                <span>File</span>
+                <span>Edit</span>
+                <span>View</span>
+                <span>Favorites</span>
+                <span>Tools</span>
+                <span>Help</span>
+            </div>
+
+            <div class="window-toolbar">
+
+                <button>←</button>
+                <button>→</button>
+                <button>↑</button>
+
+                <div class="toolbar-address">
+                    My Computer
+                </div>
+
+            </div>
+
+            <div class="window-content computer-content">
+
+                <h2>My Computer</h2>
+
+                <div class="computer-section">
+
+                    <h3>Files stored on this computer</h3>
+
+                    <div class="computer-grid">
+
+                        <div class="computer-item" data-window="projects-window">
+                            <div>📁</div>
+                            <span>My Projects</span>
+                        </div>
+
+                        <div class="computer-item" data-window="skills-window">
+                            <div>⚙️</div>
+                            <span>Installed Skills</span>
+                        </div>
+
+                        <div class="computer-item" data-window="about-window">
+                            <div>📄</div>
+                            <span>About Giovanna</span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="computer-section">
+
+                    <h3>System</h3>
+
+                    <div class="computer-grid">
+
+                        <div class="computer-item">
+                            <div>💾</div>
+                            <span>Local Disk (C:)</span>
+                        </div>
+
+                        <div class="computer-item">
+                            <div>🌐</div>
+                            <span>Internet</span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="window-statusbar">
+                5 objects
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             PROJECTS
+        ====================================================== -->
+
+        <section class="os-window" id="projects-window">
+
+            <div class="window-titlebar">
+
+                <div class="window-title">
+                    📁 My Projects
+                </div>
+
+                <div class="window-controls">
+                    <button class="window-minimize">_</button>
+                    <button class="window-maximize">□</button>
+                    <button class="window-close">X</button>
+                </div>
+
+            </div>
+
+            <div class="window-menu">
+                <span>File</span>
+                <span>Edit</span>
+                <span>View</span>
+                <span>Favorites</span>
+                <span>Tools</span>
+                <span>Help</span>
+            </div>
+
+            <div class="window-toolbar">
+
+                <button>←</button>
+                <button>→</button>
+                <button>↑</button>
+
+                <div class="toolbar-address">
+                    C:\Giovanna\Projects
+                </div>
+
+            </div>
+
+
+            <div class="window-content projects-content">
+
+                <div class="projects-header">
+
+                    <div>
+                        <h2>My Projects</h2>
+                        <p>
+                            Double-click a project to open it.
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="project-grid">
+
+                    <!-- API 1 -->
+
+                    <div class="project-item" data-window="api1-window">
+
+                        <div class="project-icon">
+                            📘
+                        </div>
+
+                        <div class="project-name">
+                            API-1
+                        </div>
+
+                        <div class="project-type">
+                            C / Algorithms
+                        </div>
+
+                    </div>
+
+
+                    <!-- API 2 -->
+
+                    <div class="project-item" data-window="api2-window">
+
+                        <div class="project-icon">
+                            ☕
+                        </div>
+
+                        <div class="project-name">
+                            API-2
+                        </div>
+
+                        <div class="project-type">
+                            Java / MySQL
+                        </div>
+
+                    </div>
+
+
+                    <!-- API 3 -->
+
+                    <div class="project-item" data-window="api3-window">
+
+                        <div class="project-icon">
+                            🖥️
+                        </div>
+
+                        <div class="project-name">
+                            API-3
+                        </div>
+
+                        <div class="project-type">
+                            Spring Boot
+                        </div>
+
+                    </div>
+
+
+                    <!-- ESTAÇÃO TI -->
+
+                    <div class="project-item" data-window="estacao-window">
+
+                        <div class="project-icon">
+                            📡
+                        </div>
+
+                        <div class="project-name">
+                            Estação-TI
+                        </div>
+
+                        <div class="project-type">
+                            Node.js / WebSockets
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="window-statusbar">
+                4 objects
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             API 1
+        ====================================================== -->
+
+        <section class="os-window project-window" id="api1-window">
+
+            <div class="window-titlebar">
+
+                <div class="window-title">
+                    📘 API-1.exe
+                </div>
+
+                <div class="window-controls">
+                    <button class="window-minimize">_</button>
+                    <button class="window-maximize">□</button>
+                    <button class="window-close">X</button>
+                </div>
+
+            </div>
+
+            <div class="window-content project-app">
+
+                <div class="app-header">
+
+                    <div class="app-icon">
+                        📘
+                    </div>
+
+                    <div>
+                        <h1>API-1</h1>
+                        <p>Aplicação de Cálculo de Sequências Lógicas</p>
+                    </div>
+
+                </div>
+
+                <hr>
+
+                <h3>Project information</h3>
+
+                <p>
+                    Primeiro projeto desenvolvido durante a formação em Banco de Dados.
+                    O projeto trabalha conceitos de lógica, algoritmos e raciocínio
+                    computacional através de diferentes sequências matemáticas.
+                </p>
+
+                <div class="tech-list">
+
+                    <span>C</span>
+                    <span>Visualg</span>
+                    <span>Algorithms</span>
+                    <span>Logic</span>
+
+                </div>
+
+                <h3>Implemented algorithms</h3>
+
+                <ul>
+                    <li>Fibonacci</li>
+                    <li>Números primos</li>
+                    <li>Fatorial</li>
+                    <li>Tribonacci</li>
+                    <li>Progressão geométrica</li>
+                    <li>Quadrados perfeitos</li>
+                </ul>
+
+                <button class="xp-button">
+                    Open project
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             API 2
+        ====================================================== -->
+
+        <section class="os-window project-window" id="api2-window">
+
+            <div class="window-titlebar">
+
+                <div class="window-title">
+                    ☕ API-2.exe
+                </div>
+
+                <div class="window-controls">
+                    <button class="window-minimize">_</button>
+                    <button class="window-maximize">□</button>
+                    <button class="window-close">X</button>
+                </div>
+
+            </div>
+
+            <div class="window-content project-app">
+
+                <div class="app-header">
+
+                    <div class="app-icon">
+                        ☕
+                    </div>
+
+                    <div>
+                        <h1>BlueTech</h1>
+                        <p>Plataforma para entrega de TG</p>
+                    </div>
+
+                </div>
+
+                <hr>
+
+                <h3>Project information</h3>
+
+                <p>
+                    Sistema desenvolvido para organizar o processo de entrega,
+                    acompanhamento e aprovação de Trabalhos de Graduação.
+                </p>
+
+                <div class="tech-list">
+
+                    <span>Java</span>
+                    <span>JavaFX</span>
+                    <span>MySQL</span>
+                    <span>Figma</span>
+                    <span>SceneBuilder</span>
+                    <span>Git</span>
+
+                </div>
+
+                <h3>Features</h3>
+
+                <ul>
+                    <li>Entrega de trabalhos</li>
+                    <li>Controle de versões</li>
+                    <li>Feedback</li>
+                    <li>Histórico</li>
+                    <li>Notificações</li>
+                    <li>Exportação Markdown</li>
+                    <li>Controle de usuários</li>
+                    <li>Aprovação final</li>
+                </ul>
+
+                <button class="xp-button">
+                    Open project
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             API 3
+        ====================================================== -->
+
+        <section class="os-window project-window" id="api3-window">
+
+            <div class="window-titlebar">
+
+                <div class="window-title">
+                    🖥️ IPEMControl.exe
+                </div>
+
+                <div class="window-controls">
+                    <button class="window-minimize">_</button>
+                    <button class="window-maximize">□</button>
+                    <button class="window-close">X</button>
+                </div>
+
+            </div>
+
+            <div class="window-content project-app ipem-app">
+
+                <div class="app-header">
+
+                    <div class="app-icon">
+                        🖥️
+                    </div>
+
+                    <div>
+                        <h1>IPEMControl</h1>
+                        <p>Vehicle & Fuel Management System</p>
+                    </div>
+
+                </div>
+
+                <hr>
+
+                <p>
+                    Sistema de controle e análise de veículos e abastecimentos
+                    desenvolvido para o IPEM.
+                </p>
+
+                <div class="dashboard-grid">
+
+                    <div class="dashboard-card">
+                        <strong>Backend</strong>
+                        <span>Java</span>
+                        <span>Spring Boot</span>
+                        <span>Maven</span>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <strong>Frontend</strong>
+                        <span>HTML</span>
+                        <span>CSS</span>
+                        <span>JavaScript</span>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <strong>Database</strong>
+                        <span>SQL</span>
+                        <span>Relational DB</span>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <strong>Tools</strong>
+                        <span>IntelliJ</span>
+                        <span>Postman</span>
+                        <span>GitHub</span>
+                    </div>
+
+                </div>
+
+                <h3>System modules</h3>
+
+                <ul>
+                    <li>Vehicle management</li>
+                    <li>Fuel management</li>
+                    <li>Dashboard</li>
+                    <li>Reports</li>
+                    <li>Data analysis</li>
+                </ul>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             ESTAÇÃO-TI
+        ====================================================== -->
+
+        <section class="os-window project-window" id="estacao-window">
+
+            <div class="window-titlebar">
+
+                <div class="window-title">
+                    📡 Estacao-TI.exe
+                </div>
+
+                <div class="window-controls">
+                    <button class="window-minimize">_</button>
+                    <button class="window-maximize">□</button>
+                    <button class="window-close">X</button>
+                </div>
+
+            </div>
+
+            <div class="window-content project-app station-app">
+
+                <div class="app-header">
+
+                    <div class="app-icon">
+                        📡
+                    </div>
+
+                    <div>
+                        <h1>Estação-TI</h1>
+                        <p>Real-time collaborative platform</p>
+                    </div>
+
+                </div>
+
+                <hr>
+
+                <p>
+                    Plataforma colaborativa com comunicação em tempo real,
+                    integração com YouTube e sincronização entre usuários.
+                </p>
+
+                <div class="waveform">
+
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+
+                </div>
+
+                <div class="player-controls">
+
+                    <button>◀◀</button>
+                    <button>▶</button>
+                    <button>▶▶</button>
+
+                </div>
+
+                <div class="tech-list">
+
+                    <span>Node.js</span>
+                    <span>Express</span>
+                    <span>Socket.IO</span>
+                    <span>WebSockets</span>
+                    <span>JavaScript</span>
+                    <span>YouTube API</span>
+                    <span>Render</span>
+
+                </div>
+
+                <h3>Features</h3>
+
+                <ul>
+                    <li>Real-time communication</li>
+                    <li>Shared rooms</li>
+                    <li>Collaborative queue</li>
+                    <li>YouTube integration</li>
+                    <li>Frontend / Backend integration</li>
+                    <li>Deployment</li>
+                </ul>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             ABOUT.EXE
+        ====================================================== -->
+
+        <section class="os-window" id="about-window">
+
+            <div class="window-titlebar">
+
+                <div class="window-title">
+                    👩🏻‍💻 ABOUT.EXE
+                </div>
+
+                <div class="window-controls">
+                    <button class="window-minimize">_</button>
+                    <button class="window-maximize">□</button>
+                    <button class="window-close">X</button>
+                </div>
+
+            </div>
+
+
+            <div class="window-menu">
+
+                <span>File</span>
+                <span>Edit</span>
+                <span>View</span>
+                <span>Help</span>
+
+            </div>
+
+
+            <div class="window-content about-content">
+
+                <div class="about-top">
+
+                    <div class="about-avatar">
+                        👩🏻‍💻
+                    </div>
+
+                    <div>
+
+                        <div class="about-name">
+                            GIOVANNA MARQUES
+                        </div>
+
+                        <div class="about-role">
+                            Database Student · IT Intern
+                        </div>
+
+                        <div class="about-status">
+                            ● SYSTEM USER
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="about-box">
+
+                    <div class="about-box-title">
+                        ABOUT ME
+                    </div>
+
+                    <p>
+                        Olá! Eu sou a Giovanna, estudante de Banco de Dados
+                        na FATEC e apaixonada por tecnologia, programação,
+                        dados e automação.
+                    </p>
+
+                    <p>
+                        Atualmente atuo como estagiária de TI, trabalhando
+                        principalmente com automação de processos e buscando
+                        transformar tarefas repetitivas em soluções mais
+                        eficientes.
+                    </p>
+
+                    <p>
+                        Minha formação combina desenvolvimento de software,
+                        bancos de dados e análise de dados, com projetos
+                        envolvendo Java, Spring Boot, SQL, JavaScript,
+                        Node.js e outras tecnologias.
+                    </p>
+
+                </div>
+
+
+                <div class="about-box">
+
+                    <div class="about-box-title">
+                        CURRENT STATUS
+                    </div>
+
+                    <div class="system-info">
+
+                        <div>
+                            <strong>USER:</strong>
+                            Giovanna
+                        </div>
+
+                        <div>
+                            <strong>ROLE:</strong>
+                            IT Intern
+                        </div>
+
+                        <div>
+                            <strong>EDUCATION:</strong>
+                            Database
+                        </div>
+
+                        <div>
+                            <strong>INTEREST:</strong>
+                            Technology / Data / Automation
+                        </div>
+
+                        <div>
+                            <strong>STATUS:</strong>
+                            Learning...
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="about-links">
+
+                    <button class="xp-button">
+                        GitHub
+                    </button>
+
+                    <button class="xp-button">
+                        LinkedIn
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div class="window-statusbar">
+                ABOUT.EXE — Giovanna OS
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             SKILLS.EXE
+        ====================================================== -->
+
+        <section class="os-window" id="skills-window">
+
+            <div class="window-titlebar">
+
+                <div class="window-title">
+                    ⚙️ SKILLS.EXE
+                </div>
+
+                <div class="window-controls">
+                    <button class="window-minimize">_</button>
+                    <button class="window-maximize">□</button>
+                    <button class="window-close">X</button>
+                </div>
+
+            </div>
+
+
+            <div class="window-menu">
+
+                <span>File</span>
+                <span>Edit</span>
+                <span>View</span>
+                <span>Tools</span>
+                <span>Help</span>
+
+            </div>
+
+
+            <div class="skills-layout">
+
+
+                <!-- LEFT SIDEBAR -->
+
+                <aside class="skills-sidebar">
+
+                    <div class="skills-side-title">
+                        Software Tasks
+                    </div>
+
+                    <button class="skills-side-button active">
+                        <span>💿</span>
+                        Installed Programs
+                    </button>
+
+                    <button class="skills-side-button">
+                        <span>➕</span>
+                        Add New Program
+                    </button>
+
+                    <button class="skills-side-button">
+                        <span>🧩</span>
+                        Windows Components
+                    </button>
+
+
+                    <div class="skills-side-separator"></div>
+
+
+                    <div class="skills-side-title">
+                        See Also
+                    </div>
+
+                    <button class="skills-side-link">
+                        🖥️ System
+                    </button>
+
+                    <button class="skills-side-link">
+                        🌐 Internet
+                    </button>
+
+                    <button class="skills-side-link">
+                        📁 My Projects
+                    </button>
+
+                </aside>
+
+
+                <!-- MAIN CONTENT -->
+
+                <div class="skills-main">
+
+                    <div class="skills-heading">
+
+                        <div>
+
+                            <h1>
+                                Add or Remove Programs
+                            </h1>
+
+                            <p>
+                                Currently installed programs
+                            </p>
+
+                        </div>
+
+                        <label class="show-updates">
+                            <input type="checkbox">
+                            Show updates
+                        </label>
+
+                    </div>
+
+
+                    <div class="skills-sort">
+
+                        <span>
+                            Sort by:
+                        </span>
+
+                        <select>
+                            <option>Name</option>
+                            <option>Size</option>
+                            <option>Last Used</option>
+                        </select>
+
+                    </div>
+
+
+                    <!-- DEVELOPMENT -->
+
+                    <div class="skill-program">
+
+                        <div class="skill-program-icon">
+                            ☕
+                        </div>
+
+                        <div class="skill-program-info">
+
+                            <strong>
+                                Java Development Kit
+                            </strong>
+
+                            <span>
+                                Java · Object-Oriented Programming
+                            </span>
+
+                            <small>
+                                Development
+                            </small>
+
+                        </div>
+
+                        <button class="change-button">
+                            Change/Remove
+                        </button>
+
+                    </div>
+
+
+                    <!-- SPRING -->
+
+                    <div class="skill-program">
+
+                        <div class="skill-program-icon">
+                            🌱
+                        </div>
+
+                        <div class="skill-program-info">
+
+                            <strong>
+                                Spring Boot
+                            </strong>
+
+                            <span>
+                                REST APIs · Backend Development
+                            </span>
+
+                            <small>
+                                Development
+                            </small>
+
+                        </div>
+
+                        <button class="change-button">
+                            Change/Remove
+                        </button>
+
+                    </div>
+
+
+                    <!-- C -->
+
+                    <div class="skill-program">
+
+                        <div class="skill-program-icon">
+                            C
+                        </div>
+
+                        <div class="skill-program-info">
+
+                            <strong>
+                                C Development Tools
+                            </strong>
+
+                            <span>
+                                Algorithms · Logic · Programming
+                            </span>
+
+                            <small>
+                                Development
+                            </small>
+
+                        </div>
+
+                        <button class="change-button">
+                            Change/Remove
+                        </button>
+
+                    </div>
+
+
+                    <!-- JAVASCRIPT -->
+
+                    <div class="skill-program">
+
+                        <div class="skill-program-icon">
+                            JS
+                        </div>
+
+                        <div class="skill-program-info">
+
+                            <strong>
+                                JavaScript Runtime
+                            </strong>
+
+                            <span>
+                                JavaScript · Node.js · Express · Socket.IO
+                            </span>
+
+                            <small>
+                                Web Development
+                            </small>
+
+                        </div>
+
+                        <button class="change-button">
+                            Change/Remove
+                        </button>
+
+                    </div>
+
+
+                    <!-- DATABASE -->
+
+                    <div class="skill-program">
+
+                        <div class="skill-program-icon">
+                            🗄️
+                        </div>
+
+                        <div class="skill-program-info">
+
+                            <strong>
+                                Database Systems
+                            </strong>
+
+                            <span>
+                                MySQL · SQLite · Oracle Database
+                            </span>
+
+                            <small>
+                                Database
+                            </small>
+
+                        </div>
+
+                        <button class="change-button">
+                            Change/Remove
+                        </button>
+
+                    </div>
+
+
+                    <!-- SQL -->
+
+                    <div class="skill-program">
+
+                        <div class="skill-program-icon">
+                            SQL
+                        </div>
+
+                        <div class="skill-program-info">
+
+                            <strong>
+                                SQL Tools
+                            </strong>
+
+                            <span>
+                                SQL · Data Modeling · Relational Databases
+                            </span>
+
+                            <small>
+                                Database
+                            </small>
+
+                        </div>
+
+                        <button class="change-button">
+                            Change/Remove
+                        </button>
+
+                    </div>
+
+
+                    <!-- HTML CSS -->
+
+                    <div class="skill-program">
+
+                        <div class="skill-program-icon">
+                            🌐
+                        </div>
+
+                        <div class="skill-program-info">
+
+                            <strong>
+                                Web Development Pack
+                            </strong>
+
+                            <span>
+                                HTML5 · CSS3 · JavaScript · REST · WebSockets
+                            </span>
+
+                            <small>
+                                Web
+                            </small>
+
+                        </div>
+
+                        <button class="change-button">
+                            Change/Remove
+                        </button>
+
+                    </div>
+
+
+                    <!-- GIT -->
+
+                    <div class="skill-program">
+
+                        <div class="skill-program-icon">
+                            🐙
+                        </div>
+
+                        <div class="skill-program-info">
+
+                            <strong>
+                                Git & GitHub
+                            </strong>
+
+                            <span>
+                                Version Control · GitHub Projects · GitHub Desktop
+                            </span>
+
+                            <small>
+                                Development Tools
+                            </small>
+
+                        </div>
+
+                        <button class="change-button">
+                            Change/Remove
+                        </button>
+
+                    </div>
+
+
+                    <!-- DOCKER -->
+
+                    <div class="skill-program">
+
+                        <div class="skill-program-icon">
+                            🐳
+                        </div>
+
+                        <div class="skill-program-info">
+
+                            <strong>
+                                Docker
+                            </strong>
+
+                            <span>
+                                Containers · Development Environment
+                            </span>
+
+                            <small>
+                                Infrastructure
+                            </small>
+
+                        </div>
+
+                        <button class="change-button">
+                            Change/Remove
+                        </button>
+
+                    </div>
+
+
+                    <!-- LINUX -->
+
+                    <div class="skill-program">
+
+                        <div class="skill-program-icon">
+                            🐧
+                        </div>
+
+                        <div class="skill-program-info">
+
+                            <strong>
+                                Linux Environment
+                            </strong>
+
+                            <span>
+                                Linux · Windows · System Environment
+                            </span>
+
+                            <small>
+                                Operating Systems
+                            </small>
+
+                        </div>
+
+                        <button class="change-button">
+                            Change/Remove
+                        </button>
+
+                    </div>
+
+
+                    <!-- TOOLS -->
+
+                    <div class="skill-program">
+
+                        <div class="skill-program-icon">
+                            🛠️
+                        </div>
+
+                        <div class="skill-program-info">
+
+                            <strong>
+                                Developer Toolkit
+                            </strong>
+
+                            <span>
+                                IntelliJ · Eclipse · VS Code · Postman · Maven
+                            </span>
+
+                            <small>
+                                Tools
+                            </small>
+
+                        </div>
+
+                        <button class="change-button">
+                            Change/Remove
+                        </button>
+
+                    </div>
+
+
+                    <!-- DESIGN -->
+
+                    <div class="skill-program">
+
+                        <div class="skill-program-icon">
+                            🎨
+                        </div>
+
+                        <div class="skill-program-info">
+
+                            <strong>
+                                Design Tools
+                            </strong>
+
+                            <span>
+                                Figma · Canva · SceneBuilder · brModelo
+                            </span>
+
+                            <small>
+                                Design
+                            </small>
+
+                        </div>
+
+                        <button class="change-button">
+                            Change/Remove
+                        </button>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+            <div class="window-statusbar">
+                12 programs currently installed
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             INTERNET
+        ====================================================== -->
+
+        <section class="os-window" id="internet-window">
+
+            <div class="window-titlebar">
+
+                <div class="window-title">
+                    🌐 Internet Explorer
+                </div>
+
+                <div class="window-controls">
+                    <button class="window-minimize">_</button>
+                    <button class="window-maximize">□</button>
+                    <button class="window-close">X</button>
+                </div>
+
+            </div>
+
+            <div class="window-menu">
+
+                <span>File</span>
+                <span>Edit</span>
+                <span>View</span>
+                <span>Favorites</span>
+                <span>Tools</span>
+                <span>Help</span>
+
+            </div>
+
+            <div class="window-toolbar">
+
+                <button>←</button>
+                <button>→</button>
+                <button>↻</button>
+                <button>🏠</button>
+
+                <div class="toolbar-address">
+                    https://github.com/markeis24
+                </div>
+
+            </div>
+
+
+            <div class="window-content browser-content">
+
+                <div class="browser-page">
+
+                    <h1>
+                        GIOVANNA ONLINE
+                    </h1>
+
+                    <p>
+                        Welcome to my personal development network.
+                    </p>
+
+                    <hr>
+
+                    <h2>
+                        External Links
+                    </h2>
+
+                    <p>
+                        GitHub
+                    </p>
+
+                    <p>
+                        LinkedIn
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             MEDIA PLAYER
+        ====================================================== -->
+
+        <section class="os-window" id="media-window">
+
+            <div class="window-titlebar media-titlebar">
+
+                <div class="window-title">
+                    🎵 Windows Media Player
+                </div>
+
+                <div class="window-controls">
+                    <button class="window-minimize">_</button>
+                    <button class="window-maximize">□</button>
+                    <button class="window-close">X</button>
+                </div>
+
+            </div>
+
+
+            <div class="media-player-content">
+
+                <div class="media-screen">
+
+                    <div class="media-visualizer">
+
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+
+                    </div>
+
+                    <div class="media-title">
+                        GIOVANNA.EXE
+                    </div>
+
+                    <div class="media-subtitle">
+                        portfolio soundtrack
+                    </div>
+
+                </div>
+
+
+                <div class="media-controls">
+
+                    <button>◀</button>
+                    <button>▶</button>
+                    <button>■</button>
+                    <button>▶▶</button>
+
+                </div>
+
+
+                <div class="media-progress">
+
+                    <div></div>
+
+                </div>
+
+
+                <div class="media-status">
+
+                    00:00 / 03:37
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             START MENU
+        ====================================================== -->
+
+        <div id="start-menu">
+
+            <div class="start-header">
+
+                <div class="start-avatar">
+                    👩🏻‍💻
+                </div>
+
+                <div>
+                    <strong>Giovanna</strong>
+                    <span>Personal Computer</span>
+                </div>
+
+            </div>
+
+
+            <div class="start-body">
+
+                <div class="start-column">
+
+                    <button data-window="about-window">
+                        👩🏻‍💻 About Me
+                    </button>
+
+                    <button data-window="projects-window">
+                        📁 My Projects
+                    </button>
+
+                    <button data-window="skills-window">
+                        ⚙️ Skills
+                    </button>
+
+                    <button data-window="internet-window">
+                        🌐 Internet
+                    </button>
+
+                    <button data-window="media-window">
+                        🎵 Media Player
+                    </button>
+
+                </div>
+
+
+                <div class="start-column right">
+
+                    <button data-window="computer-window">
+                        💻 My Computer
+                    </button>
+
+                    <button>
+                        📄 My Documents
+                    </button>
+
+                    <button>
+                        🖼️ My Pictures
+                    </button>
+
+                    <button>
+                        🎵 My Music
+                    </button>
+
+                    <button>
+                        ⚙️ Control Panel
+                    </button>
+
+                    <button>
+                        🔎 Search
+                    </button>
+
+                    <button>
+                        ▶ Run...
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div class="start-footer">
+
+                <button>
+                    🚪 Log Off
+                </button>
+
+                <button>
+                    ⏻ Turn Off Computer
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             TASKBAR
+        ====================================================== -->
+
+        <footer id="taskbar">
+
+            <button id="start-button">
+
+                <span class="windows-logo">
+                    🪟
+                </span>
+
+                <strong>
+                    Start
+                </strong>
+
+            </button>
+
+
+            <div id="taskbar-programs">
+            </div>
+
+
+            <div id="taskbar-tray">
+
+                <span class="tray-icon">
+                    🔊
+                </span>
+
+                <span class="tray-icon">
+                    🌐
+                </span>
+
+                <span id="clock">
+                    00:00
+                </span>
+
+            </div>
+
+        </footer>
+
+    </main>
+
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
