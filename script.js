@@ -1,55 +1,320 @@
 /* =========================================================
-   GIOVANNA OS
-   Main System Script
+   GIOVANNA OS - SYSTEM SCRIPT
+   Windows 2000 / XP inspired portfolio OS
 ========================================================= */
 
+/* =========================================================
+   CONFIGURAÇÕES
+========================================================= */
+
+const ICON_PATH = "img/icons/";
+
+const ICONS = {
+    computer: "windows-xp/xp-computer.ico",
+    projects: "windows-xp/xp-folder-open.ico",
+    about: "windows-xp/xp-documents.ico",
+    skills: "windows-xp/xp-settings.ico",
+    internet: "windows-xp/xp-internet.ico",
+    media: "windows-xp/xp-media-player.ico",
+
+    folder: "windows-xp/xp-folder-open.ico",
+    closedFolder: "windows-xp/xp-folder.ico",
+
+    hardDrive: "windows-xp/xp-harddrive.ico",
+    network: "windows-xp/xp-network.ico",
+
+    document: "windows-xp/xp-document.ico",
+    image: "windows-xp/xp-image.ico",
+    sound: "windows-xp/xp-audio-file.ico",
+    video: "windows-xp/xp-video.ico",
+
+    program: "windows-xp/xp-program.ico",
+    programGroup: "windows-xp/xp-program-group.ico",
+
+    settings: "windows-xp/xp-settings.ico",
+    controlPanel: "windows-xp/xp-control-panel.ico",
+
+    internetDoc: "windows-xp/xp-internet-document.ico",
+    msdos: "windows-xp/xp-msdos.ico",
+
+    desktop: "windows-xp/xp-desktop.ico",
+    recycle: "windows-xp/xp-recycle.ico",
+
+    configuration: "windows-xp/xp-config.ico"
+};
+
+const TASKBAR_ICONS = {
+    "computer-window": ICONS.computer,
+    "projects-window": ICONS.folder,
+    "about-window": ICONS.about,
+    "skills-window": ICONS.settings,
+    "internet-window": ICONS.internet,
+    "media-window": ICONS.media,
+
+    "api1-window": ICONS.document,
+    "api2-window": ICONS.programGroup,
+    "api3-window": ICONS.computer,
+    "estacao-window": ICONS.sound
+};
 
 /* =========================================================
-   GLOBAL VARIABLES
+   ESTADO DO SISTEMA
 ========================================================= */
 
 let highestZIndex = 200;
 
 let draggedWindow = null;
-
+let windowDragPointerId = null;
 let dragOffsetX = 0;
 let dragOffsetY = 0;
 
-let buddyDragging = false;
-
-let buddyOffsetX = 0;
-let buddyOffsetY = 0;
-
 let buddyEnabled = true;
-
+let buddyDragging = false;
 let buddyTimer = null;
+let gioBuddyAnimationTimer = null;
+let gioBuddyBlinkTimer = null;
+let gioBuddyAnimationToken = 0;
+let gioBuddyCurrentAnimation = "idle";
+let gioBuddyMoveAnimationId = null;
+let gioBuddyMoveToken = 0;
 
+const GIOBUDDY_SPRITE_BASE = "img/GioBuddy/frames/";
+
+// Cada frame tem duas versões: a normal (ex.: blink-1.png) e a invertida
+// (ex.: blink-1.2.png). Usamos a versão invertida quando o GioBuddy vai para a esquerda.
+let gioBuddyFacing = "right";
+
+function makeGioBuddyFrames(folder, count) {
+    return {
+        right: Array.from({ length: count }, (_, i) => `${folder}/${folder}-${i + 1}.png`),
+        left: Array.from({ length: count }, (_, i) => `${folder}/${folder}-${i + 1}.2.png`)
+    };
+}
+
+const GIOBUDDY_SPRITES = {
+    // Somente as quatro animações escolhidas: idle, blink, happy e talk.
+    idle: makeGioBuddyFrames("idle", 6),
+    blink: makeGioBuddyFrames("blink", 5),
+    happy: makeGioBuddyFrames("happy", 5),
+    talk: makeGioBuddyFrames("talk", 5)
+};
+
+const GIOBUDDY_ANIMATION_SPEED = {
+    idle: 220,
+    blink: 90,
+    happy: 115,
+    talk: 120
+};
+let buddyDragState = null;
 
 /* =========================================================
-   DOM READY
+   EXPLORER
 ========================================================= */
 
-document.addEventListener("DOMContentLoaded", () => {
+let explorerHistory = ["computer"];
+let explorerHistoryIndex = 0;
+let explorerCurrentPath = "computer";
 
-    initializeBoot();
+const explorerData = {
+    computer: {
+        title: "My Computer",
+        subtitle: "Files and folders stored on this computer",
+        address: "My Computer",
+        details: "Personal Development Environment",
 
-});
+        items: [
+            {
+                name: "My Projects",
+                icon: ICONS.folder,
+                type: "Folder",
+                path: "projects",
+                description: "FATEC projects and applications."
+            },
+            {
+                name: "Installed Skills",
+                icon: ICONS.settings,
+                type: "Folder",
+                path: "skills",
+                description: "Development technologies and tools."
+            },
+            {
+                name: "About Giovanna",
+                icon: ICONS.document,
+                type: "Document",
+                window: "about-window",
+                description: "Profile and current status."
+            },
+            {
+                name: "Internet",
+                icon: ICONS.internet,
+                type: "Shortcut",
+                window: "internet-window",
+                description: "Open Giovanna Online."
+            },
+            {
+                name: "Media Player",
+                icon: ICONS.sound,
+                type: "Application",
+                window: "media-window",
+                description: "GIOVANNA OS soundtrack."
+            },
+            {
+                name: "Control Panel",
+                icon: ICONS.settings,
+                type: "System",
+                description: "System settings are currently unavailable."
+            }
+        ]
+    },
 
+    projects: {
+        title: "My Projects",
+        subtitle: "FATEC projects and personal applications",
+        address: "C:\\Giovanna\\Projects",
+        details: "4 project applications",
+
+        items: [
+            {
+                name: "API-1",
+                icon: ICONS.document,
+                type: "C / Algorithms",
+                window: "api1-window",
+                description: "Aplicação de Cálculo de Sequências Lógicas."
+            },
+            {
+                name: "API-2",
+                icon: ICONS.programGroup,
+                type: "Java / MySQL",
+                window: "api2-window",
+                description: "BlueTech — Plataforma para entrega de TG."
+            },
+            {
+                name: "API-3",
+                icon: ICONS.computer,
+                type: "Spring Boot",
+                window: "api3-window",
+                description: "IPEMControl — Vehicle & Fuel Management."
+            },
+            {
+                name: "Estação-TI",
+                icon: ICONS.sound,
+                type: "Node.js / WebSockets",
+                window: "estacao-window",
+                description: "Real-time collaborative platform."
+            }
+        ]
+    },
+
+    skills: {
+        title: "Installed Skills",
+        subtitle: "Software and technologies installed in Giovanna OS",
+        address: "C:\\Giovanna\\Skills",
+        details: "Development environment",
+
+        items: [
+            {
+                name: "C Programming",
+                icon: ICONS.msdos,
+                type: "Language",
+                description: "C programming and algorithms."
+            },
+            {
+                name: "Java Development Kit",
+                icon: ICONS.program,
+                type: "Language",
+                description: "Java and object-oriented programming."
+            },
+            {
+                name: "Spring Boot",
+                icon: ICONS.program,
+                type: "Framework",
+                description: "Java backend and REST APIs."
+            },
+            {
+                name: "MySQL Database",
+                icon: ICONS.hardDrive,
+                type: "Database",
+                description: "Relational database and SQL."
+            },
+            {
+                name: "SQLite",
+                icon: ICONS.hardDrive,
+                type: "Database",
+                description: "Embedded relational database."
+            },
+            {
+                name: "HTML5",
+                icon: ICONS.internetDoc,
+                type: "Web",
+                description: "Web page structure."
+            },
+            {
+                name: "CSS3",
+                icon: ICONS.internetDoc,
+                type: "Web",
+                description: "Web interface styling."
+            },
+            {
+                name: "JavaScript",
+                icon: ICONS.internetDoc,
+                type: "Language",
+                description: "Frontend and backend scripting."
+            }
+        ]
+    }
+};
 
 /* =========================================================
-   BOOT SYSTEM
+   MEDIA PLAYER
 ========================================================= */
+
+const mediaTracks = [
+    {
+        title: "ESTACAO-TI",
+        artist: "Giovanna Marques",
+        duration: 222
+    },
+    {
+        title: "PORTFOLIO.EXE",
+        artist: "Giovanna OS",
+        duration: 187
+    },
+    {
+        title: "HALL OF CODE",
+        artist: "System Audio",
+        duration: 204
+    },
+    {
+        title: "DATABASE DRIVE",
+        artist: "FATEC SYSTEM",
+        duration: 239
+    }
+];
+
+let mediaIndex = 0;
+let mediaSeconds = 0;
+let mediaPlaying = false;
+let mediaTimer = null;
+
+/* =========================================================
+   BOOT
+========================================================= */
+
+document.addEventListener("DOMContentLoaded", initializeBoot);
 
 function initializeBoot() {
+    const boot = document.getElementById("boot-screen");
 
-    const bootScreen = document.getElementById("boot-screen");
-    const progressBar = document.getElementById("boot-progress-bar");
-    const bootStatus = document.getElementById("boot-status");
-
-    if (!bootScreen) {
+    if (!boot) {
         initializeSystem();
         return;
     }
+
+    const progressBar =
+        document.getElementById("boot-progress-bar");
+
+    const status =
+        document.getElementById("boot-status");
 
     const messages = [
         "Initializing system...",
@@ -67,1613 +332,3572 @@ function initializeBoot() {
     let progress = 0;
     let messageIndex = 0;
 
-    const bootInterval = setInterval(() => {
-
-        progress += Math.floor(Math.random() * 9) + 5;
-
-        if (progress > 100) {
-            progress = 100;
-        }
+    const timer = setInterval(() => {
+        progress = Math.min(
+            100,
+            progress + Math.floor(Math.random() * 8) + 7
+        );
 
         if (progressBar) {
             progressBar.style.width = `${progress}%`;
         }
 
-        if (bootStatus && messageIndex < messages.length) {
-            bootStatus.textContent = messages[messageIndex];
-            messageIndex++;
+        if (status) {
+            status.textContent =
+                messages[
+                    Math.min(
+                        messageIndex++,
+                        messages.length - 1
+                    )
+                ];
         }
 
         if (progress >= 100) {
-
-            clearInterval(bootInterval);
+            clearInterval(timer);
 
             setTimeout(() => {
-
-                bootScreen.style.opacity = "0";
-                bootScreen.style.transition = "opacity .6s ease";
+                boot.style.opacity = "0";
+                boot.style.transition = "opacity .45s ease";
 
                 setTimeout(() => {
-
-                    bootScreen.remove();
-
+                    boot.remove();
                     initializeSystem();
-
-                }, 650);
-
-            }, 500);
-
+                }, 500);
+            }, 300);
         }
-
-    }, 280);
-
+    }, 220);
 }
 
-
 /* =========================================================
-   SYSTEM INITIALIZATION
+   INICIALIZAÇÃO GERAL
 ========================================================= */
 
 function initializeSystem() {
-
     initializeClock();
-
-    initializeStartMenu();
-
     initializeWindows();
-
+    initializeStartMenu();
     initializeDesktopIcons();
-
     initializeProjectItems();
-
     initializeComputerItems();
-
+    initializeExplorer();
     initializeWindowDragging();
-
     initializeTaskbar();
-
+    initializeMediaPlayer();
     initializeGioBuddy();
 
+    applyWindowsIcons();
+    initializeTrayIcons();
+    updateTaskbarFromOpenWindows();
 }
-
 
 /* =========================================================
    CLOCK
 ========================================================= */
 
 function initializeClock() {
-
-    const clock = document.getElementById("clock");
+    const clock =
+        document.getElementById("clock");
 
     if (!clock) {
         return;
     }
 
-    function updateClock() {
-
+    const updateClock = () => {
         const now = new Date();
 
-        const hours = String(now.getHours()).padStart(2, "0");
-        const minutes = String(now.getMinutes()).padStart(2, "0");
-
-        clock.textContent = `${hours}:${minutes}`;
-
-    }
+        clock.textContent =
+            `${String(now.getHours()).padStart(2, "0")}:` +
+            `${String(now.getMinutes()).padStart(2, "0")}`;
+    };
 
     updateClock();
 
     setInterval(updateClock, 1000);
-
 }
 
-
 /* =========================================================
-   START MENU
+   ICON SYSTEM
 ========================================================= */
 
-function initializeStartMenu() {
+function iconUrl(file) {
+    return `${ICON_PATH}${file.split("/").map(encodeURIComponent).join("/")}`;
+}
 
-    const startButton = document.getElementById("start-button");
-    const startMenu = document.getElementById("start-menu");
+function makeIconImage(
+    file,
+    className = "os-icon-image"
+) {
+    const img =
+        document.createElement("img");
 
-    if (!startButton || !startMenu) {
+    img.className = className;
+    img.src = iconUrl(file);
+    img.alt = "";
+    img.draggable = false;
+    img.loading = "eager";
+
+    img.onerror = () => {
+        img.style.display = "none";
+    };
+
+    return img;
+}
+
+/* =========================================================
+   DESKTOP ICONS
+========================================================= */
+
+function applyDesktopIcons() {
+    const map = {
+        "computer-window": ICONS.computer,
+        "projects-window": ICONS.folder,
+        "about-window": ICONS.about,
+        "skills-window": ICONS.settings,
+        "internet-window": ICONS.internet,
+        "media-window": ICONS.media
+    };
+
+    document
+        .querySelectorAll(".desktop-icon")
+        .forEach(icon => {
+            const holder =
+                icon.querySelector(
+                    ".desktop-icon-image"
+                );
+
+            const file =
+                map[icon.dataset.window];
+
+            if (!holder || !file) {
+                return;
+            }
+
+            holder.innerHTML = "";
+
+            holder.appendChild(
+                makeIconImage(
+                    file,
+                    "desktop-real-icon"
+                )
+            );
+        });
+}
+
+/* =========================================================
+   WINDOW TITLE ICONS
+========================================================= */
+
+function applyWindowTitleIcons() {
+    const map = {
+        "computer-window": ICONS.computer,
+        "projects-window": ICONS.folder,
+        "about-window": ICONS.about,
+        "skills-window": ICONS.settings,
+        "internet-window": ICONS.internet,
+        "media-window": ICONS.media,
+
+        "api1-window": ICONS.document,
+        "api2-window": ICONS.programGroup,
+        "api3-window": ICONS.computer,
+        "estacao-window": ICONS.sound
+    };
+
+    document
+        .querySelectorAll(".os-window")
+        .forEach(win => {
+            const title =
+                win.querySelector(".window-title");
+
+            const file = map[win.id];
+
+            if (!title || !file) {
+                return;
+            }
+
+            title
+                .querySelector(".window-real-icon")
+                ?.remove();
+
+            title.prepend(
+                makeIconImage(
+                    file,
+                    "window-real-icon"
+                )
+            );
+        });
+}
+
+/* =========================================================
+   PROJECT ICONS
+========================================================= */
+
+function applyProjectIcons() {
+    const map = {
+        "API-1": ICONS.document,
+        "API-2": ICONS.programGroup,
+        "API-3": ICONS.computer,
+        "Estação-TI": ICONS.sound
+    };
+
+    document
+        .querySelectorAll(".project-item")
+        .forEach(item => {
+            const name =
+                item
+                    .querySelector(".project-name")
+                    ?.textContent
+                    .trim();
+
+            const holder =
+                item.querySelector(".project-icon");
+
+            const file = map[name];
+
+            if (!holder || !file) {
+                return;
+            }
+
+            holder.innerHTML = "";
+
+            holder.appendChild(
+                makeIconImage(
+                    file,
+                    "project-real-icon"
+                )
+            );
+        });
+}
+
+/* =========================================================
+   COMPUTER ICONS
+========================================================= */
+
+function applyComputerIcons() {
+    const map = {
+        "My Projects": ICONS.projects,
+        "Installed Skills": ICONS.skills,
+        "About Giovanna": ICONS.about,
+        "Local Disk (C:)": ICONS.hardDrive,
+        "Internet": ICONS.internet
+    };
+
+    document
+        .querySelectorAll(".computer-item")
+        .forEach(item => {
+            const name =
+                item
+                    .querySelector("span")
+                    ?.textContent
+                    .trim();
+
+            const holder =
+                item.querySelector("div");
+
+            const file = map[name];
+
+            if (!holder || !file) {
+                return;
+            }
+
+            holder.innerHTML = "";
+
+            holder.appendChild(
+                makeIconImage(
+                    file,
+                    "computer-real-icon"
+                )
+            );
+        });
+}
+
+/* =========================================================
+   SKILLS ICONS
+========================================================= */
+
+function applySkillIcons() {
+    const map = {
+        Java: ICONS.program,
+        "Spring Boot": ICONS.program,
+        "C Development Tools": ICONS.msdos,
+        JavaScript: ICONS.internetDoc,
+        "JavaScript Runtime": ICONS.internetDoc,
+        "Node.js Runtime": ICONS.program,
+        "Node.js": ICONS.program,
+        "Database Systems": ICONS.hardDrive,
+        "SQL Tools": ICONS.hardDrive,
+        "Web Development Pack": ICONS.internetDoc,
+        "Git & GitHub": ICONS.network,
+        Git: ICONS.network,
+        GitHub: ICONS.network,
+        Docker: ICONS.program,
+        Linux: ICONS.computer,
+        Postman: ICONS.internetDoc,
+        Figma: ICONS.image,
+        "Oracle Cloud": ICONS.network,
+        Maven: ICONS.program
+    };
+
+    document
+        .querySelectorAll(".skill-program")
+        .forEach(program => {
+            const title =
+                program
+                    .querySelector(
+                        ".skill-program-info strong"
+                    )
+                    ?.textContent
+                    .trim();
+
+            const holder =
+                program.querySelector(
+                    ".skill-program-icon"
+                );
+
+            if (!holder) {
+                return;
+            }
+
+            let file = map[title];
+
+            if (!file) {
+                const text =
+                    program.textContent.toLowerCase();
+
+                if (text.includes("java")) {
+                    file = ICONS.program;
+                } else if (
+                    text.includes("mysql") ||
+                    text.includes("sqlite") ||
+                    text.includes("oracle") ||
+                    text.includes("database") ||
+                    text.includes("sql")
+                ) {
+                    file = ICONS.hardDrive;
+                } else if (
+                    text.includes("git") ||
+                    text.includes("github")
+                ) {
+                    file = ICONS.network;
+                } else if (
+                    text.includes("html") ||
+                    text.includes("css") ||
+                    text.includes("javascript")
+                ) {
+                    file = ICONS.internetDoc;
+                } else {
+                    file = ICONS.program;
+                }
+            }
+
+            holder.innerHTML = "";
+
+            holder.appendChild(
+                makeIconImage(
+                    file,
+                    "skill-real-icon"
+                )
+            );
+        });
+}
+
+/* =========================================================
+   START ICON
+========================================================= */
+
+function applyStartIcon() {
+    const holder =
+        document.querySelector(".windows-logo");
+
+    if (!holder) {
         return;
     }
 
-    startButton.addEventListener("click", (event) => {
+    holder.innerHTML = "";
 
-        event.stopPropagation();
-
-        startMenu.classList.toggle("open");
-
-    });
-
-
-    document.addEventListener("click", (event) => {
-
-        if (
-            !startMenu.contains(event.target) &&
-            event.target !== startButton &&
-            !startButton.contains(event.target)
-        ) {
-
-            startMenu.classList.remove("open");
-
-        }
-
-    });
-
-
-    startMenu.querySelectorAll("[data-window]").forEach(button => {
-
-        button.addEventListener("click", () => {
-
-            const windowId = button.dataset.window;
-
-            openWindow(windowId);
-
-            startMenu.classList.remove("open");
-
-        });
-
-    });
-
+    holder.appendChild(
+        makeIconImage(
+            ICONS.desktop,
+            "start-icon-image"
+        )
+    );
 }
 
+/* =========================================================
+   TRAY ICONS
+========================================================= */
+
+function initializeTrayIcons() {
+    const tray =
+        document.getElementById(
+            "taskbar-tray"
+        );
+
+    if (!tray) {
+        return;
+    }
+
+    tray
+        .querySelectorAll(".tray-icon")
+        .forEach((holder, index) => {
+            const file =
+                index === 0
+                    ? ICONS.sound
+                    : ICONS.internet;
+
+            holder.innerHTML = "";
+
+            holder.appendChild(
+                makeIconImage(
+                    file,
+                    "tray-icon-image"
+                )
+            );
+        });
+}
+
+/* =========================================================
+   APLICAÇÃO DOS ÍCONES
+========================================================= */
+
+function applyWindowsIcons() {
+    applyDesktopIcons();
+    applyWindowTitleIcons();
+    applyProjectIcons();
+    applyComputerIcons();
+    applySkillIcons();
+    applyStartIcon();
+}
 
 /* =========================================================
    WINDOW SYSTEM
 ========================================================= */
 
 function initializeWindows() {
+    document
+        .querySelectorAll(".os-window")
+        .forEach(win => {
+            win.style.display = "none";
 
-    const windows = document.querySelectorAll(".os-window");
+            win.addEventListener(
+                "pointerdown",
+                () => bringToFront(win)
+            );
 
-    windows.forEach(windowElement => {
+            const close =
+                win.querySelector(".window-close");
 
-        const closeButton =
-            windowElement.querySelector(".window-close");
+            const minimize =
+                win.querySelector(".window-minimize");
 
-        const minimizeButton =
-            windowElement.querySelector(".window-minimize");
+            const maximize =
+                win.querySelector(".window-maximize");
 
-        const maximizeButton =
-            windowElement.querySelector(".window-maximize");
+            close?.addEventListener(
+                "click",
+                event => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    closeWindow(win.id);
+                }
+            );
 
+            minimize?.addEventListener(
+                "click",
+                event => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    minimizeWindow(win.id);
+                }
+            );
 
-        /* -----------------------------------------------------
-           CLOSE
-        ----------------------------------------------------- */
+            maximize?.addEventListener(
+                "click",
+                event => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    maximizeWindow(win.id);
+                }
+            );
+        });
+}
 
-        if (closeButton) {
+const FLEX_WINDOWS = [
+    "skills-window",
+    "media-window"
+];
 
-            closeButton.addEventListener("click", (event) => {
+function openWindow(id) {
+    const win =
+        document.getElementById(id);
 
-                event.stopPropagation();
+    if (!win) {
+        return;
+    }
 
-                closeWindow(windowElement.id);
+    win.style.display =
+        FLEX_WINDOWS.includes(id)
+            ? "flex"
+            : "block";
+    win.classList.add("active-window");
 
-            });
+    bringToFront(win);
+    updateTaskbarButton(id);
 
-        }
+    if (id === "media-window") {
+        initializeMediaPlayer();
+        updateMediaDisplay();
+    }
 
+    if (id === "computer-window") {
+        updateExplorerButtons();
+    }
+}
 
-        /* -----------------------------------------------------
-           MINIMIZE
-        ----------------------------------------------------- */
+function closeWindow(id) {
+    const win =
+        document.getElementById(id);
 
-        if (minimizeButton) {
+    if (!win) {
+        return;
+    }
 
-            minimizeButton.addEventListener("click", (event) => {
+    win.style.display = "none";
 
-                event.stopPropagation();
+    win.classList.remove(
+        "active-window",
+        "focused-window"
+    );
 
-                minimizeWindow(windowElement.id);
+    removeTaskbarButton(id);
 
-            });
+    if (id === "media-window") {
+        mediaPlaying = false;
+        stopMediaTimer();
+        updateMediaDisplay();
+    }
 
-        }
+    focusTopVisibleWindow();
+}
 
+function minimizeWindow(id) {
+    const win =
+        document.getElementById(id);
 
-        /* -----------------------------------------------------
-           MAXIMIZE
-        ----------------------------------------------------- */
+    if (!win) {
+        return;
+    }
 
-        if (maximizeButton) {
+    win.style.display = "none";
 
-            maximizeButton.addEventListener("click", (event) => {
+    win.classList.remove(
+        "active-window",
+        "focused-window"
+    );
 
-                event.stopPropagation();
+    updateTaskbarButton(id);
+    focusTopVisibleWindow();
+}
 
-                maximizeWindow(windowElement.id);
+function maximizeWindow(id) {
+    const win =
+        document.getElementById(id);
 
-            });
+    if (!win) {
+        return;
+    }
 
-        }
+    win.classList.toggle("maximized");
+    bringToFront(win);
+}
 
+function bringToFront(win) {
+    if (!win) {
+        return;
+    }
 
-        /* -----------------------------------------------------
-           BRING TO FRONT
-        ----------------------------------------------------- */
+    highestZIndex += 1;
 
-        windowElement.addEventListener("mousedown", () => {
+    win.style.zIndex =
+        highestZIndex;
 
-            bringToFront(windowElement);
-
+    document
+        .querySelectorAll(".os-window")
+        .forEach(other => {
+            other.classList.remove(
+                "focused-window"
+            );
         });
 
-    });
+    win.classList.add(
+        "focused-window"
+    );
 
+    document
+        .querySelectorAll(".taskbar-button")
+        .forEach(button => {
+            button.classList.toggle(
+                "active",
+                button.dataset.taskWindow === win.id
+            );
+        });
 }
 
+function focusTopVisibleWindow() {
+    const visibleWindows =
+        Array.from(
+            document.querySelectorAll(
+                ".os-window"
+            )
+        )
+        .filter(win =>
+            getComputedStyle(win).display !== "none"
+        )
+        .sort(
+            (a, b) =>
+                Number(a.style.zIndex || 0) -
+                Number(b.style.zIndex || 0)
+        );
 
-/* =========================================================
-   OPEN WINDOW
-========================================================= */
+    const top =
+        visibleWindows[
+            visibleWindows.length - 1
+        ];
 
-function openWindow(windowId) {
-
-    const windowElement = document.getElementById(windowId);
-
-    if (!windowElement) {
-        return;
+    if (top) {
+        bringToFront(top);
     }
-
-    windowElement.style.display = "block";
-
-    windowElement.classList.add("active-window");
-
-    bringToFront(windowElement);
-
-    updateTaskbarButton(windowId);
-
 }
 
-
 /* =========================================================
-   CLOSE WINDOW
+   DESKTOP / PROJECTS / COMPUTER
 ========================================================= */
 
-function closeWindow(windowId) {
+function bindDoubleOpen(selector) {
+    document
+        .querySelectorAll(selector)
+        .forEach(item => {
+            item.addEventListener(
+                "dblclick",
+                event => {
+                    event.preventDefault();
 
-    const windowElement = document.getElementById(windowId);
+                    const id =
+                        item.dataset.window;
 
-    if (!windowElement) {
-        return;
-    }
-
-    windowElement.style.display = "none";
-
-    windowElement.classList.remove("active-window");
-
-    removeTaskbarButton(windowId);
-
+                    if (id) {
+                        openWindow(id);
+                    }
+                }
+            );
+        });
 }
-
-
-/* =========================================================
-   MINIMIZE WINDOW
-========================================================= */
-
-function minimizeWindow(windowId) {
-
-    const windowElement = document.getElementById(windowId);
-
-    if (!windowElement) {
-        return;
-    }
-
-    windowElement.style.display = "none";
-
-    windowElement.classList.remove("active-window");
-
-    updateTaskbarButton(windowId);
-
-}
-
-
-/* =========================================================
-   MAXIMIZE WINDOW
-========================================================= */
-
-function maximizeWindow(windowId) {
-
-    const windowElement = document.getElementById(windowId);
-
-    if (!windowElement) {
-        return;
-    }
-
-    windowElement.classList.toggle("maximized");
-
-    bringToFront(windowElement);
-
-}
-
-
-/* =========================================================
-   BRING WINDOW TO FRONT
-========================================================= */
-
-function bringToFront(windowElement) {
-
-    highestZIndex++;
-
-    windowElement.style.zIndex = highestZIndex;
-
-    document.querySelectorAll(".os-window").forEach(windowItem => {
-
-        windowItem.classList.remove("focused-window");
-
-    });
-
-    windowElement.classList.add("focused-window");
-
-}
-
-
-/* =========================================================
-   DESKTOP ICONS
-========================================================= */
 
 function initializeDesktopIcons() {
-
-    const icons =
-        document.querySelectorAll(".desktop-icon");
-
-    icons.forEach(icon => {
-
-        icon.addEventListener("dblclick", () => {
-
-            const windowId = icon.dataset.window;
-
-            if (windowId) {
-
-                openWindow(windowId);
-
-            }
-
-        });
-
-    });
-
+    bindDoubleOpen(".desktop-icon");
 }
-
-
-/* =========================================================
-   PROJECT ITEMS
-========================================================= */
 
 function initializeProjectItems() {
-
-    const projects =
-        document.querySelectorAll(".project-item");
-
-    projects.forEach(project => {
-
-        project.addEventListener("dblclick", () => {
-
-            const windowId = project.dataset.window;
-
-            if (windowId) {
-
-                openWindow(windowId);
-
-            }
-
-        });
-
-    });
-
+    bindDoubleOpen(".project-item");
 }
-
-
-/* =========================================================
-   COMPUTER ITEMS
-========================================================= */
 
 function initializeComputerItems() {
-
-    const items =
-        document.querySelectorAll(".computer-item");
-
-    items.forEach(item => {
-
-        item.addEventListener("dblclick", () => {
-
-            const windowId = item.dataset.window;
-
-            if (windowId) {
-
-                openWindow(windowId);
-
-            }
-
-        });
-
-    });
-
+    bindDoubleOpen(".computer-item");
 }
 
+/* =========================================================
+   EXPLORER
+========================================================= */
+
+function initializeExplorer() {
+    const explorer =
+        document.getElementById(
+            "computer-window"
+        );
+
+    if (!explorer) {
+        return;
+    }
+
+    renderExplorer(
+        "computer",
+        false
+    );
+
+    explorer.addEventListener(
+        "click",
+        event => {
+            const actionButton =
+                event.target.closest(
+                    "[data-explorer-action]"
+                );
+
+            if (actionButton) {
+                event.preventDefault();
+
+                handleExplorerAction(
+                    actionButton.dataset
+                        .explorerAction
+                );
+
+                return;
+            }
+
+            const pathButton =
+                event.target.closest(
+                    "[data-explorer-path]"
+                );
+
+            if (pathButton) {
+                event.preventDefault();
+
+                navigateExplorer(
+                    pathButton.dataset
+                        .explorerPath
+                );
+
+                return;
+            }
+
+            const sidebarWindow =
+                event.target.closest(
+                    ".explorer-sidebar [data-window]"
+                );
+
+            if (sidebarWindow) {
+                event.preventDefault();
+
+                openWindow(
+                    sidebarWindow.dataset.window
+                );
+            }
+        }
+    );
+
+    document.addEventListener(
+        "keydown",
+        event => {
+            const explorerFocused =
+                document
+                    .getElementById(
+                        "computer-window"
+                    )
+                    ?.classList.contains(
+                        "focused-window"
+                    );
+
+            if (!explorerFocused) {
+                return;
+            }
+
+            if (
+                event.altKey &&
+                event.key === "ArrowLeft"
+            ) {
+                event.preventDefault();
+                handleExplorerAction("back");
+            }
+
+            if (
+                event.altKey &&
+                event.key === "ArrowRight"
+            ) {
+                event.preventDefault();
+                handleExplorerAction("forward");
+            }
+        }
+    );
+}
+
+function navigateExplorer(path) {
+    if (!explorerData[path]) {
+        return;
+    }
+
+    if (
+        explorerCurrentPath !== path
+    ) {
+        explorerHistory =
+            explorerHistory.slice(
+                0,
+                explorerHistoryIndex + 1
+            );
+
+        explorerHistory.push(path);
+        explorerHistoryIndex++;
+    }
+
+    explorerCurrentPath = path;
+
+    renderExplorer(
+        path,
+        true
+    );
+}
+
+function renderExplorer(
+    path,
+    focus = true
+) {
+    const data =
+        explorerData[path];
+
+    const container =
+        document.getElementById(
+            "explorer-items"
+        );
+
+    if (!data || !container) {
+        return;
+    }
+
+    explorerCurrentPath =
+        path;
+
+    container.innerHTML = "";
+
+    const title =
+        document.getElementById(
+            "explorer-heading-title"
+        );
+
+    const subtitle =
+        document.getElementById(
+            "explorer-heading-subtitle"
+        );
+
+    const address =
+        document.getElementById(
+            "explorer-address-text"
+        );
+
+    const detailsName =
+        document.getElementById(
+            "explorer-details-name"
+        );
+
+    const detailsDescription =
+        document.getElementById(
+            "explorer-details-description"
+        );
+
+    const count =
+        document.getElementById(
+            "explorer-status-count"
+        );
+
+    const statusPath =
+        document.getElementById(
+            "explorer-status-path"
+        );
+
+    if (title) {
+        title.textContent =
+            data.title;
+    }
+
+    if (subtitle) {
+        subtitle.textContent =
+            data.subtitle;
+    }
+
+    if (address) {
+        address.textContent =
+            data.address;
+    }
+
+    if (detailsName) {
+        detailsName.textContent =
+            data.title;
+    }
+
+    if (detailsDescription) {
+        detailsDescription.textContent =
+            data.details;
+    }
+
+    if (count) {
+        count.textContent =
+            `${data.items.length} objects`;
+    }
+
+    if (statusPath) {
+        statusPath.textContent =
+            data.address;
+    }
+
+    data.items.forEach(item => {
+        const element =
+            document.createElement("div");
+
+        element.className =
+            "explorer-item";
+
+        element.title =
+            item.description ||
+            item.name;
+
+        element.dataset.window =
+            item.window || "";
+
+        element.dataset.path =
+            item.path || "";
+
+        const icon =
+            document.createElement("div");
+
+        icon.className =
+            "explorer-item-icon";
+
+        icon.appendChild(
+            makeIconImage(
+                item.icon,
+                "explorer-icon-image"
+            )
+        );
+
+        const name =
+            document.createElement("div");
+
+        name.className =
+            "explorer-item-name";
+
+        name.textContent =
+            item.name;
+
+        const type =
+            document.createElement("div");
+
+        type.className =
+            "explorer-item-type";
+
+        type.textContent =
+            item.type;
+
+        element.append(
+            icon,
+            name,
+            type
+        );
+
+        element.addEventListener(
+            "click",
+            () => {
+                container
+                    .querySelectorAll(
+                        ".explorer-item.selected"
+                    )
+                    .forEach(selected => {
+                        selected.classList.remove(
+                            "selected"
+                        );
+                    });
+
+                element.classList.add(
+                    "selected"
+                );
+
+                updateExplorerDetails(
+                    item.name,
+                    item.description ||
+                    item.type
+                );
+            }
+        );
+
+        element.addEventListener(
+            "dblclick",
+            event => {
+                event.preventDefault();
+
+                if (item.path) {
+                    navigateExplorer(
+                        item.path
+                    );
+
+                    return;
+                }
+
+                if (item.window) {
+                    openWindow(
+                        item.window
+                    );
+
+                    buddySayExplorer(
+                        `${item.name} aberto.`
+                    );
+
+                    return;
+                }
+
+                showExplorerMessage(
+                    "Control Panel",
+                    "As configurações do sistema ainda estão sendo desenvolvidas."
+                );
+            }
+        );
+
+        container.appendChild(
+            element
+        );
+    });
+
+    updateExplorerButtons();
+
+    if (focus) {
+        const win =
+            document.getElementById(
+                "computer-window"
+            );
+
+        if (win) {
+            bringToFront(win);
+        }
+    }
+}
+
+function updateExplorerDetails(
+    name,
+    description
+) {
+    const nameElement =
+        document.getElementById(
+            "explorer-details-name"
+        );
+
+    const descriptionElement =
+        document.getElementById(
+            "explorer-details-description"
+        );
+
+    if (nameElement) {
+        nameElement.textContent =
+            name;
+    }
+
+    if (descriptionElement) {
+        descriptionElement.textContent =
+            description;
+    }
+}
+
+function updateExplorerButtons() {
+    const back =
+        document.querySelector(
+            '[data-explorer-action="back"]'
+        );
+
+    const forward =
+        document.querySelector(
+            '[data-explorer-action="forward"]'
+        );
+
+    const up =
+        document.querySelector(
+            '[data-explorer-action="up"]'
+        );
+
+    if (back) {
+        back.disabled =
+            explorerHistoryIndex <= 0;
+    }
+
+    if (forward) {
+        forward.disabled =
+            explorerHistoryIndex >=
+            explorerHistory.length - 1;
+    }
+
+    if (up) {
+        up.disabled =
+            explorerCurrentPath ===
+            "computer";
+    }
+}
+
+function handleExplorerAction(
+    action
+) {
+    if (
+        action === "back" &&
+        explorerHistoryIndex > 0
+    ) {
+        explorerHistoryIndex--;
+
+        explorerCurrentPath =
+            explorerHistory[
+                explorerHistoryIndex
+            ];
+
+        renderExplorer(
+            explorerCurrentPath
+        );
+
+        return;
+    }
+
+    if (
+        action === "forward" &&
+        explorerHistoryIndex <
+            explorerHistory.length - 1
+    ) {
+        explorerHistoryIndex++;
+
+        explorerCurrentPath =
+            explorerHistory[
+                explorerHistoryIndex
+            ];
+
+        renderExplorer(
+            explorerCurrentPath
+        );
+
+        return;
+    }
+
+    if (
+        action === "up" &&
+        explorerCurrentPath !==
+            "computer"
+    ) {
+        navigateExplorer(
+            "computer"
+        );
+
+        return;
+    }
+
+    if (action === "folders") {
+        const sidebar =
+            document.querySelector(
+                ".explorer-sidebar"
+            );
+
+        if (sidebar) {
+            sidebar.classList.toggle(
+                "explorer-sidebar-hidden"
+            );
+        }
+
+        return;
+    }
+
+    if (action === "search") {
+        showExplorerMessage(
+            "Search",
+            "Search is simulated for now.<br><br>Try opening My Projects or Installed Skills."
+        );
+
+        return;
+    }
+
+    if (action === "go") {
+        const data =
+            explorerData[
+                explorerCurrentPath
+            ];
+
+        if (data) {
+            showExplorerMessage(
+                "Go",
+                `Current location: ${data.address}`
+            );
+        }
+    }
+}
+
+function initializeComputerItems() {
+    bindDoubleOpen(".computer-item");
+}
+
+/* =========================================================
+   EXPLORER
+========================================================= */
+
+function initializeExplorer() {
+    const explorer =
+        document.getElementById(
+            "computer-window"
+        );
+
+    if (!explorer) {
+        return;
+    }
+
+    renderExplorer(
+        "computer",
+        false
+    );
+
+    explorer.addEventListener(
+        "click",
+        event => {
+            const actionButton =
+                event.target.closest(
+                    "[data-explorer-action]"
+                );
+
+            if (actionButton) {
+                event.preventDefault();
+
+                handleExplorerAction(
+                    actionButton.dataset
+                        .explorerAction
+                );
+
+                return;
+            }
+
+            const pathButton =
+                event.target.closest(
+                    "[data-explorer-path]"
+                );
+
+            if (pathButton) {
+                event.preventDefault();
+
+                navigateExplorer(
+                    pathButton.dataset
+                        .explorerPath
+                );
+
+                return;
+            }
+
+            const sidebarWindow =
+                event.target.closest(
+                    ".explorer-sidebar [data-window]"
+                );
+
+            if (sidebarWindow) {
+                event.preventDefault();
+
+                openWindow(
+                    sidebarWindow.dataset.window
+                );
+            }
+        }
+    );
+
+    document.addEventListener(
+        "keydown",
+        event => {
+            const explorerFocused =
+                document
+                    .getElementById(
+                        "computer-window"
+                    )
+                    ?.classList.contains(
+                        "focused-window"
+                    );
+
+            if (!explorerFocused) {
+                return;
+            }
+
+            if (
+                event.altKey &&
+                event.key === "ArrowLeft"
+            ) {
+                event.preventDefault();
+                handleExplorerAction("back");
+            }
+
+            if (
+                event.altKey &&
+                event.key === "ArrowRight"
+            ) {
+                event.preventDefault();
+                handleExplorerAction("forward");
+            }
+        }
+    );
+}
+
+function navigateExplorer(path) {
+    if (!explorerData[path]) {
+        return;
+    }
+
+    if (
+        explorerCurrentPath !== path
+    ) {
+        explorerHistory =
+            explorerHistory.slice(
+                0,
+                explorerHistoryIndex + 1
+            );
+
+        explorerHistory.push(path);
+        explorerHistoryIndex++;
+    }
+
+    explorerCurrentPath = path;
+
+    renderExplorer(
+        path,
+        true
+    );
+}
+
+function renderExplorer(
+    path,
+    focus = true
+) {
+    const data =
+        explorerData[path];
+
+    const container =
+        document.getElementById(
+            "explorer-items"
+        );
+
+    if (!data || !container) {
+        return;
+    }
+
+    explorerCurrentPath =
+        path;
+
+    container.innerHTML = "";
+
+    const title =
+        document.getElementById(
+            "explorer-heading-title"
+        );
+
+    const subtitle =
+        document.getElementById(
+            "explorer-heading-subtitle"
+        );
+
+    const address =
+        document.getElementById(
+            "explorer-address-text"
+        );
+
+    const detailsName =
+        document.getElementById(
+            "explorer-details-name"
+        );
+
+    const detailsDescription =
+        document.getElementById(
+            "explorer-details-description"
+        );
+
+    const count =
+        document.getElementById(
+            "explorer-status-count"
+        );
+
+    const statusPath =
+        document.getElementById(
+            "explorer-status-path"
+        );
+
+    if (title) {
+        title.textContent =
+            data.title;
+    }
+
+    if (subtitle) {
+        subtitle.textContent =
+            data.subtitle;
+    }
+
+    if (address) {
+        address.textContent =
+            data.address;
+    }
+
+    if (detailsName) {
+        detailsName.textContent =
+            data.title;
+    }
+
+    if (detailsDescription) {
+        detailsDescription.textContent =
+            data.details;
+    }
+
+    if (count) {
+        count.textContent =
+            `${data.items.length} objects`;
+    }
+
+    if (statusPath) {
+        statusPath.textContent =
+            data.address;
+    }
+
+    data.items.forEach(item => {
+        const element =
+            document.createElement("div");
+
+        element.className =
+            "explorer-item";
+
+        element.title =
+            item.description ||
+            item.name;
+
+        element.dataset.window =
+            item.window || "";
+
+        element.dataset.path =
+            item.path || "";
+
+        const icon =
+            document.createElement("div");
+
+        icon.className =
+            "explorer-item-icon";
+
+        icon.appendChild(
+            makeIconImage(
+                item.icon,
+                "explorer-icon-image"
+            )
+        );
+
+        const name =
+            document.createElement("div");
+
+        name.className =
+            "explorer-item-name";
+
+        name.textContent =
+            item.name;
+
+        const type =
+            document.createElement("div");
+
+        type.className =
+            "explorer-item-type";
+
+        type.textContent =
+            item.type;
+
+        element.append(
+            icon,
+            name,
+            type
+        );
+
+        element.addEventListener(
+            "click",
+            () => {
+                container
+                    .querySelectorAll(
+                        ".explorer-item.selected"
+                    )
+                    .forEach(selected => {
+                        selected.classList.remove(
+                            "selected"
+                        );
+                    });
+
+                element.classList.add(
+                    "selected"
+                );
+
+                updateExplorerDetails(
+                    item.name,
+                    item.description ||
+                    item.type
+                );
+            }
+        );
+
+        element.addEventListener(
+            "dblclick",
+            event => {
+                event.preventDefault();
+
+                if (item.path) {
+                    navigateExplorer(
+                        item.path
+                    );
+
+                    return;
+                }
+
+                if (item.window) {
+                    openWindow(
+                        item.window
+                    );
+
+                    buddySayExplorer(
+                        `${item.name} aberto.`
+                    );
+
+                    return;
+                }
+
+                showExplorerMessage(
+                    "Control Panel",
+                    "As configurações do sistema ainda estão sendo desenvolvidas."
+                );
+            }
+        );
+
+        container.appendChild(
+            element
+        );
+    });
+
+    updateExplorerButtons();
+
+    if (focus) {
+        const win =
+            document.getElementById(
+                "computer-window"
+            );
+
+        if (win) {
+            bringToFront(win);
+        }
+    }
+}
+
+function updateExplorerDetails(
+    name,
+    description
+) {
+    const nameElement =
+        document.getElementById(
+            "explorer-details-name"
+        );
+
+    const descriptionElement =
+        document.getElementById(
+            "explorer-details-description"
+        );
+
+    if (nameElement) {
+        nameElement.textContent =
+            name;
+    }
+
+    if (descriptionElement) {
+        descriptionElement.textContent =
+            description;
+    }
+}
+
+function updateExplorerButtons() {
+    const back =
+        document.querySelector(
+            '[data-explorer-action="back"]'
+        );
+
+    const forward =
+        document.querySelector(
+            '[data-explorer-action="forward"]'
+        );
+
+    const up =
+        document.querySelector(
+            '[data-explorer-action="up"]'
+        );
+
+    if (back) {
+        back.disabled =
+            explorerHistoryIndex <= 0;
+    }
+
+    if (forward) {
+        forward.disabled =
+            explorerHistoryIndex >=
+            explorerHistory.length - 1;
+    }
+
+    if (up) {
+        up.disabled =
+            explorerCurrentPath ===
+            "computer";
+    }
+}
+
+function handleExplorerAction(
+    action
+) {
+    if (
+        action === "back" &&
+        explorerHistoryIndex > 0
+    ) {
+        explorerHistoryIndex--;
+
+        explorerCurrentPath =
+            explorerHistory[
+                explorerHistoryIndex
+            ];
+
+        renderExplorer(
+            explorerCurrentPath
+        );
+
+        return;
+    }
+
+    if (
+        action === "forward" &&
+        explorerHistoryIndex <
+            explorerHistory.length - 1
+    ) {
+        explorerHistoryIndex++;
+
+        explorerCurrentPath =
+            explorerHistory[
+                explorerHistoryIndex
+            ];
+
+        renderExplorer(
+            explorerCurrentPath
+        );
+
+        return;
+    }
+
+    if (
+        action === "up" &&
+        explorerCurrentPath !==
+            "computer"
+    ) {
+        navigateExplorer(
+            "computer"
+        );
+
+        return;
+    }
+
+    if (action === "folders") {
+        const sidebar =
+            document.querySelector(
+                ".explorer-sidebar"
+            );
+
+        if (sidebar) {
+            sidebar.classList.toggle(
+                "explorer-sidebar-hidden"
+            );
+        }
+
+        return;
+    }
+
+    if (action === "search") {
+        showExplorerMessage(
+            "Search",
+            "Search is simulated for now.<br><br>Try opening My Projects or Installed Skills."
+        );
+
+        return;
+    }
+
+    if (action === "go") {
+        const data =
+            explorerData[
+                explorerCurrentPath
+            ];
+
+        if (data) {
+            showExplorerMessage(
+                "Go",
+                `Current location: ${data.address}`
+            );
+        }
+    }
+}
+
+function showExplorerMessage(
+    title,
+    message
+) {
+    document
+        .getElementById(
+            "explorer-message"
+        )
+        ?.remove();
+
+    const box =
+        document.createElement("div");
+
+    box.id =
+        "explorer-message";
+
+    box.className =
+        "gio-alert";
+
+    box.style.left =
+        `${Math.max(
+            20,
+            window.innerWidth / 2 - 165
+        )}px`;
+
+    box.style.top =
+        `${Math.max(
+            50,
+            window.innerHeight / 2 - 120
+        )}px`;
+
+    box.innerHTML = `
+        <div class="gio-alert-title">
+            ${title}
+        </div>
+
+        <div class="gio-alert-body">
+            <div class="gio-alert-icon">
+                <img src="img/icons/windows-xp/xp-help.ico" alt="" aria-hidden="true" width="32" height="32">
+            </div>
+
+            <div class="gio-alert-text">
+                ${message}
+            </div>
+        </div>
+
+        <div class="gio-alert-footer">
+            <button
+                type="button"
+                id="explorer-message-ok"
+            >
+                OK
+            </button>
+        </div>
+    `;
+
+    document
+        .getElementById("desktop")
+        ?.appendChild(box);
+
+    box
+        .querySelector(
+            "#explorer-message-ok"
+        )
+        ?.addEventListener(
+            "click",
+            () => box.remove()
+        );
+}
+
+function buddySayExplorer(
+    message
+) {
+    if (
+        document.getElementById(
+            "giobuddy"
+        )
+    ) {
+        buddySay(message);
+    }
+}
 
 /* =========================================================
    WINDOW DRAGGING
 ========================================================= */
 
 function initializeWindowDragging() {
-
-    const titlebars =
-        document.querySelectorAll(".window-titlebar");
-
-    titlebars.forEach(titlebar => {
-
-        titlebar.addEventListener("mousedown", (event) => {
-
-            const windowElement =
-                titlebar.closest(".os-window");
-
-            if (!windowElement) {
-                return;
-            }
-
-            if (
-                event.target.closest(".window-controls")
-            ) {
-                return;
-            }
-
-            if (
-                windowElement.classList.contains("maximized")
-            ) {
-                return;
-            }
-
-            draggedWindow = windowElement;
-
-            const rect =
-                windowElement.getBoundingClientRect();
-
-            dragOffsetX = event.clientX - rect.left;
-            dragOffsetY = event.clientY - rect.top;
-
-            bringToFront(windowElement);
-
-            document.body.style.userSelect = "none";
-
+    document
+        .querySelectorAll(
+            ".window-titlebar, .media-player-top"
+        )
+        .forEach(handle => {
+            handle.addEventListener(
+                "pointerdown",
+                startWindowDrag
+            );
         });
 
-    });
+    document.addEventListener(
+        "pointermove",
+        moveWindowDrag
+    );
 
+    document.addEventListener(
+        "pointerup",
+        endWindowDrag
+    );
 
-    document.addEventListener("mousemove", (event) => {
-
-        if (!draggedWindow) {
-            return;
-        }
-
-        let newX =
-            event.clientX - dragOffsetX;
-
-        let newY =
-            event.clientY - dragOffsetY;
-
-
-        const maxX =
-            window.innerWidth -
-            draggedWindow.offsetWidth;
-
-        const maxY =
-            window.innerHeight -
-            45;
-
-
-        newX = Math.max(0, Math.min(newX, maxX));
-
-        newY = Math.max(0, Math.min(newY, maxY));
-
-
-        draggedWindow.style.left = `${newX}px`;
-
-        draggedWindow.style.top = `${newY}px`;
-
-    });
-
-
-    document.addEventListener("mouseup", () => {
-
-        draggedWindow = null;
-
-        document.body.style.userSelect = "";
-
-    });
-
+    document.addEventListener(
+        "pointercancel",
+        endWindowDrag
+    );
 }
 
+function startWindowDrag(event) {
+    if (event.button !== 0) {
+        return;
+    }
+
+    if (
+        event.target.closest(
+            "button, input, select, textarea, a"
+        )
+    ) {
+        return;
+    }
+
+    const win =
+        event.currentTarget.closest(
+            ".os-window"
+        );
+
+    if (!win) {
+        return;
+    }
+
+    if (
+        win.classList.contains(
+            "maximized"
+        )
+    ) {
+        return;
+    }
+
+    const rect =
+        win.getBoundingClientRect();
+
+    draggedWindow = win;
+    windowDragPointerId =
+        event.pointerId;
+
+    dragOffsetX =
+        event.clientX - rect.left;
+
+    dragOffsetY =
+        event.clientY - rect.top;
+
+    bringToFront(win);
+
+    event.currentTarget
+        .setPointerCapture?.(
+            event.pointerId
+        );
+
+    event.preventDefault();
+
+    document.body.style.userSelect =
+        "none";
+}
+
+function moveWindowDrag(event) {
+    if (!draggedWindow) {
+        return;
+    }
+
+    if (
+        event.pointerId !==
+        windowDragPointerId
+    ) {
+        return;
+    }
+
+    const desktop =
+        document.getElementById(
+            "desktop"
+        );
+
+    if (!desktop) {
+        return;
+    }
+
+    const desktopRect =
+        desktop.getBoundingClientRect();
+
+    const maxX =
+        Math.max(
+            0,
+            desktop.clientWidth -
+            draggedWindow.offsetWidth
+        );
+
+    const maxY =
+        Math.max(
+            0,
+            desktop.clientHeight -
+            31 -
+            draggedWindow.offsetHeight
+        );
+
+    const x =
+        event.clientX -
+        desktopRect.left -
+        dragOffsetX;
+
+    const y =
+        event.clientY -
+        desktopRect.top -
+        dragOffsetY;
+
+    draggedWindow.style.left =
+        `${Math.max(
+            0,
+            Math.min(x, maxX)
+        )}px`;
+
+    draggedWindow.style.top =
+        `${Math.max(
+            0,
+            Math.min(y, maxY)
+        )}px`;
+}
+
+function endWindowDrag(event) {
+    if (!draggedWindow) {
+        return;
+    }
+
+    if (
+        event &&
+        windowDragPointerId !== null &&
+        event.pointerId !==
+            windowDragPointerId
+    ) {
+        return;
+    }
+
+    draggedWindow = null;
+    windowDragPointerId = null;
+
+    document.body.style.userSelect =
+        "";
+}
 
 /* =========================================================
    TASKBAR
 ========================================================= */
 
 function initializeTaskbar() {
+    const startButton =
+        document.getElementById(
+            "start-button"
+        );
 
-    const taskbar =
-        document.getElementById("taskbar-programs");
+    const startMenu =
+        document.getElementById(
+            "start-menu"
+        );
 
-    if (!taskbar) {
+    if (
+        !startButton ||
+        !startMenu
+    ) {
         return;
     }
 
+    startButton.addEventListener(
+        "click",
+        event => {
+            event.preventDefault();
+            event.stopPropagation();
+
+            startMenu.classList.toggle(
+                "open"
+            );
+        }
+    );
 }
 
-
-/* =========================================================
-   CREATE TASKBAR BUTTON
-========================================================= */
-
-function updateTaskbarButton(windowId) {
-
+function updateTaskbarButton(
+    id
+) {
     const taskbar =
-        document.getElementById("taskbar-programs");
+        document.getElementById(
+            "taskbar-programs"
+        );
 
-    const windowElement =
-        document.getElementById(windowId);
+    const win =
+        document.getElementById(id);
 
-    if (!taskbar || !windowElement) {
+    if (!taskbar || !win) {
         return;
     }
-
 
     let button =
         taskbar.querySelector(
-            `[data-task-window="${windowId}"]`
+            `[data-task-window="${id}"]`
         );
 
-
-    const titleElement =
-        windowElement.querySelector(".window-title");
-
-
-    let title =
-        titleElement
-            ? titleElement.textContent.trim()
-            : windowId;
-
-
     if (!button) {
+        button =
+            document.createElement(
+                "button"
+            );
 
-        button = document.createElement("button");
+        button.type = "button";
+        button.className =
+            "taskbar-button";
 
-        button.className = "taskbar-button";
+        button.dataset.taskWindow =
+            id;
 
-        button.dataset.taskWindow = windowId;
+        const img =
+            makeIconImage(
+                TASKBAR_ICONS[id] ||
+                ICONS.program,
+                "taskbar-icon-image"
+            );
 
-        button.textContent = title;
+        const title =
+            win
+                .querySelector(
+                    ".window-title, .media-player-brand"
+                )
+                ?.textContent
+                .trim() ||
+            id;
 
-        button.addEventListener("click", () => {
+        const cleanTitle =
+            title.replace(
+                /^[^\p{L}\p{N}]+/u,
+                ""
+            );
 
-            const currentWindow =
-                document.getElementById(windowId);
+        button.append(
+            img,
+            document.createTextNode(
+                ` ${cleanTitle}`
+            )
+        );
 
-            if (!currentWindow) {
-                return;
-            }
-
-
-            if (
-                currentWindow.style.display === "none"
-            ) {
-
-                openWindow(windowId);
-
-            } else {
-
-                const currentZ =
-                    Number(
-                        currentWindow.style.zIndex || 0
+        button.addEventListener(
+            "click",
+            () => {
+                const current =
+                    document.getElementById(
+                        id
                     );
 
-                if (currentZ >= highestZIndex) {
-
-                    minimizeWindow(windowId);
-
-                } else {
-
-                    bringToFront(currentWindow);
-
+                if (!current) {
+                    return;
                 }
 
+                const hidden =
+                    getComputedStyle(
+                        current
+                    ).display === "none";
+
+                const focused =
+                    current.classList.contains(
+                        "focused-window"
+                    );
+
+                if (hidden) {
+                    openWindow(id);
+                } else if (focused) {
+                    minimizeWindow(id);
+                } else {
+                    bringToFront(current);
+                }
             }
+        );
 
-        });
-
-        taskbar.appendChild(button);
-
+        taskbar.appendChild(
+            button
+        );
     }
 
-
     document
-        .querySelectorAll(".taskbar-button")
+        .querySelectorAll(
+            ".taskbar-button"
+        )
         .forEach(item => {
-
-            item.classList.remove("active");
-
+            item.classList.toggle(
+                "active",
+                item.dataset.taskWindow === id
+            );
         });
-
-
-    button.classList.add("active");
-
 }
 
+function removeTaskbarButton(
+    id
+) {
+    document
+        .querySelector(
+            `[data-task-window="${id}"]`
+        )
+        ?.remove();
+}
+
+function updateTaskbarFromOpenWindows() {
+    document
+        .querySelectorAll(
+            ".os-window"
+        )
+        .forEach(win => {
+            if (
+                getComputedStyle(win)
+                    .display !== "none"
+            ) {
+                updateTaskbarButton(
+                    win.id
+                );
+            }
+        });
+}
 
 /* =========================================================
-   REMOVE TASKBAR BUTTON
+   START MENU
 ========================================================= */
 
-function removeTaskbarButton(windowId) {
+function initializeStartMenu() {
+    const menu =
+        document.getElementById(
+            "start-menu"
+        );
 
-    const taskbar =
-        document.getElementById("taskbar-programs");
-
-    if (!taskbar) {
+    if (!menu) {
         return;
     }
 
-    const button =
-        taskbar.querySelector(
-            `[data-task-window="${windowId}"]`
-        );
+    menu
+        .querySelectorAll(
+            "[data-window]"
+        )
+        .forEach(button => {
+            button.addEventListener(
+                "click",
+                () => {
+                    openWindow(
+                        button.dataset.window
+                    );
 
-    if (button) {
-        button.remove();
-    }
+                    menu.classList.remove(
+                        "open"
+                    );
+                }
+            );
+        });
 
+    document.addEventListener(
+        "click",
+        event => {
+            const start =
+                document.getElementById(
+                    "start-button"
+                );
+
+            if (
+                start &&
+                !menu.contains(
+                    event.target
+                ) &&
+                !start.contains(
+                    event.target
+                )
+            ) {
+                menu.classList.remove(
+                    "open"
+                );
+            }
+        }
+    );
 }
 
+/* =========================================================
+   MEDIA PLAYER
+========================================================= */
+
+function initializeMediaPlayer() {
+    const player =
+        document.getElementById(
+            "media-window"
+        );
+
+    if (
+        !player ||
+        player.dataset.initialized ===
+            "true"
+    ) {
+        return;
+    }
+
+    player.dataset.initialized =
+        "true";
+
+    player
+        .querySelectorAll(
+            "[data-mp-action]"
+        )
+        .forEach(button => {
+            button.addEventListener(
+                "click",
+                () => {
+                    handleMediaAction(
+                        button.dataset
+                            .mpAction
+                    );
+                }
+            );
+        });
+
+    const track =
+        document.getElementById(
+            "mp-progress-track"
+        );
+
+    if (track) {
+        track.addEventListener(
+            "click",
+            event => {
+                const rect =
+                    track.getBoundingClientRect();
+
+                if (!rect.width) {
+                    return;
+                }
+
+                const ratio =
+                    Math.max(
+                        0,
+                        Math.min(
+                            1,
+                            (
+                                event.clientX -
+                                rect.left
+                            ) /
+                            rect.width
+                        )
+                    );
+
+                mediaSeconds =
+                    Math.round(
+                        mediaTracks[
+                            mediaIndex
+                        ].duration *
+                        ratio
+                    );
+
+                updateMediaDisplay();
+            }
+        );
+    }
+
+    const volume =
+        document.getElementById(
+            "mp-volume-control"
+        );
+
+    if (volume) {
+        volume.addEventListener(
+            "input",
+            () => {
+                const status =
+                    document.getElementById(
+                        "mp-status"
+                    );
+
+                if (status) {
+                    status.textContent =
+                        `VOLUME ${volume.value}%`;
+                }
+            }
+        );
+    }
+
+    updateMediaDisplay();
+}
+
+function handleMediaAction(
+    action
+) {
+    switch (action) {
+        case "play":
+            mediaPlaying =
+                !mediaPlaying;
+
+            if (mediaPlaying) {
+                startMediaTimer();
+            } else {
+                stopMediaTimer();
+            }
+
+            break;
+
+        case "stop":
+            mediaPlaying = false;
+            stopMediaTimer();
+            mediaSeconds = 0;
+            break;
+
+        case "previous":
+            mediaIndex =
+                (
+                    mediaIndex -
+                    1 +
+                    mediaTracks.length
+                ) %
+                mediaTracks.length;
+
+            mediaSeconds = 0;
+            break;
+
+        case "next":
+            mediaIndex =
+                (
+                    mediaIndex +
+                    1
+                ) %
+                mediaTracks.length;
+
+            mediaSeconds = 0;
+            break;
+
+        case "playlist":
+            showExplorerMessage(
+                "Playlist",
+                mediaTracks
+                    .map(
+                        (track, index) =>
+                            `${index + 1}. ${track.title} — ${track.artist}`
+                    )
+                    .join("<br>")
+            );
+            break;
+
+        case "equalizer":
+            showExplorerMessage(
+                "Equalizer",
+                "Equalizer visual is enabled.<br><br>" +
+                "Audio output is simulated in this portfolio version."
+            );
+            break;
+
+        case "minimize":
+            minimizeWindow(
+                "media-window"
+            );
+            break;
+
+        case "maximize":
+            maximizeWindow(
+                "media-window"
+            );
+            break;
+
+        case "close":
+            closeWindow(
+                "media-window"
+            );
+            break;
+    }
+
+    updateMediaDisplay();
+}
+
+function startMediaTimer() {
+    stopMediaTimer();
+
+    mediaTimer =
+        setInterval(() => {
+            mediaSeconds++;
+
+            if (
+                mediaSeconds >=
+                mediaTracks[
+                    mediaIndex
+                ].duration
+            ) {
+                mediaIndex =
+                    (
+                        mediaIndex +
+                        1
+                    ) %
+                    mediaTracks.length;
+
+                mediaSeconds = 0;
+            }
+
+            updateMediaDisplay();
+        }, 1000);
+}
+
+function stopMediaTimer() {
+    if (mediaTimer) {
+        clearInterval(mediaTimer);
+    }
+
+    mediaTimer = null;
+}
+
+function formatMediaTime(
+    seconds
+) {
+    return (
+        `${String(
+            Math.floor(
+                seconds / 60
+            )
+        ).padStart(2, "0")}:` +
+        `${String(
+            seconds % 60
+        ).padStart(2, "0")}`
+    );
+}
+
+function updateMediaDisplay() {
+    const track =
+        mediaTracks[mediaIndex];
+
+    if (!track) {
+        return;
+    }
+
+    const title =
+        document.getElementById(
+            "mp-track-title"
+        );
+
+    const artist =
+        document.getElementById(
+            "mp-track-subtitle"
+        );
+
+    const current =
+        document.getElementById(
+            "mp-current-time"
+        );
+
+    const total =
+        document.getElementById(
+            "mp-total-time"
+        );
+
+    const fill =
+        document.getElementById(
+            "mp-progress-fill"
+        );
+
+    const thumb =
+        document.getElementById(
+            "mp-progress-thumb"
+        );
+
+    const play =
+        document.getElementById(
+            "mp-play-button"
+        );
+
+    const status =
+        document.getElementById(
+            "mp-status"
+        );
+
+    if (title) {
+        title.textContent =
+            track.title;
+    }
+
+    if (artist) {
+        artist.textContent =
+            track.artist;
+    }
+
+    if (current) {
+        current.textContent =
+            formatMediaTime(
+                mediaSeconds
+            );
+    }
+
+    if (total) {
+        total.textContent =
+            formatMediaTime(
+                track.duration
+            );
+    }
+
+    const percent =
+        track.duration
+            ? (
+                mediaSeconds /
+                track.duration
+            ) * 100
+            : 0;
+
+    if (fill) {
+        fill.style.width =
+            `${percent}%`;
+    }
+
+    if (thumb) {
+        thumb.style.left =
+            `${percent}%`;
+    }
+
+    if (play) {
+        play.textContent =
+            mediaPlaying
+                ? "||"
+                : "▶";
+    }
+
+    if (status) {
+        status.textContent =
+            mediaPlaying
+                ? "PLAYING"
+                : "READY";
+    }
+
+    document
+        .querySelectorAll(
+            "#mp-visualizer span"
+        )
+        .forEach(bar => {
+            bar.style.animationPlayState =
+                mediaPlaying
+                    ? "running"
+                    : "paused";
+        });
+}
 
 /* =========================================================
    GIOBUDDY
 ========================================================= */
 
 function initializeGioBuddy() {
-
-    if (document.getElementById("giobuddy")) {
-        return;
-    }
-
     injectGioBuddyStyles();
-
     createGioBuddy();
 
     setTimeout(() => {
-
-        buddySay(
-            "Oi! Eu sou o GioBuddy.exe 👾"
-        );
-
-    }, 1800);
-
-
-    setTimeout(() => {
-
-        buddySay(
-            "Quer ver seus projetos? Eu sei onde eles estão."
-        );
-
-    }, 6500);
-
+        if (buddyEnabled) {
+            buddySay(
+                "Oi! Eu sou o GioBuddy.exe "
+            );
+        }
+    }, 1200);
 
     startBuddyRandomEvents();
-
+    startGioBuddyWandering();
 }
 
-
-/* =========================================================
-   GIOBUDDY STYLES
-========================================================= */
-
 function injectGioBuddyStyles() {
-
     if (document.getElementById("giobuddy-styles")) {
         return;
     }
 
-
-    const style =
-        document.createElement("style");
-
+    const style = document.createElement("style");
     style.id = "giobuddy-styles";
-
-
     style.textContent = `
-
         #giobuddy {
-
             position: absolute;
-
-            right: 55px;
-            bottom: 52px;
-
-            width: 95px;
-            height: 125px;
-
-            z-index: 9100;
-
+            right: 18px;
+            bottom: 42px;
+            width: 72px;
+            height: 72px;
+            z-index: 9500;
             cursor: grab;
-
             user-select: none;
-
-            filter:
-                drop-shadow(
-                    3px 5px 4px
-                    rgba(0,0,0,.45)
-                );
-
-            animation:
-                gioBuddyFloat 2.5s ease-in-out infinite;
-
-        }
-
-
-        #giobuddy.dragging {
-
-            cursor: grabbing;
-
-            animation: none;
-
-        }
-
-
-        .gio-body {
-
-            position: absolute;
-
-            left: 18px;
-            bottom: 8px;
-
-            width: 62px;
-            height: 75px;
-
-            border-radius:
-                45% 45% 38% 38%;
-
-            background:
-                linear-gradient(
-                    135deg,
-                    #9b6cff,
-                    #5130a8
-                );
-
-            border:
-                2px solid #27145f;
-
-            box-shadow:
-                inset 7px 5px 0
-                rgba(255,255,255,.18);
-
-        }
-
-
-        .gio-head {
-
-            position: absolute;
-
-            left: 8px;
-            top: -35px;
-
-            width: 78px;
-            height: 62px;
-
-            border-radius:
-                48% 48% 45% 45%;
-
-            background:
-                linear-gradient(
-                    135deg,
-                    #b58cff,
-                    #6340bb
-                );
-
-            border:
-                2px solid #27145f;
-
-            box-shadow:
-                inset 7px 5px 0
-                rgba(255,255,255,.2);
-
-        }
-
-
-        .gio-ear {
-
-            position: absolute;
-
-            width: 22px;
-            height: 34px;
-
-            top: 15px;
-
-            border-radius: 50%;
-
-            background:
-                linear-gradient(
-                    #8055dd,
-                    #3f267e
-                );
-
-            border:
-                2px solid #27145f;
-
-        }
-
-
-        .gio-ear.left {
-
-            left: -13px;
-
-            transform:
-                rotate(-25deg);
-
-        }
-
-
-        .gio-ear.right {
-
-            right: -13px;
-
-            transform:
-                rotate(25deg);
-
-        }
-
-
-        .gio-eye {
-
-            position: absolute;
-
-            top: 22px;
-
-            width: 13px;
-            height: 17px;
-
-            border-radius: 50%;
-
-            background: #fff;
-
-            border: 2px solid #27145f;
-
-        }
-
-
-        .gio-eye::after {
-
-            content: "";
-
-            position: absolute;
-
-            width: 5px;
-            height: 8px;
-
-            left: 3px;
-            top: 3px;
-
-            border-radius: 50%;
-
-            background: #111;
-
-        }
-
-
-        .gio-eye.left {
-
-            left: 19px;
-
-        }
-
-
-        .gio-eye.right {
-
-            right: 19px;
-
-        }
-
-
-        .gio-mouth {
-
-            position: absolute;
-
-            left: 29px;
-            top: 43px;
-
-            width: 20px;
-            height: 9px;
-
-            border-bottom:
-                2px solid #27145f;
-
-            border-radius: 50%;
-
-        }
-
-
-        .gio-antenna {
-
-            position: absolute;
-
-            width: 3px;
-            height: 23px;
-
-            left: 38px;
-            top: -22px;
-
-            background: #27145f;
-
-            transform:
-                rotate(10deg);
-
-        }
-
-
-        .gio-antenna::after {
-
-            content: "";
-
-            position: absolute;
-
-            width: 8px;
-            height: 8px;
-
-            left: -3px;
-            top: -5px;
-
-            border-radius: 50%;
-
-            background: #5ed0ff;
-
-            border: 2px solid #27145f;
-
-            box-shadow:
-                0 0 7px #5ed0ff;
-
-        }
-
-
-        .gio-tie {
-
-            position: absolute;
-
-            left: 43px;
-            bottom: 9px;
-
-            width: 15px;
-            height: 35px;
-
-            background:
-                linear-gradient(
-                    90deg,
-                    #3e73ff,
-                    #173fa8
-                );
-
-            clip-path:
-                polygon(
-                    0 0,
-                    100% 0,
-                    75% 60%,
-                    100% 100%,
-                    50% 82%,
-                    0 100%,
-                    25% 60%
-                );
-
-        }
-
-
-        .gio-foot {
-
-            position: absolute;
-
-            bottom: 0;
-
-            width: 32px;
-            height: 15px;
-
-            border-radius: 50%;
-
-            background: #3c227d;
-
-            border: 2px solid #27145f;
-
-        }
-
-
-        .gio-foot.left {
-
-            left: 12px;
-
-        }
-
-
-        .gio-foot.right {
-
-            right: 12px;
-
-        }
-
-
-        .gio-speech {
-
-            position: absolute;
-
-            right: 65px;
-            bottom: 95px;
-
-            width: 220px;
-
-            padding: 9px 11px;
-
-            color: #111;
-
-            background: #fff;
-
-            border: 1px solid #555;
-
-            border-radius: 4px;
-
-            box-shadow:
-                3px 3px 5px
-                rgba(0,0,0,.35);
-
-            font-family:
-                Tahoma,
-                Arial,
-                sans-serif;
-
-            font-size: 11px;
-
-            line-height: 1.35;
-
-        }
-
-
-        .gio-speech::after {
-
-            content: "";
-
-            position: absolute;
-
-            right: -9px;
-            bottom: 15px;
-
-            width: 0;
-            height: 0;
-
-            border-top: 7px solid transparent;
-            border-bottom: 7px solid transparent;
-
-            border-left:
-                10px solid #555;
-
-        }
-
-
-        .gio-speech::before {
-
-            content: "";
-
-            position: absolute;
-
-            right: -7px;
-            bottom: 15px;
-
-            width: 0;
-            height: 0;
-
-            border-top: 6px solid transparent;
-            border-bottom: 6px solid transparent;
-
-            border-left:
-                9px solid white;
-
-            z-index: 2;
-
-        }
-
-
-        .gio-alert {
-
-            position: fixed;
-
-            z-index: 9998;
-
-            width: 330px;
-
-            background: #ece9d8;
-
-            border: 1px solid #003399;
-
-            box-shadow:
-                4px 4px 12px
-                rgba(0,0,0,.5);
-
-            font-family: Tahoma, sans-serif;
-
-        }
-
-
-        .gio-alert-title {
-
-            height: 25px;
-
+            touch-action: none;
             display: flex;
             align-items: center;
-
-            padding: 0 6px;
-
-            color: white;
-
-            font-weight: bold;
-
-            background:
-                linear-gradient(
-                    #5d9ce6,
-                    #205eb6
-                );
-
+            justify-content: center;
+            filter: drop-shadow(2px 3px 3px rgba(0,0,0,.4));
+            animation: gioBuddyFloat 2.5s ease-in-out infinite;
         }
 
+        #giobuddy.dragging {
+            cursor: grabbing;
+            animation: none;
+        }
+
+        #gio-sprite {
+            display: block;
+            width: 64px;
+            height: 64px;
+            max-width: 64px;
+            max-height: 64px;
+            object-fit: contain;
+            object-position: center;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+            pointer-events: none;
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+
+        .gio-speech {
+            position: absolute;
+            right: 58px;
+            bottom: 48px;
+            width: 220px;
+            max-width: min(220px, 58vw);
+            padding: 7px 9px;
+            color: #111;
+            background: white;
+            border: 1px solid #555;
+            border-radius: 4px;
+            box-shadow: 3px 3px 5px rgba(0,0,0,.35);
+            font: 11px/1.35 Tahoma, Arial, sans-serif;
+            z-index: 2;
+        }
+
+        .gio-speech::after {
+            content: "";
+            position: absolute;
+            right: -9px;
+            bottom: 11px;
+            border-top: 7px solid transparent;
+            border-bottom: 7px solid transparent;
+            border-left: 10px solid #555;
+        }
+
+        .gio-speech::before {
+            content: "";
+            position: absolute;
+            right: -7px;
+            bottom: 11px;
+            border-top: 6px solid transparent;
+            border-bottom: 6px solid transparent;
+            border-left: 9px solid white;
+            z-index: 2;
+        }
+
+        .gio-alert {
+            position: fixed;
+            z-index: 9998;
+            width: 330px;
+            background: #ece9d8;
+            border: 1px solid #003399;
+            box-shadow: 4px 4px 12px rgba(0,0,0,.5);
+            font: 11px Tahoma, sans-serif;
+        }
+
+        .gio-alert-title {
+            height: 25px;
+            display: flex;
+            align-items: center;
+            padding: 0 6px;
+            color: white;
+            font-weight: bold;
+            background: linear-gradient(#5d9ce6, #205eb6);
+        }
 
         .gio-alert-body {
-
             display: flex;
-
             gap: 12px;
-
             padding: 15px;
-
-            background: #fff;
-
+            background: white;
         }
-
 
         .gio-alert-icon {
-
             font-size: 32px;
-
+            flex-shrink: 0;
         }
-
 
         .gio-alert-text {
-
             line-height: 1.45;
-
         }
-
 
         .gio-alert-footer {
-
             display: flex;
-
             justify-content: flex-end;
-
             gap: 6px;
-
             padding: 7px;
-
             background: #ece9d8;
-
             border-top: 1px solid #bbb;
-
         }
-
 
         .gio-alert-footer button {
-
             min-width: 70px;
-
             height: 24px;
-
             border: 1px solid #777;
-
-            background:
-                linear-gradient(
-                    #fff,
-                    #ddd
-                );
-
-            font-family: Tahoma, sans-serif;
-
+            background: linear-gradient(#fff, #ddd);
+            font: 11px Tahoma, sans-serif;
             cursor: pointer;
-
         }
 
+        .start-icon-image,
+        .taskbar-icon-image,
+        .tray-icon-image,
+        .os-icon-image,
+        .desktop-real-icon,
+        .window-real-icon,
+        .project-real-icon,
+        .computer-real-icon,
+        .skill-real-icon,
+        .explorer-icon-image {
+            object-fit: contain;
+        }
+
+        .start-icon-image { width: 18px; height: 18px; vertical-align: middle; }
+        .taskbar-icon-image { width: 16px; height: 16px; vertical-align: middle; }
+        .tray-icon-image { width: 14px; height: 14px; vertical-align: middle; }
+        .os-icon-image, .desktop-real-icon, .project-real-icon, .computer-real-icon, .explorer-icon-image { width: 48px; height: 48px; }
+        .window-real-icon { width: 16px; height: 16px; margin-right: 5px; vertical-align: middle; }
+        .skill-real-icon { width: 42px; height: 42px; }
+
+        .explorer-sidebar-hidden {
+            display: none !important;
+        }
 
         @keyframes gioBuddyFloat {
-
-            0% {
-                transform: translateY(0);
-            }
-
-            50% {
-                transform: translateY(-7px);
-            }
-
-            100% {
-                transform: translateY(0);
-            }
-
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
         }
-
 
         @keyframes gioBuddyShake {
-
-            0% {
-                transform: rotate(0deg);
-            }
-
-            25% {
-                transform: rotate(-5deg);
-            }
-
-            50% {
-                transform: rotate(5deg);
-            }
-
-            75% {
-                transform: rotate(-4deg);
-            }
-
-            100% {
-                transform: rotate(0deg);
-            }
-
+            0% { transform: rotate(0); }
+            25% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+            75% { transform: rotate(-4deg); }
+            100% { transform: rotate(0); }
         }
 
-    `;
+        @media (max-width: 700px) {
+            #giobuddy {
+                width: 60px;
+                height: 60px;
+                right: 10px;
+                bottom: 38px;
+            }
 
+            #gio-sprite {
+                width: 52px;
+                height: 52px;
+                max-width: 52px;
+                max-height: 52px;
+            }
+
+            .gio-speech {
+                right: 44px;
+                bottom: 40px;
+            }
+        }
+    `;
 
     document.head.appendChild(style);
-
 }
 
-
-/* =========================================================
-   CREATE GIOBUDDY
-========================================================= */
-
 function createGioBuddy() {
+    document.getElementById("giobuddy")?.remove();
 
-    const buddy =
-        document.createElement("div");
+    stopGioBuddyAnimation();
+    clearTimeout(gioBuddyBlinkTimer);
 
+    const desktop = document.getElementById("desktop");
+    if (!desktop) {
+        return;
+    }
+
+    const buddy = document.createElement("div");
     buddy.id = "giobuddy";
 
-
     buddy.innerHTML = `
+        <div class="gio-speech" id="gio-speech" style="display:none"></div>
 
-        <div class="gio-speech" id="gio-speech">
-            Inicializando GioBuddy...
-        </div>
-
-
-        <div class="gio-body">
-
-            <div class="gio-head">
-
-                <div class="gio-ear left"></div>
-                <div class="gio-ear right"></div>
-
-                <div class="gio-antenna"></div>
-
-                <div class="gio-eye left"></div>
-                <div class="gio-eye right"></div>
-
-                <div class="gio-mouth"></div>
-
-            </div>
-
-            <div class="gio-tie"></div>
-
-            <div class="gio-foot left"></div>
-            <div class="gio-foot right"></div>
-
-        </div>
-
+        <img
+            id="gio-sprite"
+            class="gio-sprite"
+            src="${GIOBUDDY_SPRITE_BASE}idle/idle-1.png"
+            alt="GioBuddy - bolinha amarela sorridente"
+            width="64"
+            height="64"
+            draggable="false"
+        />
     `;
 
+    desktop.appendChild(buddy);
 
-    document
-        .getElementById("desktop")
-        .appendChild(buddy);
+    const sprite = document.getElementById("gio-sprite");
 
+    if (sprite) {
+        sprite.onerror = () => {
+            sprite.onerror = null;
+            sprite.src = `${GIOBUDDY_SPRITE_BASE}idle/idle-1.png`;
+        };
+    }
 
-    buddy.addEventListener("click", (event) => {
+    buddy.addEventListener("pointerdown", startBuddyDrag);
 
+    buddy.addEventListener("click", event => {
         if (buddyDragging) {
             return;
         }
 
         event.stopPropagation();
-
+        playGioBuddyAnimation("happy");
         buddyRandomPhrase();
-
     });
 
+    buddy.addEventListener("dblclick", event => {
+        event.preventDefault();
+        event.stopPropagation();
+        playGioBuddyAnimation("happy", { loop: false });
+        showBuddyAlert();
+    });
 
-    buddy.addEventListener(
-        "mousedown",
-        startBuddyDrag
-    );
+    buddy.addEventListener("contextmenu", event => {
+        playGioBuddyAnimation("happy", { loop: false });
+    });
 
-
-    buddy.addEventListener(
-        "dblclick",
-        () => {
-
-            buddySay(
-                "Eu disse que você não precisava clicar duas vezes... 😐"
-            );
-
-            setTimeout(() => {
-
-                showBuddyAlert();
-
-            }, 900);
-
-        }
-    );
-
+    playGioBuddyAnimation("idle");
+    scheduleGioBuddyBlink();
 }
 
+function stopGioBuddyAnimation() {
+    clearTimeout(gioBuddyAnimationTimer);
+    gioBuddyAnimationTimer = null;
+    gioBuddyAnimationToken++;
+}
+
+function getGioBuddyFramePath(relativePath) {
+    return `${GIOBUDDY_SPRITE_BASE}${relativePath}`;
+}
+
+function setGioBuddyFrame(relativePath) {
+    const sprite = document.getElementById("gio-sprite");
+    if (!sprite || !relativePath) {
+        return;
+    }
+
+    const nextSrc = getGioBuddyFramePath(relativePath);
+
+    if (sprite.dataset.currentSrc === nextSrc) {
+        return;
+    }
+
+    const testImage = new Image();
+
+    testImage.onload = () => {
+        const currentSprite = document.getElementById("gio-sprite");
+        if (!currentSprite) {
+            return;
+        }
+
+        currentSprite.dataset.currentSrc = nextSrc;
+        currentSprite.src = nextSrc;
+    };
+
+    testImage.onerror = () => {
+        // Se algum frame faltar, simplesmente ignora esse frame.
+        // Isso evita o ícone quebrado do navegador.
+    };
+
+    testImage.src = nextSrc;
+}
+
+function playGioBuddyAnimation(animationName = "idle", options = {}) {
+    const animation = GIOBUDDY_SPRITES[animationName];
+    const frames = animation?.[gioBuddyFacing] || animation?.right;
+
+    if (!frames || !frames.length) {
+        return;
+    }
+
+    const speed = options.speed || GIOBUDDY_ANIMATION_SPEED[animationName] || 120;
+    const loop = options.loop !== undefined ? options.loop : animationName === "idle";
+    const token = ++gioBuddyAnimationToken;
+
+    clearTimeout(gioBuddyAnimationTimer);
+    gioBuddyAnimationTimer = null;
+    gioBuddyCurrentAnimation = animationName;
+
+    let frameIndex = 0;
+
+    const nextFrame = () => {
+        if (token !== gioBuddyAnimationToken) {
+            return;
+        }
+
+        setGioBuddyFrame(frames[frameIndex]);
+        frameIndex++;
+
+        if (frameIndex >= frames.length) {
+            if (!loop) {
+                gioBuddyAnimationTimer = null;
+                playGioBuddyAnimation("idle");
+                return;
+            }
+
+            frameIndex = 0;
+        }
+
+        gioBuddyAnimationTimer = setTimeout(nextFrame, speed);
+    };
+
+    nextFrame();
+}
+
+function scheduleGioBuddyBlink() {
+    clearTimeout(gioBuddyBlinkTimer);
+
+    gioBuddyBlinkTimer = setTimeout(() => {
+        if (buddyEnabled && !buddyDragging && gioBuddyCurrentAnimation === "idle") {
+            playGioBuddyAnimation("blink", {
+                loop: false,
+                speed: 85
+            });
+        }
+
+        scheduleGioBuddyBlink();
+    }, 3500 + Math.floor(Math.random() * 3500));
+}
 
 /* =========================================================
-   BUDDY SPEECH
+   GIOBUDDY MOVEMENT
 ========================================================= */
 
-function buddySay(message, duration = 4200) {
+function stopGioBuddyWandering() {
+    gioBuddyMoveToken++;
 
+    if (gioBuddyMoveAnimationId !== null) {
+        cancelAnimationFrame(gioBuddyMoveAnimationId);
+        gioBuddyMoveAnimationId = null;
+    }
+}
+
+function getGioBuddyPosition() {
+    const buddy = document.getElementById("giobuddy");
+    const desktop = document.getElementById("desktop");
+
+    if (!buddy || !desktop) {
+        return null;
+    }
+
+    const buddyRect = buddy.getBoundingClientRect();
+    const desktopRect = desktop.getBoundingClientRect();
+
+    return {
+        x: buddyRect.left - desktopRect.left,
+        y: buddyRect.top - desktopRect.top
+    };
+}
+
+function setGioBuddyPosition(x, y) {
+    const buddy = document.getElementById("giobuddy");
+    const desktop = document.getElementById("desktop");
+
+    if (!buddy || !desktop) {
+        return false;
+    }
+
+    const maxX = Math.max(
+        0,
+        desktop.clientWidth - buddy.offsetWidth
+    );
+
+    const maxY = Math.max(
+        0,
+        desktop.clientHeight - 31 - buddy.offsetHeight
+    );
+
+    const safeX = Math.max(0, Math.min(x, maxX));
+    const safeY = Math.max(0, Math.min(y, maxY));
+
+    buddy.style.left = `${safeX}px`;
+    buddy.style.top = `${safeY}px`;
+    buddy.style.right = "auto";
+    buddy.style.bottom = "auto";
+
+    return true;
+}
+
+function chooseGioBuddyWalkAnimation(dx, dy) {
+    // O GioBuddy se desloca pelo desktop, mas não usa frames de caminhada
+    // gerados por IA; assim evitamos sprites tortos ou quebrados.
+    return "idle";
+}
+
+function moveGioBuddyTo(targetX, targetY, duration = 2600, onComplete) {
+    const buddy = document.getElementById("giobuddy");
+    const desktop = document.getElementById("desktop");
+
+    if (
+        !buddy ||
+        !desktop ||
+        !buddyEnabled ||
+        buddyDragging ||
+        document.visibilityState !== "visible"
+    ) {
+        onComplete?.(false);
+        return;
+    }
+
+    stopGioBuddyWandering();
+
+    const start = getGioBuddyPosition();
+    if (!start) {
+        onComplete?.(false);
+        return;
+    }
+
+    const maxX = Math.max(
+        0,
+        desktop.clientWidth - buddy.offsetWidth
+    );
+
+    const maxY = Math.max(
+        0,
+        desktop.clientHeight - 31 - buddy.offsetHeight
+    );
+
+    const end = {
+        x: Math.max(8, Math.min(targetX, maxX - 8)),
+        y: Math.max(8, Math.min(targetY, maxY - 8))
+    };
+
+    const dx = end.x - start.x;
+    const dy = end.y - start.y;
+    const distance = Math.hypot(dx, dy);
+
+    if (distance < 18) {
+        setGioBuddyPosition(end.x, end.y);
+        onComplete?.(true);
+        return;
+    }
+
+    // As imagens .2.png são a versão virada para a esquerda.
+    if (Math.abs(dx) > 2) {
+        gioBuddyFacing = dx < 0 ? "left" : "right";
+    }
+    const animationName = chooseGioBuddyWalkAnimation(dx, dy);
+    const token = ++gioBuddyMoveToken;
+    const startedAt = performance.now();
+
+    playGioBuddyAnimation(animationName, {
+        loop: true,
+        speed: 105
+    });
+
+    const animate = timestamp => {
+        if (
+            token !== gioBuddyMoveToken ||
+            !buddyEnabled ||
+            buddyDragging ||
+            document.visibilityState !== "visible"
+        ) {
+            gioBuddyMoveAnimationId = null;
+            playGioBuddyAnimation("idle");
+            onComplete?.(false);
+            return;
+        }
+
+        const progress = Math.min(
+            1,
+            (timestamp - startedAt) / duration
+        );
+
+        const eased =
+            progress < 0.5
+                ? 2 * progress * progress
+                : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+
+        setGioBuddyPosition(
+            start.x + dx * eased,
+            start.y + dy * eased
+        );
+
+        if (progress < 1) {
+            gioBuddyMoveAnimationId = requestAnimationFrame(animate);
+            return;
+        }
+
+        gioBuddyMoveAnimationId = null;
+        playGioBuddyAnimation("idle");
+        onComplete?.(true);
+    };
+
+    gioBuddyMoveAnimationId = requestAnimationFrame(animate);
+}
+
+function moveGioBuddyRandomly(onComplete) {
+    const buddy = document.getElementById("giobuddy");
+    const desktop = document.getElementById("desktop");
+
+    if (!buddy || !desktop) {
+        onComplete?.(false);
+        return;
+    }
+
+    const current = getGioBuddyPosition();
+    if (!current) {
+        onComplete?.(false);
+        return;
+    }
+
+    const maxX = Math.max(
+        20,
+        desktop.clientWidth - buddy.offsetWidth - 20
+    );
+
+    const maxY = Math.max(
+        20,
+        desktop.clientHeight - 31 - buddy.offsetHeight - 20
+    );
+
+    const targetX = 20 + Math.random() * Math.max(1, maxX - 20);
+    const targetY = 20 + Math.random() * Math.max(1, maxY - 20);
+    const distance = Math.hypot(
+        targetX - current.x,
+        targetY - current.y
+    );
+
+    const duration = Math.max(
+        1400,
+        Math.min(4300, distance * 7)
+    );
+
+    moveGioBuddyTo(
+        targetX,
+        targetY,
+        duration,
+        onComplete
+    );
+}
+
+function startGioBuddyWandering() {
+    stopGioBuddyWandering();
+
+    const schedule = () => {
+        clearTimeout(window.gioBuddyWanderTimer);
+
+        window.gioBuddyWanderTimer = setTimeout(() => {
+            if (
+                buddyEnabled &&
+                !buddyDragging &&
+                document.visibilityState === "visible"
+            ) {
+                moveGioBuddyRandomly(() => {
+                    if (buddyEnabled && !buddyDragging) {
+                        const arrivalPhrases = [
+                            "Cheguei. Eu precisava dar uma voltinha.",
+                            "Pronto. Patrulha do desktop concluída.",
+                            "Essa área parecia suspeita. Resolvido.",
+                            "Andar pelo sistema é praticamente meu trabalho.",
+                            "Olá de novo! Eu estava ali agora há pouco."
+                        ];
+
+                        buddySay(
+                            arrivalPhrases[
+                                Math.floor(
+                                    Math.random() * arrivalPhrases.length
+                                )
+                            ],
+                            3600
+                        );
+                    }
+                });
+            }
+
+            schedule();
+        }, 6500 + Math.floor(Math.random() * 6500));
+    };
+
+    schedule();
+}
+
+/* =========================================================
+   GIOBUDDY SPEECH
+========================================================= */
+
+function buddySay(
+    message,
+    duration = 4200
+) {
     const speech =
-        document.getElementById("gio-speech");
+        document.getElementById(
+            "gio-speech"
+        );
 
     if (!speech) {
         return;
     }
 
-    speech.textContent = message;
+    speech.textContent =
+        String(message).replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu, "").replace(/\s{2,}/g, " ").trim();
 
-    speech.style.display = "block";
+    speech.style.display =
+        "block";
 
+    playGioBuddyAnimation("talk", {
+        loop: false,
+        speed: 115
+    });
 
-    clearTimeout(window.gioSpeechTimer);
-
+    clearTimeout(
+        window.gioSpeechTimer
+    );
 
     window.gioSpeechTimer =
         setTimeout(() => {
-
-            speech.style.display = "none";
-
+            speech.style.display =
+                "none";
         }, duration);
-
 }
 
-
-/* =========================================================
-   RANDOM PHRASES
-========================================================= */
-
 function buddyRandomPhrase() {
-
     const phrases = [
-
         "Você realmente clicou em mim. Interessante.",
-
         "Eu posso te mostrar os projetos. Confia.",
-
         "Você já olhou o SKILLS.EXE?",
-
         "Java carregado. Café não encontrado.",
-
-        "Banco de Dados detectado. 📊",
-
-        "Eu ouvi dizer que você gosta de tecnologia.",
-
+        "Banco de Dados detectado. ",
         "Seu portfolio está funcionando. Eu acho.",
-
         "Quer abrir o ABOUT.EXE?",
-
-        "Estou monitorando... brincadeira. 👀",
-
         "Sistema funcionando dentro dos parâmetros.",
-
-        "Tenho uma pergunta: por que você ainda está olhando para mim?",
-
-        "Você sabia que eu não estava aqui antes?",
-
-        "GioBuddy.exe está consumindo aproximadamente 0.0001% de sua atenção.",
-
         "ATENÇÃO: Giovanna está programando novamente.",
-
-        "Eu poderia fazer seu projeto por você. Mas aí não seria seu projeto."
-
+        "Eu poderia fazer seu projeto por você. Mas aí não seria seu projeto.",
+        "Oi! Só conferindo se você ainda está aí. ",
+        "Acabei de encontrar um caminho novo pelo desktop.",
+        "GioBuddy.exe: 100% amarelo e 0% silencioso.",
+        "Relatório do sistema: preciso de mais atenção.",
+        "Posso andar, falar e ainda não reclamar de bug. Quase perfeito.",
+        "Detectei código por perto. Minha missão continua.",
+        "Se você abrir o IPEMControl, eu prometo não julgar.",
+        "Estação-TI detectada. Isso parece importante.",
+        "GitHub aberto? Então estamos trabalhando de verdade.",
+        "Só uma pergunta: cadê o café? ",
+        "Eu estava quieto. Foi por aproximadamente três segundos.",
+        "Você sabia que eu consigo passear pelo desktop inteiro?",
+        "Status: feliz. Motivo: você clicou em mim.",
+        "Vou dar mais uma voltinha e já volto.",
+        "Nenhum erro crítico encontrado. Milagre.",
+        "Meu combustível é Java, SQL e curiosidade.",
+        "Se eu desaparecer, provavelmente estou explorando outra janela.",
+        "Estou de olho nesse portfolio. "
     ];
 
-
-    const random =
+    buddySay(
         phrases[
             Math.floor(
                 Math.random() * phrases.length
             )
-        ];
+        ],
+        3800
+    );
 
+    const buddy = document.getElementById("giobuddy");
+    if (!buddy) {
+        return;
+    }
 
-    buddySay(random);
+    buddy.style.animation = "gioBuddyShake .4s ease";
 
-
-    const buddy =
-        document.getElementById("giobuddy");
-
-    if (buddy) {
-
-        buddy.style.animation =
-            "gioBuddyShake .4s ease";
-
-        setTimeout(() => {
-
+    setTimeout(() => {
+        if (buddy && !buddyDragging) {
             buddy.style.animation =
                 "gioBuddyFloat 2.5s ease-in-out infinite";
-
-        }, 450);
-
-    }
-
+        }
+    }, 450);
 }
-
-
-/* =========================================================
-   RANDOM BUDDY EVENTS
-========================================================= */
 
 function startBuddyRandomEvents() {
-
     clearTimeout(buddyTimer);
 
+    const schedule = () => {
+        buddyTimer = setTimeout(() => {
+            if (
+                buddyEnabled &&
+                !buddyDragging &&
+                document.visibilityState === "visible"
+            ) {
+                const events = [
+                    () =>
+                        buddySay(
+                            "Psst... tem alguém aí? ",
+                            3600
+                        ),
 
-    function scheduleEvent() {
+                    () =>
+                        buddySay(
+                            "Só passando para lembrar que eu existo.",
+                            3600
+                        ),
 
-        const delay =
-            Math.floor(
-                Math.random() * 18000
-            ) + 18000;
+                    () =>
+                        buddySay(
+                            "SYSTEM STATUS: tudo estranhamente normal.",
+                            3600
+                        ),
 
+                    () =>
+                        buddySay(
+                            "Clique em mim. Eu sei que você quer.",
+                            3600
+                        ),
 
-        buddyTimer =
-            setTimeout(() => {
+                    () =>
+                        buddySay(
+                            "Estou patrulhando o desktop. Segurança primeiro.",
+                            3600
+                        ),
 
-                if (
-                    buddyEnabled &&
-                    document.visibilityState === "visible"
-                ) {
+                    () =>
+                        buddySay(
+                            "Você está programando ou só olhando? ",
+                            3600
+                        ),
 
-                    const eventNumber =
-                        Math.floor(
-                            Math.random() * 5
-                        );
+                    () =>
+                        playGioBuddyAnimation("happy", {
+                            loop: false,
+                            speed: 115
+                        }),
 
+                    () =>
+                        buddySay(
+                            "Animação especial: bolinha feliz! :)",
+                            3200
+                        ),
 
-                    switch (eventNumber) {
+                    () =>
+                        buddyRandomPhrase(),
 
-                        case 0:
-
+                    () =>
+                        moveGioBuddyRandomly(() => {
                             buddySay(
-                                "Psst... tem alguém aí? 👀"
+                                "Passeio concluído. Onde eu estava mesmo?",
+                                3600
                             );
+                        })
+                ];
 
-                            break;
+                events[
+                    Math.floor(
+                        Math.random() * events.length
+                    )
+                ]();
+            }
 
+            schedule();
+        }, 9000 + Math.floor(Math.random() * 7000));
+    };
 
-                        case 1:
-
-                            buddySay(
-                                "Só passando para lembrar que eu existo."
-                            );
-
-                            break;
-
-
-                        case 2:
-
-                            showBuddyAlert();
-
-                            break;
-
-
-                        case 3:
-
-                            buddySay(
-                                "SYSTEM STATUS: tudo estranhamente normal."
-                            );
-
-                            break;
-
-
-                        case 4:
-
-                            buddySay(
-                                "Clique em mim. Eu sei que você quer."
-                            );
-
-                            break;
-
-                    }
-
-                }
-
-
-                scheduleEvent();
-
-            }, delay);
-
-    }
-
-
-    scheduleEvent();
-
+    schedule();
 }
 
+/* =========================================================
+   GIOBUDDY DRAG
+========================================================= */
+
+function startBuddyDrag(event) {
+    if (
+        event.button !== 0 ||
+        !buddyEnabled
+    ) {
+        return;
+    }
+
+    const buddy =
+        document.getElementById(
+            "giobuddy"
+        );
+
+    const desktop =
+        document.getElementById(
+            "desktop"
+        );
+
+    if (!buddy || !desktop) {
+        return;
+    }
+
+    const buddyRect =
+        buddy.getBoundingClientRect();
+
+    const desktopRect =
+        desktop.getBoundingClientRect();
+
+    buddyDragging = false;
+
+    buddyDragState = {
+        pointerId:
+            event.pointerId,
+
+        desktopLeft:
+            desktopRect.left,
+
+        desktopTop:
+            desktopRect.top,
+
+        offsetX:
+            event.clientX -
+            buddyRect.left,
+
+        offsetY:
+            event.clientY -
+            buddyRect.top
+    };
+
+    buddy.setPointerCapture?.(
+        event.pointerId
+    );
+
+    buddy.classList.add(
+        "dragging"
+    );
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    const move =
+        eventMove => {
+            if (!buddyDragState) {
+                return;
+            }
+
+            if (
+                eventMove.pointerId !==
+                buddyDragState.pointerId
+            ) {
+                return;
+            }
+
+            const maxX =
+                Math.max(
+                    0,
+                    desktop.clientWidth -
+                    buddy.offsetWidth
+                );
+
+            const maxY =
+                Math.max(
+                    0,
+                    desktop.clientHeight -
+                    31 -
+                    buddy.offsetHeight
+                );
+
+            const x =
+                eventMove.clientX -
+                buddyDragState.desktopLeft -
+                buddyDragState.offsetX;
+
+            const y =
+                eventMove.clientY -
+                buddyDragState.desktopTop -
+                buddyDragState.offsetY;
+
+            buddy.style.left =
+                `${Math.max(
+                    0,
+                    Math.min(x, maxX)
+                )}px`;
+
+            buddy.style.top =
+                `${Math.max(
+                    0,
+                    Math.min(y, maxY)
+                )}px`;
+
+            buddy.style.right =
+                "auto";
+
+            buddy.style.bottom =
+                "auto";
+
+            buddyDragging = true;
+        };
+
+    const end =
+        eventEnd => {
+            if (
+                eventEnd &&
+                buddyDragState &&
+                eventEnd.pointerId !==
+                    buddyDragState.pointerId
+            ) {
+                return;
+            }
+
+            document.removeEventListener(
+                "pointermove",
+                move
+            );
+
+            document.removeEventListener(
+                "pointerup",
+                end
+            );
+
+            document.removeEventListener(
+                "pointercancel",
+                end
+            );
+
+            buddy.classList.remove(
+                "dragging"
+            );
+
+            buddyDragState = null;
+
+            setTimeout(() => {
+                buddyDragging = false;
+            }, 60);
+        };
+
+    document.addEventListener(
+        "pointermove",
+        move
+    );
+
+    document.addEventListener(
+        "pointerup",
+        end
+    );
+
+    document.addEventListener(
+        "pointercancel",
+        end
+    );
+}
 
 /* =========================================================
-   BUDDY ALERT
+   GIOBUDDY ALERT
 ========================================================= */
 
 function showBuddyAlert() {
-
     if (!buddyEnabled) {
         return;
     }
 
+    document
+        .getElementById(
+            "gio-buddy-alert"
+        )
+        ?.remove();
 
-    const alertBox =
+    const box =
         document.createElement("div");
 
-    alertBox.className =
+    box.id =
+        "gio-buddy-alert";
+
+    box.className =
         "gio-alert";
 
+    box.style.left =
+        `${Math.max(
+            20,
+            window.innerWidth / 2 - 165
+        )}px`;
 
-    const offset =
-        Math.floor(
-            Math.random() * 180
-        );
+    box.style.top =
+        `${Math.max(
+            50,
+            window.innerHeight / 2 - 130
+        )}px`;
 
-
-    alertBox.style.left =
-        `${Math.max(40, window.innerWidth / 2 - 165 + offset)}px`;
-
-
-    alertBox.style.top =
-        `${Math.max(70, window.innerHeight / 2 - 130 - offset / 2)}px`;
-
-
-    alertBox.innerHTML = `
-
+    box.innerHTML = `
         <div class="gio-alert-title">
             GioBuddy.exe
         </div>
 
-
         <div class="gio-alert-body">
-
             <div class="gio-alert-icon">
-                ⚠️
+                <img src="img/icons/windows-xp/xp-help.ico" alt="" aria-hidden="true" width="32" height="32">
             </div>
 
             <div class="gio-alert-text">
-
                 <strong>
                     SYSTEM WARNING
                 </strong>
 
                 <br><br>
 
-                GioBuddy detectou uma atividade suspeita:
+                GioBuddy detectou uma
+                atividade suspeita:
 
                 <br><br>
 
@@ -1687,225 +3911,106 @@ function showBuddyAlert() {
 
                 <br>
 
-                • mais projetos<br>
-                • mais código<br>
+                • mais projetos
+                <br>
+                • mais código
+                <br>
                 • menos horas de sono
-
             </div>
-
         </div>
 
-
         <div class="gio-alert-footer">
-
-            <button data-gio-action="projects">
+            <button
+                type="button"
+                data-gio="projects"
+            >
                 Ver projetos
             </button>
 
-            <button data-gio-action="close">
+            <button
+                type="button"
+                data-gio="close"
+            >
                 OK
             </button>
-
         </div>
-
     `;
 
-
     document
-        .getElementById("desktop")
-        .appendChild(alertBox);
+        .getElementById(
+            "desktop"
+        )
+        ?.appendChild(box);
 
+    box
+        .querySelector(
+            '[data-gio="projects"]'
+        )
+        ?.addEventListener(
+            "click",
+            () => {
+                box.remove();
 
-    const projectsButton =
-        alertBox.querySelector(
-            '[data-gio-action="projects"]'
+                openWindow(
+                    "projects-window"
+                );
+
+                buddySay(
+                    "Eu sabia que você queria ver os projetos."
+                );
+            }
         );
 
-
-    const closeButton =
-        alertBox.querySelector(
-            '[data-gio-action="close"]'
+    box
+        .querySelector(
+            '[data-gio="close"]'
+        )
+        ?.addEventListener(
+            "click",
+            () => {
+                box.remove();
+            }
         );
-
-
-    projectsButton.addEventListener(
-        "click",
-        () => {
-
-            alertBox.remove();
-
-            openWindow("projects-window");
-
-            buddySay(
-                "Eu sabia que você queria ver os projetos."
-            );
-
-        }
-    );
-
-
-    closeButton.addEventListener(
-        "click",
-        () => {
-
-            alertBox.remove();
-
-            buddySay(
-                "Você fechou o alerta. Corajoso."
-            );
-
-        }
-    );
-
 
     setTimeout(() => {
-
-        if (document.body.contains(alertBox)) {
-
-            alertBox.remove();
-
-        }
-
+        box.remove();
     }, 15000);
-
 }
 
+function disableGioBuddy() {
+    buddyEnabled = false;
 
-/* =========================================================
-   BUDDY DRAGGING
-========================================================= */
-
-function startBuddyDrag(event) {
-
-    if (event.button !== 0) {
-        return;
-    }
-
-
-    const buddy =
-        document.getElementById("giobuddy");
-
-    if (!buddy) {
-        return;
-    }
-
-
-    const rect =
-        buddy.getBoundingClientRect();
-
-
-    buddyDragging = false;
-
-    buddyOffsetX =
-        event.clientX - rect.left;
-
-    buddyOffsetY =
-        event.clientY - rect.top;
-
-
-    function moveBuddy(moveEvent) {
-
-        buddyDragging = true;
-
-        buddy.classList.add("dragging");
-
-
-        const desktop =
-            document.getElementById("desktop");
-
-
-        const desktopRect =
-            desktop.getBoundingClientRect();
-
-
-        let x =
-            moveEvent.clientX -
-            desktopRect.left -
-            buddyOffsetX;
-
-
-        let y =
-            moveEvent.clientY -
-            desktopRect.top -
-            buddyOffsetY;
-
-
-        const maxX =
-            desktop.clientWidth -
-            buddy.offsetWidth;
-
-
-        const maxY =
-            desktop.clientHeight -
-            35 -
-            buddy.offsetHeight;
-
-
-        x = Math.max(
-            0,
-            Math.min(x, maxX)
-        );
-
-
-        y = Math.max(
-            0,
-            Math.min(y, maxY)
-        );
-
-
-        buddy.style.left =
-            `${x}px`;
-
-        buddy.style.top =
-            `${y}px`;
-
-        buddy.style.right =
-            "auto";
-
-        buddy.style.bottom =
-            "auto";
-
-    }
-
-
-    function stopBuddy() {
-
-        document.removeEventListener(
-            "mousemove",
-            moveBuddy
-        );
-
-        document.removeEventListener(
-            "mouseup",
-            stopBuddy
-        );
-
-
-        buddy.classList.remove("dragging");
-
-
-        setTimeout(() => {
-
-            buddyDragging = false;
-
-        }, 50);
-
-    }
-
-
-    document.addEventListener(
-        "mousemove",
-        moveBuddy
+    clearTimeout(
+        buddyTimer
     );
 
+    stopGioBuddyWandering();
+    clearTimeout(window.gioBuddyWanderTimer);
 
-    document.addEventListener(
-        "mouseup",
-        stopBuddy
+    document
+        .getElementById(
+            "giobuddy"
+        )
+        ?.remove();
+
+    showExplorerMessage(
+        "GioBuddy.exe",
+        "GioBuddy foi desativado."
     );
-
 }
 
+function restoreGioBuddy() {
+    buddyEnabled = true;
+
+    createGioBuddy();
+
+    buddySay(
+        "EU VOLTEI. "
+    );
+
+    startBuddyRandomEvents();
+    startGioBuddyWandering();
+}
 
 /* =========================================================
    GIOBUDDY CONTEXT MENU
@@ -1913,471 +4018,316 @@ function startBuddyDrag(event) {
 
 document.addEventListener(
     "contextmenu",
-    (event) => {
-
+    event => {
         const buddy =
-            document.getElementById("giobuddy");
-
+            document.getElementById(
+                "giobuddy"
+            );
 
         if (
             !buddy ||
-            !buddy.contains(event.target)
+            !buddy.contains(
+                event.target
+            )
         ) {
             return;
         }
 
-
         event.preventDefault();
-
 
         showBuddyContextMenu(
             event.clientX,
             event.clientY
         );
-
     }
 );
 
-
-/* =========================================================
-   BUDDY CONTEXT MENU
-========================================================= */
-
-function showBuddyContextMenu(x, y) {
-
-    const oldMenu =
-        document.getElementById(
+function showBuddyContextMenu(
+    x,
+    y
+) {
+    document
+        .getElementById(
             "gio-context-menu"
-        );
-
-
-    if (oldMenu) {
-        oldMenu.remove();
-    }
-
+        )
+        ?.remove();
 
     const menu =
-        document.createElement("div");
-
+        document.createElement(
+            "div"
+        );
 
     menu.id =
         "gio-context-menu";
 
+    Object.assign(
+        menu.style,
+        {
+            position: "fixed",
 
-    menu.style.position = "fixed";
+            left:
+                `${Math.max(
+                    5,
+                    Math.min(
+                        x,
+                        window.innerWidth - 195
+                    )
+                )}px`,
 
-    menu.style.left =
-        `${Math.min(x, window.innerWidth - 190)}px`;
+            top:
+                `${Math.max(
+                    5,
+                    Math.min(
+                        y,
+                        window.innerHeight - 180
+                    )
+                )}px`,
 
-    menu.style.top =
-        `${Math.min(y, window.innerHeight - 150)}px`;
-
-    menu.style.width = "185px";
-
-    menu.style.zIndex = "99999";
-
-    menu.style.background = "#ece9d8";
-
-    menu.style.border =
-        "1px solid #555";
-
-    menu.style.boxShadow =
-        "3px 3px 8px rgba(0,0,0,.4)";
-
-    menu.style.font =
-        "11px Tahoma, sans-serif";
-
+            width: "190px",
+            zIndex: "99999",
+            background: "#ece9d8",
+            border: "1px solid #555",
+            boxShadow:
+                "3px 3px 8px rgba(0,0,0,.4)",
+            font:
+                "11px Tahoma, sans-serif"
+        }
+    );
 
     const items = [
-
-        {
-            label: "💬 What are you doing?",
-            action: () => {
-
-                buddySay(
-                    "Estou ajudando. Tecnicamente."
-                );
-
-            }
-        },
-
-        {
-            label: "🎲 Do a trick",
-            action: () => {
-
-                buddySay(
-                    "Olha só! Eu consigo ficar parado. Impressionante."
-                );
-
-                const buddy =
-                    document.getElementById(
-                        "giobuddy"
-                    );
-
-                if (buddy) {
-
-                    buddy.style.animation =
-                        "gioBuddyShake .5s ease";
-
-                    setTimeout(() => {
-
-                        buddy.style.animation =
-                            "gioBuddyFloat 2.5s ease-in-out infinite";
-
-                    }, 550);
-
-                }
-
-            }
-        },
-
-        {
-            label: "📁 Show Projects",
-            action: () => {
-
-                openWindow(
-                    "projects-window"
-                );
-
-                buddySay(
-                    "Projetos encontrados."
-                );
-
-            }
-        },
-
-        {
-            label: "⚠️ System Warning",
-            action: () => {
-
-                showBuddyAlert();
-
-            }
-        },
-
-        {
-            label: "❌ Disable GioBuddy",
-            action: () => {
-
-                disableGioBuddy();
-
-            }
-        }
-
+        ["windows-xp/xp-write.ico", "What are you doing?", () => buddySay("Estou ajudando. Tecnicamente.")],
+        ["windows-xp/xp-run.ico", "Do a trick", () => buddyRandomPhrase()],
+        ["windows-xp/xp-folder.ico", "Show Projects", () => {
+            openWindow("projects-window");
+            buddySay("Projetos encontrados.");
+        }],
+        ["windows-xp/xp-help.ico", "System Warning", () => showBuddyAlert()],
+        ["windows-xp/xp-shutdown.ico", "Disable GioBuddy", () => disableGioBuddy()]
     ];
 
+    items.forEach(
+        ([iconFile, label, action]) => {
+            const item = document.createElement("div");
+            const icon = document.createElement("img");
+            icon.src = `img/icons/${iconFile}`;
+            icon.alt = "";
+            icon.setAttribute("aria-hidden", "true");
+            icon.style.cssText = "width:16px;height:16px;object-fit:contain;vertical-align:middle;margin-right:7px;";
+            item.appendChild(icon);
+            item.appendChild(document.createTextNode(label));
 
-    items.forEach(item => {
+            item.style.padding =
+                "7px 9px";
 
-        const button =
-            document.createElement("div");
+            item.style.cursor =
+                "pointer";
 
+            item.addEventListener(
+                "mouseenter",
+                () => {
+                    item.style.background =
+                        "#316ac5";
 
-        button.textContent =
-            item.label;
+                    item.style.color =
+                        "white";
+                }
+            );
 
+            item.addEventListener(
+                "mouseleave",
+                () => {
+                    item.style.background =
+                        "";
 
-        button.style.padding =
-            "7px 9px";
+                    item.style.color =
+                        "";
+                }
+            );
 
+            item.addEventListener(
+                "click",
+                () => {
+                    action();
+                    menu.remove();
+                }
+            );
 
-        button.style.cursor =
-            "pointer";
+            menu.appendChild(item);
+        }
+    );
 
+    document
+        .getElementById(
+            "desktop"
+        )
+        ?.appendChild(menu);
 
-        button.addEventListener(
-            "mouseenter",
-            () => {
-
-                button.style.background =
-                    "#316ac5";
-
-                button.style.color =
-                    "white";
-
-            }
-        );
-
-
-        button.addEventListener(
-            "mouseleave",
-            () => {
-
-                button.style.background =
-                    "";
-
-                button.style.color =
-                    "";
-
-            }
-        );
-
-
-        button.addEventListener(
-            "click",
-            () => {
-
-                item.action();
-
+    const closeMenu =
+        event => {
+            if (
+                !menu.contains(
+                    event.target
+                )
+            ) {
                 menu.remove();
 
+                document.removeEventListener(
+                    "click",
+                    closeMenu
+                );
             }
-        );
-
-
-        menu.appendChild(button);
-
-    });
-
-
-    document
-        .getElementById("desktop")
-        .appendChild(menu);
-
+        };
 
     setTimeout(() => {
-
         document.addEventListener(
             "click",
-            function closeMenu(event) {
-
-                if (!menu.contains(event.target)) {
-
-                    menu.remove();
-
-                    document.removeEventListener(
-                        "click",
-                        closeMenu
-                    );
-
-                }
-
-            }
+            closeMenu
         );
-
-    }, 10);
-
+    }, 0);
 }
 
-
 /* =========================================================
-   DISABLE GIOBUDDY
-========================================================= */
-
-function disableGioBuddy() {
-
-    const buddy =
-        document.getElementById(
-            "giobuddy"
-        );
-
-
-    if (!buddy) {
-        return;
-    }
-
-
-    buddyEnabled = false;
-
-
-    clearTimeout(buddyTimer);
-
-
-    buddy.remove();
-
-
-    showBuddyDisabledAlert();
-
-}
-
-
-/* =========================================================
-   DISABLED MESSAGE
-========================================================= */
-
-function showBuddyDisabledAlert() {
-
-    const alertBox =
-        document.createElement("div");
-
-
-    alertBox.className =
-        "gio-alert";
-
-
-    alertBox.style.left =
-        `${window.innerWidth / 2 - 165}px`;
-
-
-    alertBox.style.top =
-        `${window.innerHeight / 2 - 100}px`;
-
-
-    alertBox.innerHTML = `
-
-        <div class="gio-alert-title">
-            GioBuddy.exe
-        </div>
-
-        <div class="gio-alert-body">
-
-            <div class="gio-alert-icon">
-                👾
-            </div>
-
-            <div class="gio-alert-text">
-
-                <strong>
-                    GioBuddy foi desativado.
-                </strong>
-
-                <br><br>
-
-                O sistema ficará em paz por enquanto.
-
-                <br><br>
-
-                Provavelmente.
-
-            </div>
-
-        </div>
-
-        <div class="gio-alert-footer">
-
-            <button id="gio-restore">
-                Ativar novamente
-            </button>
-
-            <button id="gio-close-disabled">
-                OK
-            </button>
-
-        </div>
-
-    `;
-
-
-    document
-        .getElementById("desktop")
-        .appendChild(alertBox);
-
-
-    document
-        .getElementById("gio-close-disabled")
-        .addEventListener(
-            "click",
-            () => {
-
-                alertBox.remove();
-
-            }
-        );
-
-
-    document
-        .getElementById("gio-restore")
-        .addEventListener(
-            "click",
-            () => {
-
-                alertBox.remove();
-
-                buddyEnabled = true;
-
-                createGioBuddy();
-
-                buddySay(
-                    "EU VOLTEI. 😈"
-                );
-
-                startBuddyRandomEvents();
-
-            }
-        );
-
-}
-
-
-/* =========================================================
-   KEYBOARD SHORTCUT
+   KEYBOARD
 ========================================================= */
 
 document.addEventListener(
     "keydown",
-    (event) => {
+    event => {
+        const tag =
+            document.activeElement
+                ?.tagName;
+
+        const typing =
+            tag === "INPUT" ||
+            tag === "TEXTAREA" ||
+            tag === "SELECT";
 
         /* G = GioBuddy */
-
         if (
+            !typing &&
             event.key.toLowerCase() === "g" &&
             !event.ctrlKey &&
             !event.altKey &&
             !event.metaKey
         ) {
-
-            const activeElement =
-                document.activeElement;
-
-
             if (
-                activeElement &&
-                (
-                    activeElement.tagName === "INPUT" ||
-                    activeElement.tagName === "TEXTAREA" ||
-                    activeElement.tagName === "SELECT"
-                )
-            ) {
-                return;
-            }
-
-
-            const buddy =
                 document.getElementById(
                     "giobuddy"
-                );
-
-
-            if (buddy) {
-
+                )
+            ) {
                 buddyRandomPhrase();
-
             } else {
-
-                buddyEnabled = true;
-
-                createGioBuddy();
-
-                buddySay(
-                    "Você me chamou?"
-                );
-
-                startBuddyRandomEvents();
-
+                restoreGioBuddy();
             }
-
         }
 
-
-        /* ESC = close start menu */
-
-        if (event.key === "Escape") {
-
-            const startMenu =
-                document.getElementById(
+        /* ESC = fechar menus */
+        if (
+            event.key === "Escape"
+        ) {
+            document
+                .getElementById(
                     "start-menu"
-                );
-
-
-            if (startMenu) {
-
-                startMenu.classList.remove(
+                )
+                ?.classList.remove(
                     "open"
                 );
 
-            }
+            document
+                .getElementById(
+                    "gio-context-menu"
+                )
+                ?.remove();
 
+            document
+                .getElementById(
+                    "gio-buddy-alert"
+                )
+                ?.remove();
+
+            document
+                .getElementById(
+                    "explorer-message"
+                )
+                ?.remove();
+        }
+    }
+);
+
+/* =========================================================
+   RESIZE SAFETY
+========================================================= */
+
+window.addEventListener(
+    "resize",
+    () => {
+        const desktop =
+            document.getElementById(
+                "desktop"
+            );
+
+        if (!desktop) {
+            return;
         }
 
+        document
+            .querySelectorAll(
+                ".os-window"
+            )
+            .forEach(win => {
+                if (
+                    getComputedStyle(win)
+                        .display === "none"
+                ) {
+                    return;
+                }
+
+                if (
+                    win.classList.contains(
+                        "maximized"
+                    )
+                ) {
+                    return;
+                }
+
+                const maxX =
+                    Math.max(
+                        0,
+                        desktop.clientWidth -
+                        win.offsetWidth
+                    );
+
+                const maxY =
+                    Math.max(
+                        0,
+                        desktop.clientHeight -
+                        31 -
+                        win.offsetHeight
+                    );
+
+                const x =
+                    Math.min(
+                        Math.max(
+                            0,
+                            win.offsetLeft
+                        ),
+                        maxX
+                    );
+
+                const y =
+                    Math.min(
+                        Math.max(
+                            0,
+                            win.offsetTop
+                        ),
+                        maxY
+                    );
+
+                win.style.left =
+                    `${x}px`;
+
+                win.style.top =
+                    `${y}px`;
+            });
     }
 );

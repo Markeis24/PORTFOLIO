@@ -1,7 +1,12 @@
 /* =========================================================
    GIOVANNA OS
-   Windows 2000 / XP inspired interface
-========================================================= */
+   Windows 2000 / Windows XP inspired interface
+   ========================================================= */
+
+
+/* =========================================================
+   RESET
+   ========================================================= */
 
 * {
     box-sizing: border-box;
@@ -9,26 +14,30 @@
 
 html,
 body {
-    margin: 0;
     width: 100%;
     height: 100%;
+    margin: 0;
     overflow: hidden;
+
     font-family: Tahoma, Verdana, Arial, sans-serif;
     font-size: 12px;
+
+    color: #111;
 }
 
 body {
     background: #245edb;
-    color: #111;
 }
+
 
 /* =========================================================
    BOOT SCREEN
-========================================================= */
+   ========================================================= */
 
 #boot-screen {
     position: fixed;
     inset: 0;
+
     z-index: 99999;
 
     display: flex;
@@ -36,37 +45,46 @@ body {
     justify-content: center;
 
     background:
-        radial-gradient(circle at center, #123b79 0%, #06152e 55%, #020711 100%);
+        radial-gradient(
+            circle at center,
+            #123b79 0%,
+            #06152e 55%,
+            #020711 100%
+        );
 
     color: white;
 }
 
 .boot-content {
-    width: 520px;
+    width: min(520px, 90vw);
 }
 
 .boot-logo {
+    margin-bottom: 4px;
+
     font-family: "Courier New", monospace;
     font-size: 38px;
     font-weight: bold;
     letter-spacing: 4px;
-    margin-bottom: 4px;
 }
 
 .boot-version {
+    margin-bottom: 42px;
+
     color: #80bfff;
     font-family: "Courier New", monospace;
-    margin-bottom: 42px;
 }
 
 .boot-line {
-    font-family: "Courier New", monospace;
     margin-bottom: 10px;
+
+    font-family: "Courier New", monospace;
 }
 
 .boot-progress {
     width: 100%;
     height: 18px;
+
     padding: 2px;
 
     border: 1px solid #6688aa;
@@ -94,22 +112,23 @@ body {
     font-family: "Courier New", monospace;
 }
 
+
 /* =========================================================
    DESKTOP
-========================================================= */
+   ========================================================= */
 
 #desktop {
     position: fixed;
     inset: 0;
 
+    overflow: hidden;
+
     background-image: url("img/bliss.jpg");
     background-size: cover;
     background-position: center;
-
-    overflow: hidden;
 }
 
-/* subtle CRT effect */
+/* CRT / scanlines */
 
 #desktop::after {
     content: "";
@@ -117,8 +136,9 @@ body {
     position: absolute;
     inset: 0;
 
-    pointer-events: none;
     z-index: 9000;
+
+    pointer-events: none;
 
     background:
         repeating-linear-gradient(
@@ -130,34 +150,43 @@ body {
         );
 }
 
+
 /* =========================================================
    DESKTOP ICONS
-========================================================= */
+   ========================================================= */
 
 .desktop-icons {
     position: absolute;
-    top: 18px;
-    left: 12px;
+    top: 16px;
+    left: 10px;
+
+    z-index: 20;
+
+    width: 96px;
 
     display: flex;
     flex-direction: column;
-    gap: 17px;
+    align-items: center;
 
-    width: 90px;
-
-    z-index: 20;
+    gap: 10px;
 }
 
 .desktop-icon {
-    width: 82px;
+    width: 92px;
+    min-height: 78px;
 
     padding: 4px 2px;
 
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
 
     color: white;
+    text-align: center;
 
     cursor: default;
+    user-select: none;
 
     text-shadow:
         1px 1px 2px #000,
@@ -165,47 +194,72 @@ body {
 }
 
 .desktop-icon:hover {
-    background: rgba(20, 70, 150, 0.45);
+    background: rgba(20, 70, 150, 0.42);
+
     outline: 1px dotted white;
 }
 
 .desktop-icon-image {
+    width: 52px;
+    height: 52px;
+
+    min-width: 52px;
+    min-height: 52px;
+
+    margin: 0 auto 3px;
+
     display: flex;
     align-items: center;
     justify-content: center;
 
-    width: 44px;
-    height: 44px;
-
-    margin: 0 auto 4px;
+    overflow: visible;
 
     font-size: 32px;
 
     filter:
-        drop-shadow(1px 2px 1px rgba(0, 0, 0, 0.7));
+        drop-shadow(
+            1px 2px 1px rgba(0, 0, 0, 0.7)
+        );
+}
+
+.desktop-icon-image img,
+.desktop-icon-image .os-icon-image {
+    display: block;
+
+    width: 48px !important;
+    height: 48px !important;
+
+    max-width: 48px;
+    max-height: 48px;
+
+    object-fit: contain;
 }
 
 .desktop-icon span {
     display: block;
 
+    width: 100%;
+
+    font-size: 11px;
     line-height: 14px;
 
-    word-break: break-word;
+    overflow-wrap: anywhere;
 }
+
 
 /* =========================================================
    GENERIC WINDOWS
-========================================================= */
+   ========================================================= */
 
 .os-window {
     position: absolute;
 
+    top: 100px;
+    left: 170px;
+
     width: 650px;
     min-width: 320px;
     min-height: 220px;
-
-    top: 100px;
-    left: 170px;
 
     display: none;
 
@@ -215,8 +269,10 @@ body {
 
     box-shadow:
         3px 3px 10px rgba(0, 0, 0, 0.45),
-        inset 1px 1px 0 white,
-        inset -1px -1px 0 #777;
+        inset 1px 1px 0 rgba(255, 255, 255, 0.95),
+        inset -1px -1px 0 rgba(80, 80, 80, 0.75);
+
+    overflow: hidden;
 
     z-index: 100;
 }
@@ -225,12 +281,15 @@ body {
     display: block;
 }
 
+
 /* =========================================================
    WINDOW TITLEBAR
-========================================================= */
+   ========================================================= */
 
 .window-titlebar {
+    width: 100%;
     height: 27px;
+    min-height: 27px;
 
     display: flex;
     align-items: center;
@@ -239,7 +298,6 @@ body {
     padding: 2px 3px 2px 7px;
 
     color: white;
-
     font-weight: bold;
 
     background:
@@ -252,11 +310,15 @@ body {
 
     border-bottom: 1px solid #00317e;
 
-    cursor: default;
+    cursor: move;
     user-select: none;
+
+    touch-action: none;
 }
 
 .window-title {
+    min-width: 0;
+
     overflow: hidden;
 
     white-space: nowrap;
@@ -266,6 +328,8 @@ body {
 }
 
 .window-controls {
+    flex-shrink: 0;
+
     display: flex;
     gap: 2px;
 }
@@ -274,9 +338,11 @@ body {
     width: 19px;
     height: 19px;
 
+    flex: 0 0 19px;
+
     padding: 0;
 
-    border: 1px solid #fff;
+    border: 1px solid white;
 
     background:
         linear-gradient(
@@ -289,7 +355,6 @@ body {
 
     font-family: Arial, sans-serif;
     font-weight: bold;
-
     line-height: 15px;
 
     box-shadow:
@@ -299,24 +364,34 @@ body {
     cursor: pointer;
 }
 
+.window-controls button:hover {
+    background:
+        linear-gradient(
+            135deg,
+            #ffffff,
+            #86b9ec
+        );
+}
+
 .window-controls button:active {
     box-shadow:
         inset 1px 1px #4775ad,
         inset -1px -1px white;
 }
 
+
 /* =========================================================
    MENUS
-========================================================= */
+   ========================================================= */
 
 .window-menu {
     height: 24px;
+    min-height: 24px;
 
     display: flex;
     align-items: center;
 
     padding-left: 7px;
-
     gap: 18px;
 
     background: #ece9d8;
@@ -325,6 +400,8 @@ body {
 }
 
 .window-menu span {
+    padding: 2px 4px;
+
     cursor: default;
 }
 
@@ -333,22 +410,23 @@ body {
 }
 
 .window-menu span:hover {
-    background: #316ac5;
     color: white;
+    background: #316ac5;
 }
+
 
 /* =========================================================
    TOOLBAR
-========================================================= */
+   ========================================================= */
 
 .window-toolbar {
     height: 40px;
+    min-height: 40px;
 
     display: flex;
     align-items: center;
 
     gap: 4px;
-
     padding: 5px;
 
     background: #ece9d8;
@@ -360,11 +438,15 @@ body {
     width: 28px;
     height: 27px;
 
+    flex: 0 0 28px;
+
+    padding: 0;
+
     border: 1px solid #999;
 
     background:
         linear-gradient(
-            #fff,
+            #ffffff,
             #d6d6d6
         );
 
@@ -373,6 +455,14 @@ body {
         inset -1px -1px #888;
 
     cursor: pointer;
+}
+
+.window-toolbar button:hover {
+    background:
+        linear-gradient(
+            #ffffff,
+            #e5eef9
+        );
 }
 
 .window-toolbar button:active {
@@ -384,7 +474,8 @@ body {
 .toolbar-address {
     height: 26px;
 
-    flex: 1;
+    flex: 1 1 auto;
+    min-width: 0;
 
     display: flex;
     align-items: center;
@@ -399,20 +490,22 @@ body {
         inset 1px 1px #aaa;
 }
 
+
 /* =========================================================
-   WINDOW CONTENT
-========================================================= */
+   GENERIC WINDOW CONTENT
+   ========================================================= */
 
 .window-content {
     padding: 14px;
 
-    background: #fff;
+    background: white;
 
     overflow: auto;
 }
 
 .window-statusbar {
     height: 22px;
+    min-height: 22px;
 
     display: flex;
     align-items: center;
@@ -426,9 +519,10 @@ body {
     color: #333;
 }
 
+
 /* =========================================================
-   COMPUTER
-========================================================= */
+   MY COMPUTER
+   ========================================================= */
 
 .computer-content {
     min-height: 380px;
@@ -443,13 +537,15 @@ body {
 }
 
 .computer-section h3 {
-    font-size: 12px;
     margin-bottom: 10px;
+
+    font-size: 12px;
 }
 
 .computer-grid {
     display: flex;
     flex-wrap: wrap;
+
     gap: 20px;
 }
 
@@ -465,21 +561,688 @@ body {
 
 .computer-item:hover {
     background: #dcecff;
+
     outline: 1px dotted #316ac5;
 }
 
 .computer-item div {
-    font-size: 36px;
     margin-bottom: 7px;
+
+    font-size: 36px;
 }
 
 .computer-item span {
     display: block;
 }
 
+
+/* =========================================================
+   EXPLORER / MY COMPUTER
+   ========================================================= */
+
+.explorer-window {
+    position: absolute;
+
+    top: 70px;
+    left: 150px;
+
+    width: 900px;
+    height: 610px;
+
+    min-width: 650px;
+    min-height: 420px;
+
+    max-width: calc(100vw - 30px);
+    max-height: calc(100vh - 45px);
+
+    display: none;
+    flex-direction: column;
+
+    background: #ece9d8;
+
+    overflow: hidden;
+}
+
+.explorer-window.active-window {
+    display: flex;
+}
+
+
+/* =========================================================
+   EXPLORER TITLE
+   ========================================================= */
+
+.explorer-window .window-titlebar {
+    flex: 0 0 27px;
+}
+
+
+/* =========================================================
+   EXPLORER MENU
+   ========================================================= */
+
+.explorer-menu {
+    flex: 0 0 23px;
+
+    height: 23px;
+    min-height: 23px;
+
+    display: flex;
+    align-items: center;
+
+    padding: 0 7px;
+
+    gap: 18px;
+
+    background: #ece9d8;
+
+    border-bottom: 1px solid #aaa;
+
+    font-size: 11px;
+}
+
+.explorer-menu span {
+    padding: 2px 4px;
+}
+
+.explorer-menu span:hover {
+    color: white;
+    background: #316ac5;
+}
+
+
+/* =========================================================
+   EXPLORER TOOLBAR
+   ========================================================= */
+
+.explorer-toolbar {
+    flex: 0 0 43px;
+
+    width: 100%;
+    height: 43px;
+    min-height: 43px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 4px;
+
+    padding: 5px 7px;
+
+    background:
+        linear-gradient(
+            #f4f4f4,
+            #d8d8d8
+        );
+
+    border-bottom: 1px solid #999;
+
+    overflow: hidden;
+}
+
+.explorer-toolbar button {
+    width: 30px;
+    height: 28px;
+
+    flex: 0 0 30px;
+
+    padding: 0;
+
+    border: 1px solid #888;
+
+    background:
+        linear-gradient(
+            #ffffff,
+            #d6d6d6
+        );
+
+    box-shadow:
+        inset 1px 1px white,
+        inset -1px -1px #888;
+
+    color: #111;
+
+    font:
+        12px Tahoma,
+        Arial,
+        sans-serif;
+
+    cursor: pointer;
+}
+
+.explorer-toolbar button:hover {
+    background:
+        linear-gradient(
+            #ffffff,
+            #e7eef7
+        );
+}
+
+.explorer-toolbar button:active {
+    box-shadow:
+        inset 1px 1px #777,
+        inset -1px -1px white;
+}
+
+.explorer-toolbar button:disabled {
+    opacity: 0.45;
+    cursor: default;
+}
+
+.explorer-separator {
+    width: 1px;
+    height: 27px;
+
+    flex: 0 0 1px;
+
+    margin: 0 3px;
+
+    background: #999;
+}
+
+
+/* =========================================================
+   EXPLORER ADDRESS BAR
+   ========================================================= */
+
+.explorer-address {
+    flex: 1 1 auto;
+    min-width: 0;
+
+    height: 27px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 5px;
+
+    padding: 0 7px;
+
+    background: white;
+
+    border: 1px solid #888;
+
+    box-shadow:
+        inset 1px 1px 2px rgba(0, 0, 0, 0.15);
+
+    overflow: hidden;
+
+    white-space: nowrap;
+
+    font:
+        11px Tahoma,
+        Verdana,
+        sans-serif;
+}
+
+.address-computer {
+    flex: 0 0 auto;
+
+    font-size: 14px;
+}
+
+#explorer-address-text {
+    min-width: 0;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+.explorer-go {
+    width: 32px !important;
+    flex: 0 0 32px !important;
+
+    font-size: 11px !important;
+}
+
+
+/* =========================================================
+   EXPLORER BODY
+   ========================================================= */
+
+.explorer-body {
+    flex: 1 1 auto;
+
+    width: 100%;
+
+    min-width: 0;
+    min-height: 0;
+
+    display: flex;
+
+    background: white;
+
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   EXPLORER SIDEBAR
+   ========================================================= */
+
+.explorer-sidebar {
+    width: 195px;
+    min-width: 195px;
+
+    flex: 0 0 195px;
+
+    height: 100%;
+    min-height: 0;
+
+    padding: 8px 7px;
+
+    background:
+        linear-gradient(
+            to bottom,
+            #dcecff 0%,
+            #edf5ff 48%,
+            #d9e9fa 100%
+        );
+
+    border-right: 1px solid #9aafc7;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.explorer-side-title {
+    width: 100%;
+    min-height: 24px;
+
+    margin-bottom: 5px;
+    padding: 5px 7px;
+
+    color: #154e91;
+
+    font-size: 11px;
+    font-weight: bold;
+
+    background:
+        linear-gradient(
+            #ffffff,
+            #d4e5f8
+        );
+
+    border: 1px solid #aac1da;
+    border-bottom-color: #8da8c4;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.explorer-side-title-second {
+    margin-top: 13px;
+}
+
+.explorer-sidebar button {
+    width: 100%;
+    min-height: 25px;
+
+    display: block;
+
+    padding: 5px 6px;
+
+    border: 0;
+
+    background: transparent;
+
+    color: #124f9d;
+
+    text-align: left;
+
+    font:
+        11px Tahoma,
+        Verdana,
+        sans-serif;
+
+    cursor: pointer;
+}
+
+.explorer-sidebar button:hover {
+    color: #063b86;
+
+    text-decoration: underline;
+
+    background: rgba(49, 106, 197, 0.14);
+}
+
+.explorer-side-link {
+    color: #333 !important;
+}
+
+.explorer-details {
+    display: flex;
+    flex-direction: column;
+
+    gap: 4px;
+
+    padding: 7px;
+
+    color: #444;
+
+    font-size: 10px;
+    line-height: 13px;
+}
+
+.explorer-details strong {
+    color: #164f98;
+
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   EXPLORER MAIN
+   ========================================================= */
+
+.explorer-main {
+    flex: 1 1 auto;
+
+    width: 0;
+
+    min-width: 0;
+    min-height: 0;
+
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    background: white;
+
+    overflow: hidden;
+}
+
+
+/* =========================================================
+   EXPLORER HEADING
+   ========================================================= */
+
+.explorer-heading {
+    flex: 0 0 68px;
+
+    width: 100%;
+    min-height: 68px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 12px;
+
+    padding: 9px 14px;
+
+    background:
+        linear-gradient(
+            to bottom,
+            #ffffff,
+            #f0f5fa
+        );
+
+    border-bottom: 1px solid #c8c8c8;
+}
+
+.explorer-heading h2 {
+    margin: 0 0 3px;
+
+    color: #174f9c;
+
+    font-size: 18px;
+    line-height: 21px;
+}
+
+.explorer-heading p {
+    margin: 0;
+
+    color: #666;
+
+    font-size: 10px;
+    line-height: 14px;
+}
+
+.explorer-view-label {
+    flex: 0 0 auto;
+
+    align-self: flex-start;
+
+    margin-top: 5px;
+
+    color: #555;
+
+    font-size: 10px;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   EXPLORER ITEMS
+   ========================================================= */
+
+.explorer-items {
+    flex: 1 1 auto;
+
+    width: 100%;
+
+    min-width: 0;
+    min-height: 0;
+
+    padding: 14px 16px;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fill,
+            minmax(125px, 1fr)
+        );
+
+    grid-auto-rows: 118px;
+
+    align-content: start;
+
+    gap: 8px;
+
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    background: white;
+}
+
+.explorer-item {
+    width: 100%;
+    min-width: 0;
+    min-height: 112px;
+
+    padding: 8px 5px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    border: 1px solid transparent;
+
+    cursor: default;
+    user-select: none;
+}
+
+.explorer-item:hover {
+    background: #e8f2ff;
+
+    border: 1px dotted #316ac5;
+}
+
+.explorer-item.selected {
+    background: #cfe2ff;
+
+    border: 1px dotted #316ac5;
+}
+
+
+/* =========================================================
+   EXPLORER ITEM ICON
+   ========================================================= */
+
+.explorer-item-icon {
+    width: 52px;
+    height: 52px;
+
+    flex: 0 0 52px;
+
+    margin: 0 auto 5px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow: visible;
+
+    font-size: 38px;
+
+    filter:
+        drop-shadow(
+            1px 2px 1px rgba(0, 0, 0, 0.18)
+        );
+}
+
+.explorer-item-icon img,
+.explorer-item-icon .explorer-icon-image {
+    display: block;
+
+    width: 48px !important;
+    height: 48px !important;
+
+    max-width: 48px;
+    max-height: 48px;
+
+    object-fit: contain;
+}
+
+.explorer-item-name {
+    width: 100%;
+    max-width: 115px;
+
+    min-height: 28px;
+
+    color: #111;
+
+    text-align: center;
+
+    font-size: 11px;
+    line-height: 14px;
+
+    overflow-wrap: anywhere;
+}
+
+.explorer-item-type {
+    width: 100%;
+
+    margin-top: 2px;
+
+    color: #777;
+
+    font-size: 9px;
+    line-height: 11px;
+
+    text-align: center;
+
+    overflow: hidden;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+
+/* =========================================================
+   EXPLORER EMPTY
+   ========================================================= */
+
+.explorer-empty {
+    grid-column: 1 / -1;
+
+    padding: 45px 20px;
+
+    text-align: center;
+
+    color: #777;
+}
+
+
+/* =========================================================
+   EXPLORER HINT
+   ========================================================= */
+
+.explorer-projects-hint {
+    margin-bottom: 8px;
+
+    padding: 4px 7px;
+
+    border: 1px solid #c3c3c3;
+
+    background: #f3f3f3;
+
+    color: #666;
+
+    font:
+        10px "Courier New",
+        monospace;
+}
+
+
+/* =========================================================
+   EXPLORER STATUS BAR
+   ========================================================= */
+
+.explorer-statusbar {
+    flex: 0 0 22px;
+
+    width: 100%;
+    height: 22px;
+    min-height: 22px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    padding: 2px 7px;
+
+    background: #ece9d8;
+
+    border-top: 1px solid #aaa;
+
+    color: #333;
+
+    font-size: 10px;
+
+    overflow: hidden;
+}
+
+.explorer-statusbar span {
+    min-width: 0;
+
+    overflow: hidden;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.explorer-statusbar span:last-child {
+    color: #666;
+
+    text-align: right;
+}
+
+
 /* =========================================================
    PROJECTS
-========================================================= */
+   ========================================================= */
 
 .projects-content {
     min-height: 390px;
@@ -495,13 +1258,15 @@ body {
 
 .projects-header p {
     margin: 0;
+
     color: #555;
 }
 
 .project-grid {
     display: grid;
 
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
 
     gap: 22px;
 }
@@ -518,13 +1283,14 @@ body {
 
 .project-item:hover {
     border: 1px dotted #316ac5;
+
     background: #e4efff;
 }
 
 .project-icon {
-    font-size: 44px;
-
     margin-bottom: 8px;
+
+    font-size: 44px;
 }
 
 .project-name {
@@ -539,9 +1305,10 @@ body {
     font-size: 10px;
 }
 
+
 /* =========================================================
    PROJECT WINDOWS
-========================================================= */
+   ========================================================= */
 
 .project-window {
     width: 700px;
@@ -551,6 +1318,8 @@ body {
     min-height: 430px;
 
     background: #fafafa;
+
+    overflow: auto;
 }
 
 .app-header {
@@ -565,6 +1334,8 @@ body {
 .app-icon {
     width: 55px;
     height: 55px;
+
+    flex: 0 0 55px;
 
     display: flex;
     align-items: center;
@@ -589,9 +1360,9 @@ body {
 .app-header h1 {
     margin: 0;
 
-    font-size: 20px;
-
     color: #154e9b;
+
+    font-size: 20px;
 }
 
 .app-header p {
@@ -606,9 +1377,9 @@ body {
 }
 
 .project-app h3 {
-    color: #174f9c;
-
     margin-top: 20px;
+
+    color: #174f9c;
 }
 
 .project-app li {
@@ -640,9 +1411,10 @@ body {
     font-size: 11px;
 }
 
+
 /* =========================================================
    XP BUTTON
-========================================================= */
+   ========================================================= */
 
 .xp-button {
     min-width: 100px;
@@ -678,12 +1450,14 @@ body {
         inset 1px 1px #777;
 }
 
+
 /* =========================================================
-   API 3
-========================================================= */
+   IPEMCONTROL / API 3
+   ========================================================= */
 
 .ipem-app {
     background: #101827;
+
     color: #dce7f5;
 }
 
@@ -706,7 +1480,8 @@ body {
 .dashboard-grid {
     display: grid;
 
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
 
     gap: 10px;
 
@@ -727,17 +1502,19 @@ body {
 }
 
 .dashboard-card strong {
-    color: #76b5ff;
     margin-bottom: 5px;
+
+    color: #76b5ff;
 }
 
 .dashboard-card span {
     color: #b5c8df;
 }
 
+
 /* =========================================================
    ESTAÇÃO-TI
-========================================================= */
+   ========================================================= */
 
 .station-app {
     background:
@@ -784,7 +1561,6 @@ body {
 
 .waveform span {
     width: 5px;
-
     height: 20px;
 
     background: #59a9ff;
@@ -795,27 +1571,27 @@ body {
 }
 
 .waveform span:nth-child(2) {
-    animation-delay: .1s;
+    animation-delay: 0.1s;
 }
 
 .waveform span:nth-child(3) {
-    animation-delay: .2s;
+    animation-delay: 0.2s;
 }
 
 .waveform span:nth-child(4) {
-    animation-delay: .3s;
+    animation-delay: 0.3s;
 }
 
 .waveform span:nth-child(5) {
-    animation-delay: .15s;
+    animation-delay: 0.15s;
 }
 
 .waveform span:nth-child(6) {
-    animation-delay: .4s;
+    animation-delay: 0.4s;
 }
 
 .waveform span:nth-child(7) {
-    animation-delay: .25s;
+    animation-delay: 0.25s;
 }
 
 @keyframes waveform {
@@ -850,9 +1626,10 @@ body {
     cursor: pointer;
 }
 
+
 /* =========================================================
    ABOUT.EXE
-========================================================= */
+   ========================================================= */
 
 #about-window {
     width: 620px;
@@ -866,6 +1643,8 @@ body {
             #ffffff,
             #f4f4f4
         );
+
+    overflow: auto;
 }
 
 .about-top {
@@ -875,7 +1654,6 @@ body {
     gap: 15px;
 
     padding: 12px;
-
     margin-bottom: 15px;
 
     border: 1px solid #9aaec6;
@@ -890,6 +1668,8 @@ body {
 .about-avatar {
     width: 70px;
     height: 70px;
+
+    flex: 0 0 70px;
 
     display: flex;
     align-items: center;
@@ -908,12 +1688,11 @@ body {
 
     box-shadow:
         inset 1px 1px white,
-        2px 2px 3px rgba(0, 0, 0, .25);
+        2px 2px 3px rgba(0, 0, 0, 0.25);
 }
 
 .about-name {
     font-size: 20px;
-
     font-weight: bold;
 
     color: #174f9d;
@@ -946,7 +1725,6 @@ body {
     padding: 5px 8px;
 
     color: white;
-
     font-weight: bold;
 
     background:
@@ -965,7 +1743,8 @@ body {
 .system-info {
     display: grid;
 
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
 
     gap: 8px;
 
@@ -985,33 +1764,62 @@ body {
     margin-top: 15px;
 }
 
+
 /* =========================================================
    SKILLS.EXE
-========================================================= */
+   ========================================================= */
 
 #skills-window {
     width: 820px;
     height: 610px;
 
+    min-height: 0;
+
+    display: none;
+    flex-direction: column;
+
     background: #ece9d8;
+
+    overflow: hidden;
 }
 
-.skills-layout {
+#skills-window.active-window {
+    display: flex;
+}
+
+
+/* =========================================================
+   SKILLS LAYOUT
+   ========================================================= */
+
+#skills-window .skills-layout {
+    flex: 1 1 auto;
+
+    width: 100%;
+
+    min-width: 0;
+    min-height: 0;
+
+    height: auto;
+
     display: flex;
 
-    height: calc(100% - 73px);
-
-    min-height: 500px;
+    overflow: hidden;
 }
 
-/* ---------------------------------------------------------
-   SIDEBAR
---------------------------------------------------------- */
 
-.skills-sidebar {
+/* =========================================================
+   SKILLS SIDEBAR
+   ========================================================= */
+
+#skills-window .skills-sidebar {
     width: 190px;
+    min-width: 190px;
 
-    flex-shrink: 0;
+    flex: 0 0 190px;
+
+    height: 100%;
+    min-height: 0;
 
     padding: 13px 10px;
 
@@ -1024,6 +1832,9 @@ body {
         );
 
     border-right: 1px solid #8fa9c4;
+
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .skills-side-title {
@@ -1032,7 +1843,6 @@ body {
     color: #174f9b;
 
     font-weight: bold;
-
     font-size: 11px;
 }
 
@@ -1081,24 +1891,40 @@ body {
     background: #a9bed5;
 }
 
-/* ---------------------------------------------------------
-   MAIN
---------------------------------------------------------- */
 
-.skills-main {
-    flex: 1;
+/* =========================================================
+   SKILLS MAIN
+   ========================================================= */
 
-    overflow-y: auto;
+#skills-window .skills-main {
+    flex: 1 1 auto;
+
+    width: 0;
+
+    height: 100%;
+
+    min-width: 0;
+    min-height: 0;
 
     padding: 15px;
 
     background: white;
+
+    overflow-x: hidden;
+    overflow-y: auto;
 }
+
+
+/* =========================================================
+   SKILLS HEADING
+   ========================================================= */
 
 .skills-heading {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
+
+    gap: 10px;
 
     margin-bottom: 15px;
 }
@@ -1106,11 +1932,10 @@ body {
 .skills-heading h1 {
     margin: 0;
 
-    font-size: 18px;
-
-    font-weight: normal;
-
     color: #174f9b;
+
+    font-size: 18px;
+    font-weight: normal;
 }
 
 .skills-heading p {
@@ -1132,7 +1957,6 @@ body {
     gap: 5px;
 
     margin-bottom: 8px;
-
     padding-bottom: 8px;
 
     border-bottom: 1px solid #ccc;
@@ -1145,15 +1969,21 @@ body {
     font-size: 11px;
 }
 
-/* ---------------------------------------------------------
-   PROGRAM ITEMS
---------------------------------------------------------- */
+
+/* =========================================================
+   SKILLS PROGRAM ITEMS
+   ========================================================= */
 
 .skill-program {
-    display: flex;
-    align-items: center;
+    width: 100%;
+    min-width: 0;
 
     min-height: 66px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
 
     padding: 8px;
 
@@ -1170,7 +2000,7 @@ body {
     width: 48px;
     height: 48px;
 
-    flex-shrink: 0;
+    flex: 0 0 48px;
 
     display: flex;
     align-items: center;
@@ -1194,11 +2024,20 @@ body {
 
     box-shadow:
         inset 1px 1px white,
-        1px 1px 2px rgba(0, 0, 0, .25);
+        1px 1px 2px rgba(0, 0, 0, 0.25);
+}
+
+.skill-program-icon img {
+    width: 42px;
+    height: 42px;
+
+    object-fit: contain;
 }
 
 .skill-program-info {
-    flex: 1;
+    flex: 1 1 auto;
+
+    min-width: 0;
 
     display: flex;
     flex-direction: column;
@@ -1222,6 +2061,8 @@ body {
     min-width: 95px;
     height: 25px;
 
+    flex: 0 0 auto;
+
     border: 1px solid #888;
 
     background:
@@ -1234,8 +2075,9 @@ body {
         inset 1px 1px white,
         inset -1px -1px #888;
 
-    font-family: Tahoma, sans-serif;
-    font-size: 11px;
+    font:
+        11px Tahoma,
+        sans-serif;
 
     cursor: pointer;
 }
@@ -1250,14 +2092,17 @@ body {
         );
 }
 
+
 /* =========================================================
    BROWSER
-========================================================= */
+   ========================================================= */
 
 .browser-content {
     min-height: 400px;
 
     background: white;
+
+    overflow: auto;
 }
 
 .browser-page {
@@ -1284,9 +2129,10 @@ body {
     color: #315e96;
 }
 
+
 /* =========================================================
    MEDIA PLAYER
-========================================================= */
+   ========================================================= */
 
 #media-window {
     width: 500px;
@@ -1294,6 +2140,8 @@ body {
     background: #111;
 
     border-color: #111;
+
+    overflow: hidden;
 }
 
 .media-titlebar {
@@ -1304,6 +2152,14 @@ body {
         );
 
     border-color: #080a0d;
+}
+
+.media-player-top {
+    cursor: move;
+
+    user-select: none;
+
+    touch-action: none;
 }
 
 .media-player-content {
@@ -1317,6 +2173,8 @@ body {
         );
 
     color: white;
+
+    overflow: auto;
 }
 
 .media-screen {
@@ -1343,7 +2201,6 @@ body {
 
 .media-visualizer {
     position: absolute;
-
     inset: 0;
 
     display: flex;
@@ -1352,7 +2209,7 @@ body {
 
     gap: 5px;
 
-    opacity: .7;
+    opacity: 0.7;
 }
 
 .media-visualizer span {
@@ -1361,23 +2218,23 @@ body {
 
     background: #55aaff;
 
-    animation: media-bars .8s infinite alternate;
+    animation: media-bars 0.8s infinite alternate;
 }
 
 .media-visualizer span:nth-child(2) {
-    animation-delay: .1s;
+    animation-delay: 0.1s;
 }
 
 .media-visualizer span:nth-child(3) {
-    animation-delay: .2s;
+    animation-delay: 0.2s;
 }
 
 .media-visualizer span:nth-child(4) {
-    animation-delay: .3s;
+    animation-delay: 0.3s;
 }
 
 .media-visualizer span:nth-child(5) {
-    animation-delay: .4s;
+    animation-delay: 0.4s;
 }
 
 @keyframes media-bars {
@@ -1393,10 +2250,10 @@ body {
 .media-title,
 .media-subtitle {
     position: relative;
+
     z-index: 2;
 
-    text-shadow:
-        0 0 5px #000;
+    text-shadow: 0 0 5px #000;
 }
 
 .media-title {
@@ -1463,15 +2320,16 @@ body {
     font-family: monospace;
 }
 
+
 /* =========================================================
    START MENU
-========================================================= */
+   ========================================================= */
 
 #start-menu {
     position: absolute;
 
     left: 0;
-    bottom: 30px;
+    bottom: 31px;
 
     width: 390px;
 
@@ -1481,10 +2339,10 @@ body {
 
     border: 1px solid #174b91;
 
-    background: #fff;
+    background: white;
 
     box-shadow:
-        3px 3px 8px rgba(0, 0, 0, .45);
+        3px 3px 8px rgba(0, 0, 0, 0.45);
 }
 
 #start-menu.open {
@@ -1513,6 +2371,8 @@ body {
 .start-avatar {
     width: 40px;
     height: 40px;
+
+    flex: 0 0 40px;
 
     display: flex;
     align-items: center;
@@ -1575,8 +2435,9 @@ body {
 
     text-align: left;
 
-    font-family: Tahoma, sans-serif;
-    font-size: 11px;
+    font:
+        11px Tahoma,
+        sans-serif;
 
     cursor: pointer;
 }
@@ -1605,15 +2466,17 @@ body {
 
     background: transparent;
 
-    font-family: Tahoma, sans-serif;
-    font-size: 11px;
+    font:
+        11px Tahoma,
+        sans-serif;
 
     cursor: pointer;
 }
 
+
 /* =========================================================
    TASKBAR
-========================================================= */
+   ========================================================= */
 
 #taskbar {
     position: absolute;
@@ -1622,7 +2485,9 @@ body {
     right: 0;
     bottom: 0;
 
+    width: 100%;
     height: 31px;
+    min-height: 31px;
 
     display: flex;
     align-items: center;
@@ -1638,13 +2503,20 @@ body {
     border-top: 1px solid #6ea9ec;
 
     box-shadow:
-        inset 0 1px rgba(255, 255, 255, .45);
+        inset 0 1px rgba(255, 255, 255, 0.45);
 }
 
+
+/* =========================================================
+   START BUTTON
+   ========================================================= */
+
 #start-button {
+    width: 94px;
+    min-width: 94px;
     height: 29px;
 
-    min-width: 87px;
+    flex: 0 0 auto;
 
     display: flex;
     align-items: center;
@@ -1654,7 +2526,6 @@ body {
     padding: 0 9px;
 
     border: none;
-
     border-right: 1px solid #0a3f8f;
 
     border-radius: 0 10px 10px 0;
@@ -1667,7 +2538,9 @@ body {
 
     color: white;
 
-    font-family: Tahoma, sans-serif;
+    font:
+        bold 12px Tahoma,
+        sans-serif;
 
     cursor: pointer;
 
@@ -1683,11 +2556,37 @@ body {
 }
 
 .windows-logo {
-    font-size: 18px;
+    width: 19px;
+    height: 19px;
+
+    flex: 0 0 19px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
+.start-icon-image {
+    width: 18px !important;
+    height: 18px !important;
+
+    max-width: 18px;
+    max-height: 18px;
+
+    object-fit: contain;
+
+    display: block;
+}
+
+
+/* =========================================================
+   TASKBAR PROGRAMS
+   ========================================================= */
+
 #taskbar-programs {
-    flex: 1;
+    flex: 1 1 auto;
+
+    min-width: 0;
 
     height: 100%;
 
@@ -1697,13 +2596,21 @@ body {
     gap: 3px;
 
     padding: 2px 5px;
+
+    overflow: hidden;
 }
 
 .taskbar-button {
     min-width: 125px;
     max-width: 180px;
-
     height: 25px;
+
+    flex: 0 1 180px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 5px;
 
     overflow: hidden;
 
@@ -1722,12 +2629,24 @@ body {
 
     text-align: left;
 
-    padding: 0 8px;
+    padding: 0 7px;
 
-    font-family: Tahoma, sans-serif;
-    font-size: 11px;
+    font:
+        11px Tahoma,
+        sans-serif;
 
     cursor: pointer;
+
+    box-shadow:
+        inset 1px 1px rgba(255, 255, 255, 0.3);
+}
+
+.taskbar-button:hover {
+    background:
+        linear-gradient(
+            #67a9e6,
+            #3477c5
+        );
 }
 
 .taskbar-button.active {
@@ -1741,8 +2660,29 @@ body {
         inset 1px 1px #0a2a57;
 }
 
+.taskbar-icon-image {
+    width: 16px !important;
+    height: 16px !important;
+
+    flex: 0 0 16px;
+
+    max-width: 16px;
+    max-height: 16px;
+
+    object-fit: contain;
+
+    display: block;
+}
+
+
+/* =========================================================
+   SYSTEM TRAY
+   ========================================================= */
+
 #taskbar-tray {
     height: 100%;
+
+    flex: 0 0 auto;
 
     display: flex;
     align-items: center;
@@ -1763,7 +2703,26 @@ body {
 }
 
 .tray-icon {
+    width: 15px;
+    height: 18px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
     font-size: 12px;
+}
+
+.tray-icon-image {
+    width: 14px !important;
+    height: 14px !important;
+
+    max-width: 14px;
+    max-height: 14px;
+
+    object-fit: contain;
+
+    display: block;
 }
 
 #clock {
@@ -1771,13 +2730,15 @@ body {
 
     text-align: center;
 
-    font-family: Tahoma, sans-serif;
-    font-size: 11px;
+    font:
+        11px Tahoma,
+        sans-serif;
 }
 
+
 /* =========================================================
-   MAXIMIZED WINDOW
-========================================================= */
+   MAXIMIZED WINDOWS
+   ========================================================= */
 
 .os-window.maximized {
     top: 0 !important;
@@ -1786,89 +2747,324 @@ body {
     width: 100% !important;
     height: calc(100% - 31px) !important;
 
-    max-width: none;
-
-    max-height: none;
+    max-width: none !important;
+    max-height: none !important;
 }
 
+.explorer-window.maximized {
+    top: 0 !important;
+    left: 0 !important;
+
+    width: 100% !important;
+    height: calc(100% - 31px) !important;
+
+    max-width: none !important;
+    max-height: none !important;
+}
+
+
 /* =========================================================
-   SCROLLBARS
-========================================================= */
+   OTHER WINDOWS — SAFE LIMITS
+   ========================================================= */
+
+#about-window,
+#projects-window,
+#skills-window,
+#internet-window,
+#api1-window,
+#api2-window,
+#api3-window,
+#estacao-window,
+#media-window {
+    max-width: calc(100vw - 30px);
+    max-height: calc(100vh - 45px);
+}
+
+
+/* =========================================================
+   SCROLLBARS — WINDOWS STYLE
+   ========================================================= */
 
 ::-webkit-scrollbar {
-    width: 15px;
-    height: 15px;
+    width: 16px;
+    height: 16px;
 }
 
 ::-webkit-scrollbar-track {
-    background: #ece9d8;
+    background: #d4d0c8;
+
+    border-left: 1px solid #999;
 }
 
 ::-webkit-scrollbar-thumb {
-    border: 1px solid #777;
+    min-height: 25px;
 
     background:
         linear-gradient(
             90deg,
-            #d9e4f0,
-            #aebed0
+            #eeeeee 0%,
+            #c9c9c9 45%,
+            #aaaaaa 100%
         );
+
+    border: 1px solid #777;
+
+    box-shadow:
+        inset 1px 1px #ffffff,
+        inset -1px -1px #888;
 }
 
 ::-webkit-scrollbar-button {
-    height: 15px;
-    width: 15px;
+    width: 16px;
+    height: 16px;
 
-    background: #d4d0c8;
+    background:
+        linear-gradient(
+            135deg,
+            #eeeeee,
+            #bdbdbd
+        );
 
-    border: 1px solid #888;
+    border: 1px solid #777;
+
+    box-shadow:
+        inset 1px 1px #ffffff,
+        inset -1px -1px #888;
 }
 
+
 /* =========================================================
-   RESPONSIVE FALLBACK
-========================================================= */
+   SKILLS SCROLLBAR
+   ========================================================= */
 
-@media (max-width: 900px) {
+#skills-window .skills-main::-webkit-scrollbar {
+    width: 16px;
+}
 
-    .os-window {
+#skills-window .skills-main::-webkit-scrollbar-track {
+    background: #d4d0c8;
+
+    border-left: 1px solid #999;
+}
+
+#skills-window .skills-main::-webkit-scrollbar-thumb {
+    background:
+        linear-gradient(
+            90deg,
+            #eeeeee 0%,
+            #c9c9c9 45%,
+            #aaaaaa 100%
+        );
+
+    border: 1px solid #777;
+
+    box-shadow:
+        inset 1px 1px #ffffff,
+        inset -1px -1px #888;
+}
+
+#skills-window .skills-main::-webkit-scrollbar-button {
+    width: 16px;
+    height: 16px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #eeeeee,
+            #bdbdbd
+        );
+
+    border: 1px solid #777;
+
+    box-shadow:
+        inset 1px 1px #ffffff,
+        inset -1px -1px #888;
+}
+
+
+/* =========================================================
+   GIOBUDDY
+   ========================================================= */
+
+#giobuddy {
+    position: absolute;
+
+    right: 28px;
+    bottom: 44px;
+
+    width: 120px;
+    height: 145px;
+
+    z-index: 9500;
+
+    cursor: grab;
+
+    user-select: none;
+
+    touch-action: none;
+}
+
+#giobuddy:active {
+    cursor: grabbing;
+}
+
+
+/* =========================================================
+   RESPONSIVE — LARGE TABLET
+   ========================================================= */
+
+@media (max-width: 1050px) {
+
+    .explorer-window {
         left: 100px;
 
-        width: calc(100% - 120px);
+        width: calc(100vw - 120px);
+
+        min-width: 620px;
+    }
+
+    .explorer-sidebar {
+        width: 175px;
+        min-width: 175px;
+
+        flex-basis: 175px;
+    }
+
+    .explorer-items {
+        grid-template-columns:
+            repeat(
+                auto-fill,
+                minmax(110px, 1fr)
+            );
     }
 
     #skills-window {
-        width: calc(100% - 40px);
+        width: calc(100vw - 40px);
 
         left: 20px;
     }
 
     .project-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
     }
-
 }
 
-@media (max-width: 650px) {
+
+/* =========================================================
+   RESPONSIVE — TABLET
+   ========================================================= */
+
+@media (max-width: 760px) {
+
+    .desktop-icons {
+        left: 4px;
+
+        gap: 8px;
+    }
+
+    .desktop-icon {
+        width: 76px;
+    }
+
+    .explorer-window {
+        top: 20px;
+        left: 60px;
+
+        width: calc(100vw - 70px);
+        height: calc(100vh - 55px);
+
+        min-width: 0;
+        min-height: 380px;
+    }
+
+    .explorer-sidebar {
+        display: none;
+    }
+
+    .explorer-items {
+        grid-template-columns:
+            repeat(
+                auto-fill,
+                minmax(100px, 1fr)
+            );
+    }
+
+    .taskbar-button {
+        min-width: 100px;
+    }
+
+    #skills-window {
+        left: 10px;
+
+        width: calc(100vw - 20px);
+
+        height: calc(100vh - 50px);
+    }
+
+    #skills-window .skills-sidebar {
+        width: 150px;
+        min-width: 150px;
+
+        flex-basis: 150px;
+    }
+}
+
+
+/* =========================================================
+   RESPONSIVE — MOBILE
+   ========================================================= */
+
+@media (max-width: 560px) {
 
     .desktop-icons {
         display: none;
     }
 
-    .os-window {
+    #start-button {
+        width: 78px;
+        min-width: 78px;
+    }
+
+    .taskbar-button {
+        min-width: 80px;
+        max-width: 130px;
+    }
+
+    #taskbar-tray {
+        padding: 0 5px;
+    }
+
+    .explorer-window {
+        top: 5px;
         left: 5px;
-        top: 20px;
 
-        width: calc(100% - 10px);
-
-        height: calc(100% - 60px);
+        width: calc(100vw - 10px);
+        height: calc(100vh - 40px);
     }
 
-    .skills-sidebar {
-        width: 135px;
+    .explorer-heading h2 {
+        font-size: 15px;
     }
 
-    .skill-program {
-        align-items: flex-start;
+    .explorer-items {
+        grid-template-columns:
+            repeat(
+                auto-fill,
+                minmax(90px, 1fr)
+            );
+    }
+
+    #skills-window {
+        top: 5px;
+        left: 5px;
+
+        width: calc(100vw - 10px);
+        height: calc(100vh - 40px);
+    }
+
+    #skills-window .skills-sidebar {
+        display: none;
     }
 
     .change-button {
@@ -1876,7 +3072,2190 @@ body {
     }
 
     .project-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* =========================================================
+   FIX — MY COMPUTER / EXPLORER
+========================================================= */
+
+.explorer-window {
+    display: flex;
+    flex-direction: column;
+
+    box-sizing: border-box;
+
+    width: 820px;
+    height: min(570px, calc(100vh - 31px));
+
+    min-height: 360px;
+    max-height: calc(100vh - 31px);
+
+    overflow: hidden;
+}
+
+.explorer-window .window-titlebar {
+    flex: 0 0 31px;
+}
+
+.explorer-window .explorer-menu {
+    flex: 0 0 23px;
+    box-sizing: border-box;
+}
+
+.explorer-window .explorer-toolbar {
+    flex: 0 0 43px;
+    box-sizing: border-box;
+}
+
+.explorer-window .explorer-body {
+    flex: 1 1 auto;
+
+    width: 100%;
+    height: auto;
+    min-height: 0;
+
+    display: flex;
+
+    overflow: hidden;
+
+    background: #fff;
+}
+
+.explorer-window .explorer-sidebar {
+    height: 100%;
+    box-sizing: border-box;
+
+    overflow-y: auto;
+}
+
+.explorer-window .explorer-main {
+    height: 100%;
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+}
+
+.explorer-window .explorer-heading {
+    flex: 0 0 64px;
+    box-sizing: border-box;
+}
+
+.explorer-window .explorer-items {
+    flex: 1 1 auto;
+
+    width: 100%;
+    height: auto;
+    min-height: 0;
+
+    box-sizing: border-box;
+
+    overflow-y: auto;
+}
+
+.explorer-window .explorer-statusbar {
+    flex: 0 0 22px;
+    box-sizing: border-box;
+}
+
+/* =========================================================
+   FIX — ICONES REAIS DO WINDOWS 2000
+========================================================= */
+
+.os-ui-icon {
+    width: 16px;
+    height: 16px;
+
+    object-fit: contain;
+
+    vertical-align: middle;
+
+    flex-shrink: 0;
+
+    image-rendering: auto;
+}
+
+.os-ui-icon.small {
+    width: 14px;
+    height: 14px;
+}
+
+.explorer-toolbar .os-ui-icon {
+    width: 18px;
+    height: 18px;
+}
+
+.explorer-side-title {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.explorer-sidebar button {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* =========================================================
+   START MENU — ICONES REAIS
+========================================================= */
+
+.start-column button {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.start-item-icon {
+    width: 18px;
+    height: 18px;
+
+    object-fit: contain;
+
+    flex-shrink: 0;
+}
+
+.start-footer button {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.start-footer .start-item-icon {
+    width: 16px;
+    height: 16px;
+}
+
+/* Ícone do Start real */
+.windows-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 18px;
+    height: 18px;
+}
+
+.windows-logo img {
+    width: 18px;
+    height: 18px;
+
+    object-fit: contain;
+}
+
+/* =========================================================
+   FINAL FIX — EXPLORER + SKILLS SCROLL
+========================================================= */
+
+/* ---------------------------------------------------------
+   MY COMPUTER / EXPLORER
+--------------------------------------------------------- */
+
+#computer-window {
+    display: none;
+
+    flex-direction: column;
+
+    height: 520px;
+    max-height: calc(100vh - 45px);
+
+    overflow: hidden;
+}
+
+#computer-window.active-window {
+    display: flex;
+}
+
+/* Corpo inteiro do Explorer */
+#computer-window .explorer-body {
+    display: flex;
+
+    flex: 1 1 auto;
+
+    min-height: 0;
+
+    overflow: hidden;
+
+    background: #ffffff;
+}
+
+/* Barra lateral */
+#computer-window .explorer-sidebar {
+    width: 195px;
+
+    flex: 0 0 195px;
+
+    min-height: 0;
+
+    overflow-y: auto;
+
+    background:
+        linear-gradient(
+            to right,
+            #e8f3ff 0%,
+            #d9eafb 100%
+        );
+
+    border-right: 1px solid #9ab1c8;
+
+    padding: 10px;
+}
+
+/* Área principal */
+#computer-window .explorer-main {
+    flex: 1 1 auto;
+
+    min-width: 0;
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+
+    background: #ffffff;
+}
+
+/* Cabeçalho "My Computer" */
+#computer-window .explorer-heading {
+    flex: 0 0 auto;
+
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    min-height: 62px;
+
+    padding: 10px 14px;
+
+    background:
+        linear-gradient(
+            to bottom,
+            #ffffff 0%,
+            #f2f7fc 100%
+        );
+
+    border-bottom: 1px solid #c5c5c5;
+}
+
+#computer-window .explorer-heading h2 {
+    margin: 0;
+
+    color: #174f9b;
+
+    font-size: 18px;
+    font-weight: normal;
+}
+
+#computer-window .explorer-heading p {
+    margin: 4px 0 0;
+
+    color: #777;
+
+    font-size: 11px;
+}
+
+#computer-window .explorer-view-label {
+    color: #666;
+
+    font-size: 11px;
+
+    white-space: nowrap;
+}
+
+/* ÁREA QUE REALMENTE ROLA */
+#computer-window .explorer-items {
+    flex: 1 1 auto;
+
+    min-width: 0;
+    min-height: 0;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    padding: 18px;
+
+    background: #ffffff;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fill,
+            minmax(125px, 1fr)
+        );
+
+    grid-auto-rows: minmax(115px, auto);
+
+    align-content: start;
+
+    gap: 10px 15px;
+}
+
+/* Itens do My Computer */
+#computer-window .computer-item {
+    width: auto;
+
+    min-height: 105px;
+
+    padding: 10px 5px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+
+    text-align: center;
+
+    cursor: pointer;
+
+    border: 1px solid transparent;
+}
+
+#computer-window .computer-item:hover {
+    background: #dcecff;
+
+    border: 1px dotted #316ac5;
+}
+
+#computer-window .computer-item img {
+    width: 48px;
+    height: 48px;
+
+    object-fit: contain;
+
+    image-rendering: auto;
+
+    margin-bottom: 7px;
+}
+
+#computer-window .computer-item span {
+    display: block;
+
+    color: #111;
+
+    line-height: 15px;
+}
+
+#computer-window .computer-item small {
+    display: block;
+
+    margin-top: 5px;
+
+    color: #888;
+
+    font-size: 9px;
+}
+
+/* Status bar fica SEMPRE no final */
+#computer-window .explorer-statusbar {
+    flex: 0 0 22px;
+
+    height: 22px;
+    min-height: 22px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 7px;
+
+    background: #ece9d8;
+
+    border-top: 1px solid #aaa;
+
+    color: #333;
+}
+
+
+/* ---------------------------------------------------------
+   SKILLS.EXE — SCROLL CORRETO
+--------------------------------------------------------- */
+
+#skills-window {
+    display: none;
+
+    flex-direction: column;
+
+    height: 610px;
+    max-height: calc(100vh - 45px);
+
+    overflow: hidden;
+}
+
+#skills-window.active-window {
+    display: flex;
+}
+
+/* O layout precisa ocupar somente o espaço entre
+   menu e statusbar */
+#skills-window .skills-layout {
+    display: flex;
+
+    flex: 1 1 auto;
+
+    height: auto;
+
+    min-height: 0;
+
+    overflow: hidden;
+}
+
+/* Sidebar não cresce junto com a lista */
+#skills-window .skills-sidebar {
+    flex: 0 0 190px;
+
+    min-height: 0;
+
+    overflow-y: auto;
+}
+
+/* ESTA É A PARTE MAIS IMPORTANTE */
+#skills-window .skills-main {
+    flex: 1 1 auto;
+
+    min-width: 0;
+    min-height: 0;
+
+    height: 100%;
+
+    overflow-y: scroll;
+    overflow-x: hidden;
+
+    padding: 15px;
+
+    background: #ffffff;
+}
+
+/* Deixa a barra sempre visível */
+#skills-window .skills-main::-webkit-scrollbar {
+    width: 15px;
+}
+
+#skills-window .skills-main::-webkit-scrollbar-track {
+    background: #ece9d8;
+}
+
+#skills-window .skills-main::-webkit-scrollbar-thumb {
+    border: 1px solid #777;
+
+    background:
+        linear-gradient(
+            to right,
+            #d9e4f0,
+            #aebed0
+        );
+}
+
+#skills-window .skills-main::-webkit-scrollbar-button {
+    height: 15px;
+
+    background: #d4d0c8;
+
+    border: 1px solid #888;
+}
+
+/* Os programas continuam com tamanho normal */
+#skills-window .skill-program {
+    flex-shrink: 0;
+}
+
+
+/* ---------------------------------------------------------
+   RESPONSIVO
+--------------------------------------------------------- */
+
+@media (max-width: 900px) {
+
+    #computer-window {
+        width: calc(100% - 30px);
+
+        left: 15px;
     }
 
+    #computer-window .explorer-sidebar {
+        width: 175px;
+
+        flex-basis: 175px;
+    }
+
+    #skills-window {
+        width: calc(100% - 30px);
+
+        left: 15px;
+    }
+
+}
+
+
+@media (max-width: 650px) {
+
+    #computer-window {
+        left: 5px;
+
+        width: calc(100% - 10px);
+
+        top: 20px;
+
+        height: calc(100% - 60px);
+    }
+
+    #computer-window .explorer-sidebar {
+        width: 140px;
+
+        flex-basis: 140px;
+    }
+
+    #computer-window .explorer-items {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(100px, 1fr)
+            );
+    }
+
+    #skills-window {
+        left: 5px;
+
+        width: calc(100% - 10px);
+
+        top: 20px;
+
+        height: calc(100% - 60px);
+    }
+
+    #skills-window .skills-sidebar {
+        width: 135px;
+
+        flex-basis: 135px;
+    }
+
+}
+
+/* =========================================================
+   PROJECTS — LIGHT THEME
+   Todos os projetos usam o mesmo tema claro
+========================================================= */
+
+
+/* ---------------------------------------------------------
+   BASE DOS PROJETOS
+--------------------------------------------------------- */
+
+.project-window {
+    background: #ece9d8;
+}
+
+.project-window .window-content {
+    background: #fafafa;
+    color: #222;
+}
+
+.project-app {
+    background:
+        linear-gradient(
+            to bottom,
+            #ffffff 0%,
+            #f7f7f7 100%
+        ) !important;
+
+    color: #222 !important;
+
+    overflow: auto;
+}
+
+
+/* ---------------------------------------------------------
+   CABEÇALHO DOS PROJETOS
+--------------------------------------------------------- */
+
+.project-app .app-header h1 {
+    color: #154e9b !important;
+}
+
+.project-app .app-header p {
+    color: #555 !important;
+}
+
+.project-app hr {
+    border-top: 1px solid #c7c7c7 !important;
+    border-color: #c7c7c7 !important;
+}
+
+.project-app h3 {
+    color: #174f9c !important;
+}
+
+.project-app p,
+.project-app li {
+    color: #222 !important;
+}
+
+
+/* ---------------------------------------------------------
+   TAGS / TECNOLOGIAS
+--------------------------------------------------------- */
+
+.project-app .tech-list span {
+    border: 1px solid #7e9bc7 !important;
+
+    background:
+        linear-gradient(
+            #edf6ff,
+            #c9ddf5
+        ) !important;
+
+    color: #164f98 !important;
+}
+
+
+/* =========================================================
+   IPEMCONTROL — TIRAR TEMA ESCURO
+========================================================= */
+
+#api3-window .ipem-app {
+    background:
+        linear-gradient(
+            to bottom,
+            #ffffff 0%,
+            #f7f7f7 100%
+        ) !important;
+
+    color: #222 !important;
+}
+
+#api3-window .ipem-app .app-header h1 {
+    color: #154e9b !important;
+}
+
+#api3-window .ipem-app .app-header p {
+    color: #555 !important;
+}
+
+#api3-window .ipem-app hr {
+    border-color: #c7c7c7 !important;
+}
+
+#api3-window .ipem-app h3 {
+    color: #174f9c !important;
+}
+
+
+/* Cards do dashboard */
+#api3-window .dashboard-card {
+    background:
+        linear-gradient(
+            #ffffff,
+            #eef4fa
+        ) !important;
+
+    border: 1px solid #9db3ca !important;
+
+    color: #222 !important;
+
+    box-shadow:
+        inset 1px 1px #ffffff;
+}
+
+#api3-window .dashboard-card strong {
+    color: #174f9c !important;
+}
+
+#api3-window .dashboard-card span {
+    color: #444 !important;
+}
+
+
+/* ---------------------------------------------------------
+   ESTAÇÃO-TI — TIRAR TEMA ESCURO
+--------------------------------------------------------- */
+
+#estacao-window .station-app {
+    background:
+        linear-gradient(
+            to bottom,
+            #ffffff 0%,
+            #f7f7f7 100%
+        ) !important;
+
+    color: #222 !important;
+}
+
+#estacao-window .station-app .app-header h1 {
+    color: #154e9b !important;
+}
+
+#estacao-window .station-app .app-header p {
+    color: #555 !important;
+}
+
+#estacao-window .station-app hr {
+    border-color: #c7c7c7 !important;
+}
+
+#estacao-window .station-app h3 {
+    color: #174f9c !important;
+}
+
+
+/* =========================================================
+   WAVEFORM DA ESTAÇÃO-TI
+   ========================================================= */
+
+#estacao-window .waveform {
+    background:
+        linear-gradient(
+            to bottom,
+            #ffffff,
+            #e9f2fb
+        ) !important;
+
+    border: 1px solid #9db3ca !important;
+
+    box-shadow:
+        inset 1px 1px #ffffff;
+}
+
+#estacao-window .waveform span {
+    background: #438bd1 !important;
+
+    box-shadow:
+        0 0 4px rgba(67, 139, 209, 0.5) !important;
+}
+
+
+/* =========================================================
+   CONTROLES DA ESTAÇÃO-TI
+========================================================= */
+
+#estacao-window .player-controls button {
+    border: 1px solid #7c96b0 !important;
+
+    background:
+        linear-gradient(
+            #ffffff,
+            #d7e3ef
+        ) !important;
+
+    color: #173f70 !important;
+
+    box-shadow:
+        inset 1px 1px #ffffff,
+        inset -1px -1px #999;
+}
+
+#estacao-window .player-controls button:hover {
+    background:
+        linear-gradient(
+            #ffffff,
+            #c8ddf3
+        ) !important;
+}
+
+
+/* =========================================================
+   BOTÃO OPEN PROJECT
+========================================================= */
+
+.project-app .xp-button {
+    background:
+        linear-gradient(
+            #ffffff,
+            #e2e2e2
+        ) !important;
+
+    color: #111 !important;
+
+    border: 1px solid #003c9d !important;
+}
+
+.project-app .xp-button:hover {
+    background:
+        linear-gradient(
+            #ffffff,
+            #d4e8ff
+        ) !important;
+}
+
+
+/* =========================================================
+   GARANTIA — NENHUM PROJETO ESCURO
+========================================================= */
+
+#api1-window .project-app,
+#api2-window .project-app,
+#api3-window .project-app,
+#estacao-window .project-app {
+
+    background:
+        linear-gradient(
+            to bottom,
+            #ffffff 0%,
+            #f7f7f7 100%
+        ) !important;
+
+    color: #222 !important;
+}
+
+
+/* Texto interno */
+#api1-window .project-app *,
+#api2-window .project-app *,
+#api3-window .project-app *,
+#estacao-window .project-app * {
+    color: inherit;
+}
+
+
+/* Títulos continuam azuis */
+#api1-window .project-app h1,
+#api2-window .project-app h1,
+#api3-window .project-app h1,
+#estacao-window .project-app h1,
+#api1-window .project-app h3,
+#api2-window .project-app h3,
+#api3-window .project-app h3,
+#estacao-window .project-app h3 {
+    color: #174f9c !important;
+}
+
+
+/* Subtítulos */
+#api1-window .project-app .app-header p,
+#api2-window .project-app .app-header p,
+#api3-window .project-app .app-header p,
+#estacao-window .project-app .app-header p {
+    color: #555 !important;
+}
+
+
+/* Listas */
+#api1-window .project-app li,
+#api2-window .project-app li,
+#api3-window .project-app li,
+#estacao-window .project-app li {
+    color: #222 !important;
+}
+
+/* =========================================================
+   RESPONSIVE ACTION BUTTONS
+   GitHub / LinkedIn / Projects
+========================================================= */
+
+
+/* ---------------------------------------------------------
+   CONTAINER DOS BOTÕES DO ABOUT.EXE
+--------------------------------------------------------- */
+
+.about-links {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin-top: 16px;
+
+    width: 100%;
+}
+
+
+/* ---------------------------------------------------------
+   BOTÕES DE LINK
+--------------------------------------------------------- */
+
+.about-links .xp-button,
+.project-actions .xp-button,
+.project-app .xp-button {
+    box-sizing: border-box;
+
+    min-width: 120px;
+    min-height: 30px;
+
+    padding: 5px 14px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 5px;
+
+    border: 1px solid #003c9d;
+
+    border-radius: 2px;
+
+    background:
+        linear-gradient(
+            to bottom,
+            #ffffff 0%,
+            #f5f5f5 45%,
+            #d9d9d9 100%
+        );
+
+    color: #111;
+
+    font-family:
+        Tahoma,
+        Arial,
+        sans-serif;
+
+    font-size: 11px;
+
+    line-height: 1.2;
+
+    text-decoration: none;
+
+    white-space: nowrap;
+
+    cursor: pointer;
+
+    box-shadow:
+        inset 1px 1px #ffffff,
+        inset -1px -1px #888,
+        1px 1px 2px rgba(0, 0, 0, 0.2);
+
+    transition:
+        background 0.12s ease,
+        transform 0.08s ease,
+        box-shadow 0.08s ease;
+}
+
+
+/* ---------------------------------------------------------
+   HOVER
+--------------------------------------------------------- */
+
+.about-links .xp-button:hover,
+.project-actions .xp-button:hover,
+.project-app .xp-button:hover {
+
+    background:
+        linear-gradient(
+            to bottom,
+            #ffffff 0%,
+            #e9f4ff 45%,
+            #c8def5 100%
+        );
+
+    color: #003c9d;
+
+    box-shadow:
+        inset 1px 1px #ffffff,
+        inset -1px -1px #6b7d91,
+        0 0 3px rgba(49, 106, 197, 0.35);
+}
+
+
+/* ---------------------------------------------------------
+   CLIQUE
+--------------------------------------------------------- */
+
+.about-links .xp-button:active,
+.project-actions .xp-button:active,
+.project-app .xp-button:active {
+
+    transform: translate(1px, 1px);
+
+    background:
+        linear-gradient(
+            to bottom,
+            #d2d2d2,
+            #eeeeee
+        );
+
+    box-shadow:
+        inset 1px 1px #777,
+        inset -1px -1px #ffffff;
+}
+
+
+/* ---------------------------------------------------------
+   LINKS <a> DEVEM HERDAR O VISUAL
+--------------------------------------------------------- */
+
+a.xp-button {
+
+    text-decoration: none;
+
+    color: #111;
+}
+
+a.xp-button:visited {
+
+    color: #111;
+}
+
+a.xp-button:hover {
+
+    color: #003c9d;
+}
+
+
+/* ---------------------------------------------------------
+   ÍCONES DOS BOTÕES
+--------------------------------------------------------- */
+
+.xp-button .button-icon {
+
+    width: 16px;
+    height: 16px;
+
+    flex: 0 0 16px;
+
+    object-fit: contain;
+
+    image-rendering: auto;
+}
+
+
+/* ---------------------------------------------------------
+   AÇÕES DOS PROJETOS
+--------------------------------------------------------- */
+
+.project-actions {
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin-top: 20px;
+
+    padding-top: 12px;
+
+    border-top: 1px solid #c8c8c8;
+}
+
+
+/* ---------------------------------------------------------
+   BOTÃO PRINCIPAL DO PROJETO
+--------------------------------------------------------- */
+
+.project-actions .xp-button.primary {
+
+    min-width: 135px;
+
+    font-weight: bold;
+
+    background:
+        linear-gradient(
+            to bottom,
+            #ffffff,
+            #d8e8f8
+        );
+}
+
+
+/* ---------------------------------------------------------
+   BOTÃO GITHUB DO PROJETO
+--------------------------------------------------------- */
+
+.project-actions .xp-button.github-button {
+
+    min-width: 115px;
+}
+
+
+/* ---------------------------------------------------------
+   BOTÃO LINKEDIN
+--------------------------------------------------------- */
+
+.about-links .linkedin-button {
+
+    min-width: 115px;
+}
+
+
+/* ---------------------------------------------------------
+   BOTÃO GITHUB
+--------------------------------------------------------- */
+
+.about-links .github-button {
+
+    min-width: 115px;
+}
+
+
+/* =========================================================
+   RESPONSIVIDADE
+========================================================= */
+
+
+/* Tablets / janelas menores */
+
+@media (max-width: 700px) {
+
+    .about-links {
+
+        gap: 6px;
+
+    }
+
+    .about-links .xp-button,
+    .project-actions .xp-button {
+
+        flex: 1 1 140px;
+
+        min-width: 0;
+
+    }
+
+    .project-actions {
+
+        gap: 6px;
+
+    }
+
+}
+
+
+/* Celular */
+
+@media (max-width: 480px) {
+
+    .about-links {
+
+        flex-direction: column;
+
+        align-items: stretch;
+
+        width: 100%;
+
+    }
+
+    .about-links .xp-button {
+
+        width: 100%;
+
+        min-width: 0;
+
+        min-height: 34px;
+
+    }
+
+    .project-actions {
+
+        flex-direction: column;
+
+        align-items: stretch;
+
+        width: 100%;
+
+    }
+
+    .project-actions .xp-button {
+
+        width: 100%;
+
+        min-width: 0;
+
+        min-height: 34px;
+
+    }
+
+}
+
+
+/* Janelas muito estreitas */
+
+@media (max-width: 350px) {
+
+    .about-links .xp-button,
+    .project-actions .xp-button {
+
+        font-size: 10px;
+
+        padding-left: 8px;
+        padding-right: 8px;
+
+    }
+
+}
+/* =========================================================
+   REPAIR: INTERNET EXPLORER, INSTALLED SKILLS AND MEDIA PLAYER
+   Overrides scoped to the three windows so other portfolio
+   windows and interactions remain unchanged.
+========================================================= */
+
+#internet-window,
+#skills-window,
+#media-window {
+    box-sizing: border-box;
+    max-width: calc(100vw - 20px);
+    max-height: calc(100vh - 40px);
+}
+
+/* Internet Explorer: keep toolbar and title visible; scroll page content. */
+#internet-window {
+    display: none;
+    flex-direction: column;
+    width: 760px;
+    height: 540px;
+    min-width: 300px;
+    min-height: 260px;
+    overflow: hidden;
+    background: #ece9d8;
+}
+
+#internet-window.active-window {
+    display: flex;
+}
+
+#internet-window .window-titlebar,
+#internet-window .window-menu,
+#internet-window .window-toolbar {
+    flex: 0 0 auto;
+}
+
+#internet-window .window-menu {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 23px;
+    padding: 2px 7px;
+    background: #ece9d8;
+    border-bottom: 1px solid #c2c2c2;
+}
+
+#internet-window .window-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    min-height: 40px;
+    padding: 5px 7px;
+    background: #ece9d8;
+    border-bottom: 1px solid #a7a7a7;
+}
+
+#internet-window .toolbar-address {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font: 11px Tahoma, Verdana, sans-serif;
+}
+
+#internet-window .browser-content {
+    flex: 1 1 auto;
+    min-width: 0;
+    min-height: 0;
+    height: auto;
+    padding: 0;
+    overflow: auto;
+    background: #fff;
+}
+
+#internet-window .browser-page {
+    min-height: 100%;
+    padding: 24px 30px;
+    overflow-wrap: anywhere;
+    background: linear-gradient(#fff, #eef6ff);
+}
+
+#internet-window .browser-page h1 {
+    margin-top: 0;
+    color: #174f9b;
+    font-size: 25px;
+}
+
+#internet-window .browser-page h2 {
+    color: #315e96;
+}
+
+/* Installed Skills: the program list scrolls inside the window. */
+#skills-window {
+    display: none;
+    flex-direction: column;
+    width: 820px;
+    height: 610px;
+    min-width: 300px;
+    min-height: 260px;
+    overflow: hidden;
+    background: #ece9d8;
+}
+
+#skills-window.active-window {
+    display: flex;
+}
+
+#skills-window > .window-titlebar,
+#skills-window > .window-menu,
+#skills-window > .window-statusbar {
+    flex: 0 0 auto;
+}
+
+#skills-window > .window-menu {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 23px;
+    padding: 2px 7px;
+    background: #ece9d8;
+    border-bottom: 1px solid #c2c2c2;
+}
+
+#skills-window .skills-layout {
+    display: flex;
+    flex: 1 1 0;
+    width: 100%;
+    height: auto;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+}
+
+#skills-window .skills-sidebar {
+    flex: 0 0 190px;
+    width: 190px;
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+#skills-window .skills-main {
+    flex: 1 1 0;
+    width: 0;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+
+#skills-window .skill-program {
+    flex: 0 0 auto;
+    min-width: 0;
+}
+
+#skills-window .skill-program-info {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+#skills-window .window-statusbar {
+    flex: 0 0 22px;
+    min-height: 22px;
+}
+
+/* Media Player: style the actual mp-* classes used by index.html. */
+#media-window {
+    display: none;
+    flex-direction: column;
+    width: 500px;
+    height: 430px;
+    min-width: 290px;
+    min-height: 300px;
+    padding: 0;
+    border: 1px solid #10141c;
+    background: #151922;
+    color: #f2f6ff;
+    overflow: hidden;
+}
+
+#media-window.active-window {
+    display: flex;
+}
+
+#media-window .media-player-shell {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+    background: linear-gradient(145deg, #303846, #10141b 72%);
+    color: #f2f6ff;
+    font-family: Tahoma, Verdana, sans-serif;
+}
+
+#media-window .media-player-top {
+    display: flex;
+    flex: 0 0 32px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 4px 6px 4px 10px;
+    color: #fff;
+    background: linear-gradient(#68758b, #27344b 55%, #151d2a);
+    border-bottom: 1px solid #090d14;
+    cursor: move;
+    user-select: none;
+    touch-action: none;
+}
+
+#media-window .media-player-brand {
+    min-width: 0;
+    overflow: hidden;
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: .5px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#media-window .media-player-window-controls {
+    display: flex;
+    flex: 0 0 auto;
+    gap: 3px;
+}
+
+#media-window .mp-window-button {
+    width: 22px;
+    height: 20px;
+    padding: 0;
+    border: 1px solid #8a9ab1;
+    background: linear-gradient(#f8fbff, #aebbd0);
+    color: #17243a;
+    line-height: 16px;
+    cursor: pointer;
+}
+
+#media-window .mp-window-button.mp-close {
+    color: #fff;
+    border-color: #a95c5c;
+    background: linear-gradient(#e98282, #a72c2c);
+}
+
+#media-window .media-player-display {
+    position: relative;
+    flex: 1 1 auto;
+    min-height: 120px;
+    margin: 10px 10px 6px;
+    overflow: hidden;
+    border: 1px solid #05080d;
+    background: radial-gradient(ellipse at center, #183b5d 0%, #07121f 70%);
+    box-shadow: inset 0 0 18px #000;
+}
+
+#media-window .mp-display-grid {
+    position: absolute;
+    inset: 0;
+    opacity: .25;
+    background-image: linear-gradient(rgba(100,190,255,.18) 1px, transparent 1px), linear-gradient(90deg, rgba(100,190,255,.18) 1px, transparent 1px);
+    background-size: 18px 18px;
+}
+
+#media-window .mp-display-content {
+    position: relative;
+    z-index: 2;
+    padding: 13px 14px 4px;
+    text-align: center;
+    text-shadow: 0 1px 3px #000;
+}
+
+#media-window .mp-display-label {
+    color: #7fcaff;
+    font-size: 9px;
+    letter-spacing: 2px;
+}
+
+#media-window .mp-track-title {
+    margin-top: 8px;
+    color: #fff;
+    font-size: clamp(14px, 3vw, 21px);
+    font-weight: bold;
+    overflow-wrap: anywhere;
+}
+
+#media-window .mp-track-subtitle {
+    margin-top: 4px;
+    color: #b9d5ee;
+    font-size: 11px;
+}
+
+#media-window .mp-time-row {
+    display: flex;
+    justify-content: center;
+    gap: 7px;
+    margin-top: 9px;
+    color: #a9c7e3;
+    font: 10px "Courier New", monospace;
+}
+
+#media-window .mp-visualizer {
+    position: absolute;
+    inset: 0 10px 0;
+    z-index: 1;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 5px;
+    padding-bottom: 7px;
+    opacity: .65;
+    pointer-events: none;
+}
+
+#media-window .mp-visualizer span {
+    width: 5px;
+    height: 18%;
+    border-radius: 2px 2px 0 0;
+    background: linear-gradient(#8de5ff, #1687e8 65%, #124c9a);
+    box-shadow: 0 0 5px rgba(58, 169, 255, .55);
+    animation: gio-mp-bars .75s ease-in-out infinite alternate;
+}
+
+#media-window .mp-visualizer span:nth-child(3n) { animation-delay: -.25s; height: 35%; }
+#media-window .mp-visualizer span:nth-child(3n + 1) { animation-delay: -.5s; height: 24%; }
+#media-window .mp-visualizer span:nth-child(4n) { animation-duration: 1.1s; height: 45%; }
+
+@keyframes gio-mp-bars {
+    from { transform: scaleY(.35); }
+    to { transform: scaleY(1.35); }
+}
+
+#media-window .mp-progress-area {
+    flex: 0 0 auto;
+    padding: 5px 12px 8px;
+}
+
+#media-window .mp-progress-track {
+    position: relative;
+    height: 7px;
+    border: 1px solid #05080d;
+    background: #080d14;
+    cursor: pointer;
+}
+
+#media-window .mp-progress-fill {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(#a4e8ff, #188ce5);
+}
+
+#media-window .mp-progress-thumb {
+    position: absolute;
+    top: -3px;
+    left: 0%;
+    width: 7px;
+    height: 11px;
+    border: 1px solid #e7f6ff;
+    background: linear-gradient(#fff, #7caed6);
+    transform: translateX(-50%);
+}
+
+#media-window .mp-controls {
+    display: flex;
+    flex: 0 0 auto;
+    justify-content: center;
+    align-items: center;
+    gap: 9px;
+    padding: 3px 8px 9px;
+}
+
+#media-window .mp-round-button {
+    min-width: 36px;
+    height: 30px;
+    padding: 0 7px;
+    border: 1px solid #667b94;
+    border-radius: 3px;
+    background: linear-gradient(#63758b, #26354a 55%, #172131);
+    color: #fff;
+    text-shadow: 0 1px #000;
+    cursor: pointer;
+}
+
+#media-window .mp-round-button:hover,
+#media-window .mp-small-button:hover {
+    border-color: #a4d7ff;
+    background: linear-gradient(#4e9bd5, #245b91);
+}
+
+#media-window .mp-play {
+    min-width: 43px;
+    border-color: #4e9fd8;
+    background: linear-gradient(#55b9f0, #1267ae);
+}
+
+#media-window .mp-bottom {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 7px 10px;
+    border-top: 1px solid #4b5667;
+    background: rgba(0,0,0,.18);
+}
+
+#media-window .mp-small-button {
+    min-height: 23px;
+    padding: 2px 8px;
+    border: 1px solid #68788d;
+    background: linear-gradient(#5d6c80, #283547);
+    color: #eaf4ff;
+    font-size: 9px;
+    cursor: pointer;
+}
+
+#media-window .mp-volume {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-width: 50px;
+    color: #c3d9ed;
+}
+
+#media-window #mp-volume-control {
+    width: min(100%, 100px);
+    accent-color: #3c9fe8;
+}
+
+#media-window .mp-status-bar {
+    display: flex;
+    flex: 0 0 22px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 0 8px;
+    border-top: 1px solid #536074;
+    background: #0c1119;
+    color: #8cb4d8;
+    font: 9px "Courier New", monospace;
+}
+
+#media-window .mp-status-right {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+@media (max-width: 650px) {
+    #internet-window,
+    #skills-window,
+    #media-window {
+        left: 5px !important;
+        width: calc(100vw - 10px) !important;
+        max-width: calc(100vw - 10px) !important;
+        max-height: calc(100vh - 45px) !important;
+    }
+
+    #internet-window,
+    #skills-window {
+        height: calc(100vh - 45px) !important;
+    }
+
+    #skills-window .skills-sidebar {
+        flex-basis: 118px;
+        width: 118px;
+    }
+
+    #skills-window .skills-main {
+        padding: 9px;
+    }
+
+    #skills-window .change-button {
+        display: none;
+    }
+
+    #media-window {
+        height: min(430px, calc(100vh - 45px)) !important;
+    }
+
+    #media-window .mp-visualizer {
+        gap: 3px;
+    }
+}
+
+
+/* Skills only: keep the installed-program list scrollable within its window. */
+#skills-window .skills-layout {
+    flex: 1 1 0 !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+}
+#skills-window .skills-main {
+    flex: 1 1 0 !important;
+    align-self: stretch !important;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow-x: hidden !important;
+    overflow-y: scroll !important;
+    overscroll-behavior: contain;
+}
+#skills-window .skills-main::-webkit-scrollbar { width: 15px; }
+#skills-window .skills-main::-webkit-scrollbar-track { background: #ece9d8; }
+#skills-window .skills-main::-webkit-scrollbar-thumb {
+    border: 1px solid #777;
+    background: linear-gradient(to right, #d9e4f0, #aebed0);
+}
+#skills-window .skills-main::-webkit-scrollbar-button {
+    height: 15px; background: #d4d0c8; border: 1px solid #888;
+}
+.windows-emoji-icon {
+    display: inline-block; width: 1.2em; height: 1.2em;
+    max-width: 48px; max-height: 48px; object-fit: contain;
+    vertical-align: middle; margin: 0 2px;
+}
+.desktop-icon-image .windows-emoji-icon { width: 48px; height: 48px; margin: 0; }
+.project-icon .windows-emoji-icon, .app-icon .windows-emoji-icon { width: 44px; height: 44px; margin: 0; }
+.tray-icon .windows-emoji-icon { width: 14px; height: 14px; margin: 0; }
+.start-avatar .windows-emoji-icon { width: 32px; height: 32px; margin: 0; }
+
+
+/* Fix: janelas flex (Skills / Media Player) tambem quando maximizadas */
+#skills-window.maximized,
+#media-window.maximized {
+    display: flex !important;
+}
+
+/* Media Player: o visualizador fica atras do texto sem cobrir o tempo */
+#media-window .media-player-display {
+    display: flex;
+    flex-direction: column;
+}
+#media-window .mp-display-content {
+    flex: 0 0 auto;
+}
+#media-window .mp-visualizer {
+    top: auto;
+    height: 46%;
+}
+
+
+/* Links externos (GitHub / LinkedIn) */
+a.xp-button {
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+}
+
+#internet-window .browser-page a.browser-link {
+    color: #0000ee;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+#internet-window .browser-page a.browser-link:visited {
+    color: #551a8b;
+}
+
+
+
+
+/* =========================================================
+   WINDOWS XP LUNA FINISH
+   Visual-only refinements; application logic and GioBuddy are untouched.
+   ========================================================= */
+
+/* Keep the Bliss desktop crisp, as in the original XP desktop. */
+#desktop::after {
+    display: none !important;
+    background: none !important;
+}
+
+/* XP desktop icons use compact, sharp native-style artwork. */
+.desktop-icon {
+    min-height: 70px;
+    padding: 3px 2px;
+    text-shadow: 1px 1px 2px #12345d;
+}
+
+.desktop-icon-image {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    min-height: 40px;
+    margin-bottom: 2px;
+    filter: none;
+}
+
+.desktop-icon-image img,
+.desktop-icon-image .os-icon-image {
+    width: 36px !important;
+    height: 36px !important;
+    max-width: 36px;
+    max-height: 36px;
+    image-rendering: auto;
+}
+
+.desktop-icon:hover {
+    background: rgba(49, 106, 197, 0.42);
+    outline: 1px dotted rgba(255, 255, 255, 0.95);
+}
+
+/* Luna's rounded blue title frame and bright active title bar. */
+.os-window,
+.explorer-window {
+    border: 1px solid #0054e3;
+    border-radius: 7px 7px 0 0;
+    box-shadow:
+        2px 2px 5px rgba(0, 0, 0, 0.38),
+        inset 1px 1px rgba(255, 255, 255, 0.95);
+}
+
+.window-titlebar {
+    height: 27px;
+    min-height: 27px;
+    padding: 3px 4px 3px 7px;
+    background: linear-gradient(
+        to bottom,
+        #3b8cf5 0%,
+        #1671e8 18%,
+        #0860d8 58%,
+        #0053d6 100%
+    );
+    border-bottom: 1px solid #003c9d;
+    border-radius: 6px 6px 0 0;
+}
+
+.window-title {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    letter-spacing: 0;
+    text-shadow: 1px 1px 1px #003c91;
+}
+
+.window-real-icon {
+    width: 16px !important;
+    height: 16px !important;
+    max-width: 16px;
+    max-height: 16px;
+    flex: 0 0 16px;
+    object-fit: contain;
+}
+
+.window-controls {
+    gap: 2px;
+    padding-left: 5px;
+}
+
+.window-controls button {
+    position: relative;
+    width: 21px;
+    height: 21px;
+    flex: 0 0 21px;
+    border: 1px solid #fff;
+    border-radius: 3px;
+    background: linear-gradient(135deg, #6eb4ff 0%, #2878e7 55%, #0751bd 100%);
+    color: #fff;
+    font-family: Tahoma, Arial, sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 16px;
+    text-shadow: 0 -1px #174b9b;
+    box-shadow:
+        inset 1px 1px rgba(255,255,255,.55),
+        inset -1px -1px rgba(0,38,120,.45);
+}
+
+.window-controls button:hover {
+    background: linear-gradient(135deg, #9bd0ff, #3988f3 58%, #0751bd);
+}
+
+.window-controls .window-close {
+    background: linear-gradient(135deg, #ffb6a3 0%, #ed5b42 45%, #c91d12 100%);
+    border-color: #fff0e9;
+    color: #fff;
+    text-shadow: 0 -1px #8e1008;
+}
+
+.window-controls .window-close:hover {
+    background: linear-gradient(135deg, #ffd3c5 0%, #ff7258 45%, #d82719 100%);
+}
+
+/* Native XP menu and toolbar surfaces. */
+.window-menu,
+.explorer-menu {
+    background: linear-gradient(to bottom, #fff 0%, #f5f4ef 45%, #ece9d8 100%);
+    border-bottom: 1px solid #d0cfc8;
+}
+
+.window-menu span,
+.explorer-menu span {
+    border: 1px solid transparent;
+    border-radius: 2px;
+}
+
+.window-menu span:hover,
+.explorer-menu span:hover {
+    color: #102b50;
+    background: linear-gradient(#fff8dc, #ffe7a2);
+    border-color: #e2b94f;
+}
+
+.window-toolbar,
+.explorer-toolbar {
+    background: linear-gradient(to bottom, #faf9f5, #e7e5dc);
+    border-bottom: 1px solid #c7c5bc;
+}
+
+.window-toolbar button,
+.explorer-toolbar button,
+.xp-button,
+button.xp-button {
+    border: 1px solid #8e9aab;
+    border-radius: 3px;
+    background: linear-gradient(to bottom, #fff, #e5eaf2 55%, #d2d9e5);
+    box-shadow: inset 1px 1px #fff, inset -1px -1px #c1c8d2;
+}
+
+.window-toolbar button:hover,
+.explorer-toolbar button:hover,
+.xp-button:hover,
+button.xp-button:hover {
+    border-color: #e2b94f;
+    background: linear-gradient(#fff9e7, #ffe8a8);
+}
+
+.window-toolbar button:active,
+.explorer-toolbar button:active,
+.xp-button:active,
+button.xp-button:active {
+    background: linear-gradient(#d7e6f7, #f7faff);
+    box-shadow: inset 1px 1px #9aa9bc;
+}
+
+.window-content {
+    scrollbar-color: #8ab5e8 #f0f0f0;
+    scrollbar-width: thin;
+}
+
+.window-statusbar {
+    background: linear-gradient(to bottom, #f5f4ef, #e8e6dd);
+    border-top: 1px solid #c8c6bd;
+    font-size: 11px;
+}
+
+/* XP Explorer's blue task pane and clean white file area. */
+.explorer-sidebar {
+    background: linear-gradient(to right, #d6e8fa 0%, #eaf4ff 12%, #eaf4ff 100%);
+    border-right: 1px solid #9bb8d7;
+}
+
+.explorer-side-title {
+    color: #124a8c;
+    background: linear-gradient(to bottom, #fff 0%, #dcecff 100%);
+    border: 1px solid #b5cde7;
+    border-radius: 3px;
+}
+
+.explorer-heading {
+    background: linear-gradient(to bottom, #fff 0%, #f1f6fc 100%);
+    border-bottom-color: #d6dce4;
+}
+
+.explorer-heading h2 {
+    color: #1356a4;
+    font-weight: bold;
+}
+
+.explorer-item:hover,
+.computer-item:hover {
+    background: #e5f1ff;
+    border-color: #9bbce2;
+}
+
+.explorer-item.selected {
+    background: #cde3fb;
+    border-color: #6d9ed4;
+}
+
+/* XP Start menu: glossy blue user header, pale right column and crisp dividers. */
+#start-menu {
+    width: 390px;
+    border: 1px solid #174b91;
+    border-radius: 6px 6px 0 0;
+    overflow: hidden;
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, .4);
+}
+
+.start-header {
+    background: linear-gradient(to bottom, #3e8ce9 0%, #1761bd 100%);
+    border-bottom: 1px solid #0c4698;
+}
+
+.start-avatar {
+    border: 2px solid #fff;
+    border-radius: 4px;
+    box-shadow: 0 1px 2px rgba(0,0,0,.35);
+}
+
+.start-column {
+    background: #fff;
+    border-right: 1px solid #d7dce4;
+}
+
+.start-column.right {
+    background: #dce9f8;
+}
+
+.start-column button {
+    min-height: 31px;
+    padding: 6px 7px;
+    border: 1px solid transparent;
+    border-radius: 2px;
+}
+
+.start-column button:hover {
+    color: #102b50;
+    background: linear-gradient(#fff8dc, #ffe6a0);
+    border-color: #e2b94f;
+}
+
+.start-footer {
+    background: linear-gradient(to bottom, #2b78d1, #1455a6);
+    border-top: 1px solid #0d4594;
+}
+
+.start-footer button {
+    padding: 5px 7px;
+    color: #fff;
+    border: 1px solid transparent;
+    border-radius: 3px;
+}
+
+.start-footer button:hover {
+    background: rgba(255,255,255,.18);
+    border-color: rgba(255,255,255,.35);
+}
+
+/* The original XP taskbar has a vivid blue surface and a green Start button. */
+#taskbar {
+    height: 30px;
+    min-height: 30px;
+    background: linear-gradient(to bottom, #3d91ef 0%, #1975dc 42%, #0759bf 100%);
+    border-top: 1px solid #70b8ff;
+    box-shadow: inset 0 1px rgba(255,255,255,.55);
+}
+
+#start-button {
+    height: 29px;
+    min-width: 94px;
+    border: 1px solid #4a9d35;
+    border-left: 0;
+    border-radius: 0 14px 14px 0;
+    background: linear-gradient(to bottom, #75d75b 0%, #3caa2b 46%, #23851d 100%);
+    box-shadow: inset 0 1px rgba(255,255,255,.55), inset 0 -1px rgba(0,60,0,.25);
+    text-shadow: 1px 1px #286d1b;
+}
+
+#start-button:hover {
+    background: linear-gradient(to bottom, #91e879 0%, #4fbd37 48%, #2a9822 100%);
+}
+
+#taskbar-programs {
+    gap: 3px;
+}
+
+.taskbar-button {
+    border: 1px solid #0b4da5;
+    border-radius: 2px;
+    background: linear-gradient(to bottom, #3b8de8, #1766c1 55%, #0c55aa);
+    box-shadow: inset 1px 1px rgba(255,255,255,.32), inset -1px -1px rgba(0,40,110,.3);
+}
+
+.taskbar-button.active {
+    background: linear-gradient(to bottom, #0d4fa7, #286fca);
+    border-color: #083b80;
+    box-shadow: inset 1px 1px #073c82, inset -1px -1px rgba(255,255,255,.18);
+}
+
+#taskbar-tray {
+    background: linear-gradient(to bottom, #1683df, #0862bc);
+    border-left: 1px solid #0a4f9f;
+    box-shadow: inset 1px 0 rgba(255,255,255,.25);
+}
+
+/* Standard Windows XP scrollbar treatment in the content panes. */
+*::-webkit-scrollbar {
+    width: 16px;
+    height: 16px;
+}
+
+*::-webkit-scrollbar-track {
+    background: #f0f0f0;
+    border-left: 1px solid #d0d0d0;
+}
+
+*::-webkit-scrollbar-thumb {
+    border: 1px solid #b4b4b4;
+    background: linear-gradient(to right, #fafafa, #dcdcdc);
+}
+
+*::-webkit-scrollbar-button {
+    display: block;
+    height: 16px;
+    background: linear-gradient(#fff, #d7d7d7);
+    border: 1px solid #b7b7b7;
+}
+
+/* Keep windows usable on smaller displays, without touching the buddy layer. */
+@media (max-width: 720px) {
+    .desktop-icons {
+        width: 78px;
+        left: 3px;
+        top: 6px;
+        gap: 4px;
+    }
+
+    .desktop-icon {
+        width: 74px;
+        min-height: 61px;
+    }
+
+    .desktop-icon-image {
+        width: 34px;
+        height: 34px;
+        min-width: 34px;
+        min-height: 34px;
+    }
+
+    .desktop-icon-image img,
+    .desktop-icon-image .os-icon-image {
+        width: 32px !important;
+        height: 32px !important;
+        max-width: 32px;
+        max-height: 32px;
+    }
+
+    .os-window,
+    .explorer-window {
+        left: 5px !important;
+        top: 24px !important;
+        width: calc(100vw - 10px) !important;
+        min-width: 0;
+        max-width: calc(100vw - 10px);
+        max-height: calc(100vh - 58px);
+    }
+
+    #start-menu {
+        width: min(390px, 100vw);
+    }
+
+    .taskbar-button {
+        min-width: 78px;
+        flex-basis: 100px;
+    }
+}
+
+
+/* Project links keep the Windows XP button appearance while navigating correctly. */
+a.xp-button {
+    display: inline-block;
+    color: inherit;
+    text-decoration: none;
+    text-align: center;
+}
+a.xp-button:focus-visible {
+    outline: 1px dotted #000;
+    outline-offset: 2px;
 }

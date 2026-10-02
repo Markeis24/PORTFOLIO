@@ -58,32 +58,32 @@
         <div class="desktop-icons">
 
             <div class="desktop-icon" data-window="computer-window">
-                <div class="desktop-icon-image">💻</div>
+                <div class="desktop-icon-image"></div>
                 <span>My Computer</span>
             </div>
 
             <div class="desktop-icon" data-window="projects-window">
-                <div class="desktop-icon-image">📁</div>
+                <div class="desktop-icon-image"></div>
                 <span>Projects</span>
             </div>
 
             <div class="desktop-icon" data-window="about-window">
-                <div class="desktop-icon-image">👩🏻‍💻</div>
+                <div class="desktop-icon-image"></div>
                 <span>About Me</span>
             </div>
 
             <div class="desktop-icon" data-window="skills-window">
-                <div class="desktop-icon-image">⚙️</div>
+                <div class="desktop-icon-image"></div>
                 <span>Skills</span>
             </div>
 
             <div class="desktop-icon" data-window="internet-window">
-                <div class="desktop-icon-image">🌐</div>
+                <div class="desktop-icon-image"></div>
                 <span>Internet</span>
             </div>
 
             <div class="desktop-icon" data-window="media-window">
-                <div class="desktop-icon-image">🎵</div>
+                <div class="desktop-icon-image"></div>
                 <span>Media Player</span>
             </div>
 
@@ -94,100 +94,130 @@
              MY COMPUTER
         ====================================================== -->
 
-        <section class="os-window" id="computer-window">
+<section class="os-window explorer-window" id="computer-window">
 
-            <div class="window-titlebar">
+    <div class="window-titlebar">
 
-                <div class="window-title">
-                    💻 My Computer
-                </div>
+        <div class="window-title" id="computer-window-title">
+             My Computer
+        </div>
 
-                <div class="window-controls">
-                    <button class="window-minimize">_</button>
-                    <button class="window-maximize">□</button>
-                    <button class="window-close">X</button>
-                </div>
+        <div class="window-controls">
+            <button class="window-minimize">_</button>
+            <button class="window-maximize">□</button>
+            <button class="window-close">X</button>
+        </div>
 
+    </div>
+
+    <div class="window-menu explorer-menu">
+        <span>File</span>
+        <span>Edit</span>
+        <span>View</span>
+        <span>Favorites</span>
+        <span>Tools</span>
+        <span>Help</span>
+    </div>
+
+    <div class="window-toolbar explorer-toolbar">
+
+        <button class="explorer-nav" data-explorer-action="back" title="Back">←</button>
+        <button class="explorer-nav" data-explorer-action="forward" title="Forward">→</button>
+        <button class="explorer-nav" data-explorer-action="up" title="Up one level">↑</button>
+
+        <div class="explorer-separator"></div>
+
+        <button class="explorer-tool" data-explorer-action="search" title="Search"><img class="windows-emoji-icon" src="img/icons/windows-xp/xp-search.ico" alt="" aria-hidden="true"></button>
+        <button class="explorer-tool" data-explorer-action="folders" title="Folders"><img class="windows-emoji-icon" src="img/icons/windows-xp/xp-folder.ico" alt="" aria-hidden="true"></button>
+
+        <div class="toolbar-address explorer-address">
+            <span class="address-computer"><img class="windows-emoji-icon" src="img/icons/windows-xp/xp-computer.ico" alt="" aria-hidden="true"></span>
+            <span id="explorer-address-text">My Computer</span>
+        </div>
+
+        <button class="explorer-go" data-explorer-action="go" title="Go">▶</button>
+
+    </div>
+
+    <div class="explorer-body">
+
+        <aside class="explorer-sidebar">
+
+            <div class="explorer-side-title">
+                <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-folder.ico" alt="" aria-hidden="true"> File and Folder Tasks
             </div>
 
-            <div class="window-menu">
-                <span>File</span>
-                <span>Edit</span>
-                <span>View</span>
-                <span>Favorites</span>
-                <span>Tools</span>
-                <span>Help</span>
+            <button data-explorer-path="projects">
+                <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-folder.ico" alt="" aria-hidden="true"> View my projects
+            </button>
+
+            <button data-explorer-path="skills">
+                <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-settings.ico" alt="" aria-hidden="true"> View installed skills
+            </button>
+
+            <button data-window="about-window">
+                <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-computer.ico" alt="" aria-hidden="true"> View my profile
+            </button>
+
+            <div class="explorer-side-title explorer-side-title-second">
+                <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-computer.ico" alt="" aria-hidden="true"> Other Places
             </div>
 
-            <div class="window-toolbar">
+            <button class="explorer-side-link" data-explorer-path="computer">
+                <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-computer.ico" alt="" aria-hidden="true"> My Computer
+            </button>
 
-                <button>←</button>
-                <button>→</button>
-                <button>↑</button>
+            <button class="explorer-side-link" data-explorer-path="projects">
+                <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-folder.ico" alt="" aria-hidden="true"> My Projects
+            </button>
 
-                <div class="toolbar-address">
-                    My Computer
+            <button class="explorer-side-link" data-window="internet-window">
+                <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-internet.ico" alt="" aria-hidden="true"> Internet
+            </button>
+
+            <div class="explorer-side-title explorer-side-title-second">
+                <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-help.ico" alt="" aria-hidden="true"> Details
+            </div>
+
+            <div class="explorer-details">
+                <strong id="explorer-details-name">My Computer</strong>
+                <span id="explorer-details-description">
+                    Personal Development Environment
+                </span>
+            </div>
+
+        </aside>
+
+        <div class="explorer-main">
+
+            <div class="explorer-heading">
+                <div>
+                    <h2 id="explorer-heading-title">My Computer</h2>
+                    <p id="explorer-heading-subtitle">
+                        Files and folders stored on this computer
+                    </p>
                 </div>
 
-            </div>
-
-            <div class="window-content computer-content">
-
-                <h2>My Computer</h2>
-
-                <div class="computer-section">
-
-                    <h3>Files stored on this computer</h3>
-
-                    <div class="computer-grid">
-
-                        <div class="computer-item" data-window="projects-window">
-                            <div>📁</div>
-                            <span>My Projects</span>
-                        </div>
-
-                        <div class="computer-item" data-window="skills-window">
-                            <div>⚙️</div>
-                            <span>Installed Skills</span>
-                        </div>
-
-                        <div class="computer-item" data-window="about-window">
-                            <div>📄</div>
-                            <span>About Giovanna</span>
-                        </div>
-
-                    </div>
-
+                <div class="explorer-view-label">
+                    View: <strong>Icons</strong> ▼
                 </div>
-
-
-                <div class="computer-section">
-
-                    <h3>System</h3>
-
-                    <div class="computer-grid">
-
-                        <div class="computer-item">
-                            <div>💾</div>
-                            <span>Local Disk (C:)</span>
-                        </div>
-
-                        <div class="computer-item">
-                            <div>🌐</div>
-                            <span>Internet</span>
-                        </div>
-
-                    </div>
-
-                </div>
-
             </div>
 
-            <div class="window-statusbar">
-                5 objects
+            <div class="explorer-items" id="explorer-items">
+                <!-- Populated by script.js -->
             </div>
 
-        </section>
+        </div>
+
+    </div>
+
+    <div class="window-statusbar explorer-statusbar">
+        <span id="explorer-status-count">6 objects</span>
+        <span id="explorer-status-path">My Computer</span>
+    </div>
+
+</section>
+
 
 
         <!-- =====================================================
@@ -199,7 +229,7 @@
             <div class="window-titlebar">
 
                 <div class="window-title">
-                    📁 My Projects
+                     My Projects
                 </div>
 
                 <div class="window-controls">
@@ -234,6 +264,8 @@
 
             <div class="window-content projects-content">
 
+                <div class="explorer-projects-hint"><img class="windows-emoji-icon" src="img/icons/windows-xp/xp-folder.ico" alt="" aria-hidden="true"> C:\\Giovanna\\Projects</div>
+
                 <div class="projects-header">
 
                     <div>
@@ -253,7 +285,7 @@
                     <div class="project-item" data-window="api1-window">
 
                         <div class="project-icon">
-                            📘
+                            
                         </div>
 
                         <div class="project-name">
@@ -261,7 +293,7 @@
                         </div>
 
                         <div class="project-type">
-                            C / Algorithms
+                            Algorithms
                         </div>
 
                     </div>
@@ -272,7 +304,7 @@
                     <div class="project-item" data-window="api2-window">
 
                         <div class="project-icon">
-                            ☕
+                            
                         </div>
 
                         <div class="project-name">
@@ -291,7 +323,7 @@
                     <div class="project-item" data-window="api3-window">
 
                         <div class="project-icon">
-                            🖥️
+                            
                         </div>
 
                         <div class="project-name">
@@ -310,7 +342,7 @@
                     <div class="project-item" data-window="estacao-window">
 
                         <div class="project-icon">
-                            📡
+                            
                         </div>
 
                         <div class="project-name">
@@ -344,7 +376,7 @@
             <div class="window-titlebar">
 
                 <div class="window-title">
-                    📘 API-1.exe
+                     API-1.exe
                 </div>
 
                 <div class="window-controls">
@@ -360,7 +392,7 @@
                 <div class="app-header">
 
                     <div class="app-icon">
-                        📘
+                        <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-help.ico" alt="" aria-hidden="true">
                     </div>
 
                     <div>
@@ -382,7 +414,6 @@
 
                 <div class="tech-list">
 
-                    <span>C</span>
                     <span>Visualg</span>
                     <span>Algorithms</span>
                     <span>Logic</span>
@@ -400,9 +431,9 @@
                     <li>Quadrados perfeitos</li>
                 </ul>
 
-                <button class="xp-button">
+                <a class="xp-button" href="https://github.com/Markeis24/API-1" target="_blank" rel="noopener noreferrer">
                     Open project
-                </button>
+                </a>
 
             </div>
 
@@ -418,7 +449,7 @@
             <div class="window-titlebar">
 
                 <div class="window-title">
-                    ☕ API-2.exe
+                     API-2.exe
                 </div>
 
                 <div class="window-controls">
@@ -434,7 +465,7 @@
                 <div class="app-header">
 
                     <div class="app-icon">
-                        ☕
+                        <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-default.ico" alt="" aria-hidden="true">
                     </div>
 
                     <div>
@@ -477,9 +508,9 @@
                     <li>Aprovação final</li>
                 </ul>
 
-                <button class="xp-button">
+                <a class="xp-button" href="https://github.com/Markeis24/API-2" target="_blank" rel="noopener noreferrer">
                     Open project
-                </button>
+                </a>
 
             </div>
 
@@ -495,7 +526,7 @@
             <div class="window-titlebar">
 
                 <div class="window-title">
-                    🖥️ IPEMControl.exe
+                     IPEMControl.exe
                 </div>
 
                 <div class="window-controls">
@@ -511,7 +542,7 @@
                 <div class="app-header">
 
                     <div class="app-icon">
-                        🖥️
+                        <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-computer.ico" alt="" aria-hidden="true">
                     </div>
 
                     <div>
@@ -569,6 +600,10 @@
                     <li>Data analysis</li>
                 </ul>
 
+                <a class="xp-button" href="https://github.com/Markeis24/API-3" target="_blank" rel="noopener noreferrer">
+                    Open project
+                </a>
+
             </div>
 
         </section>
@@ -583,7 +618,7 @@
             <div class="window-titlebar">
 
                 <div class="window-title">
-                    📡 Estacao-TI.exe
+                     Estacao-TI.exe
                 </div>
 
                 <div class="window-controls">
@@ -599,7 +634,7 @@
                 <div class="app-header">
 
                     <div class="app-icon">
-                        📡
+                        <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-network-neighborhood.ico" alt="" aria-hidden="true">
                     </div>
 
                     <div>
@@ -667,6 +702,10 @@
                     <li>Deployment</li>
                 </ul>
 
+                <a class="xp-button" href="https://github.com/Markeis24/Estacao-TI" target="_blank" rel="noopener noreferrer">
+                    Open project
+                </a>
+
             </div>
 
         </section>
@@ -681,7 +720,7 @@
             <div class="window-titlebar">
 
                 <div class="window-title">
-                    👩🏻‍💻 ABOUT.EXE
+                     ABOUT.EXE
                 </div>
 
                 <div class="window-controls">
@@ -708,7 +747,7 @@
                 <div class="about-top">
 
                     <div class="about-avatar">
-                        👩🏻‍💻
+                        <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-computer.ico" alt="" aria-hidden="true">
                     </div>
 
                     <div>
@@ -799,13 +838,13 @@
 
                 <div class="about-links">
 
-                    <button class="xp-button">
+                    <a class="xp-button github-button" href="https://github.com/markeis24" target="_blank" rel="noopener noreferrer">
                         GitHub
-                    </button>
+                    </a>
 
-                    <button class="xp-button">
+                    <a class="xp-button linkedin-button" href="https://www.linkedin.com/in/SEU-USUARIO-AQUI" target="_blank" rel="noopener noreferrer">
                         LinkedIn
-                    </button>
+                    </a>
 
                 </div>
 
@@ -828,7 +867,7 @@
             <div class="window-titlebar">
 
                 <div class="window-title">
-                    ⚙️ SKILLS.EXE
+                     SKILLS.EXE
                 </div>
 
                 <div class="window-controls">
@@ -863,17 +902,17 @@
                     </div>
 
                     <button class="skills-side-button active">
-                        <span>💿</span>
+                        <span><img class="windows-emoji-icon" src="img/icons/windows-xp/xp-cdrom.ico" alt="" aria-hidden="true"></span>
                         Installed Programs
                     </button>
 
                     <button class="skills-side-button">
-                        <span>➕</span>
+                        <span><img class="windows-emoji-icon" src="img/icons/windows-xp/xp-run.ico" alt="" aria-hidden="true"></span>
                         Add New Program
                     </button>
 
                     <button class="skills-side-button">
-                        <span>🧩</span>
+                        <span><img class="windows-emoji-icon" src="img/icons/windows-xp/xp-program-group.ico" alt="" aria-hidden="true"></span>
                         Windows Components
                     </button>
 
@@ -886,15 +925,15 @@
                     </div>
 
                     <button class="skills-side-link">
-                        🖥️ System
+                        <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-computer.ico" alt="" aria-hidden="true"> System
                     </button>
 
                     <button class="skills-side-link">
-                        🌐 Internet
+                        <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-internet.ico" alt="" aria-hidden="true"> Internet
                     </button>
 
                     <button class="skills-side-link">
-                        📁 My Projects
+                        <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-folder.ico" alt="" aria-hidden="true"> My Projects
                     </button>
 
                 </aside>
@@ -941,377 +980,259 @@
                     </div>
 
 
-                    <!-- DEVELOPMENT -->
+                    <!-- INSTALLED SKILLS: individual programs -->
 
                     <div class="skill-program">
-
                         <div class="skill-program-icon">
-                            ☕
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/c/c-original.svg" alt="C logo" loading="lazy" onerror="this.style.display='none'; this.parentElement.textContent='C';">
                         </div>
-
                         <div class="skill-program-info">
-
-                            <strong>
-                                Java Development Kit
-                            </strong>
-
-                            <span>
-                                Java · Object-Oriented Programming
-                            </span>
-
-                            <small>
-                                Development
-                            </small>
-
+                            <strong>C Programming</strong>
+                            <span>Algorithms · Logic · Programming</span>
+                            <small>Development</small>
                         </div>
-
-                        <button class="change-button">
-                            Change/Remove
-                        </button>
-
+                        <button class="change-button" type="button">Change/Remove</button>
                     </div>
-
-
-                    <!-- SPRING -->
 
                     <div class="skill-program">
-
                         <div class="skill-program-icon">
-                            🌱
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/java/java-original.svg" alt="Java logo" loading="lazy" onerror="this.style.display='none'; this.parentElement.textContent='Jav';">
                         </div>
-
                         <div class="skill-program-info">
-
-                            <strong>
-                                Spring Boot
-                            </strong>
-
-                            <span>
-                                REST APIs · Backend Development
-                            </span>
-
-                            <small>
-                                Development
-                            </small>
-
+                            <strong>Java Development Kit</strong>
+                            <span>Java · Object-Oriented Programming</span>
+                            <small>Development</small>
                         </div>
-
-                        <button class="change-button">
-                            Change/Remove
-                        </button>
-
+                        <button class="change-button" type="button">Change/Remove</button>
                     </div>
-
-
-                    <!-- C -->
 
                     <div class="skill-program">
-
                         <div class="skill-program-icon">
-                            C
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/spring/spring-original.svg" alt="Spring Boot logo" loading="lazy" onerror="this.style.display='none'; this.parentElement.textContent='Spr';">
                         </div>
-
                         <div class="skill-program-info">
-
-                            <strong>
-                                C Development Tools
-                            </strong>
-
-                            <span>
-                                Algorithms · Logic · Programming
-                            </span>
-
-                            <small>
-                                Development
-                            </small>
-
+                            <strong>Spring Boot</strong>
+                            <span>Java Backend · REST APIs</span>
+                            <small>Development</small>
                         </div>
-
-                        <button class="change-button">
-                            Change/Remove
-                        </button>
-
+                        <button class="change-button" type="button">Change/Remove</button>
                     </div>
-
-
-                    <!-- JAVASCRIPT -->
 
                     <div class="skill-program">
-
                         <div class="skill-program-icon">
-                            JS
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mysql/mysql-original.svg" alt="MySQL logo" loading="lazy" onerror="this.style.display='none'; this.parentElement.textContent='MyS';">
                         </div>
-
                         <div class="skill-program-info">
-
-                            <strong>
-                                JavaScript Runtime
-                            </strong>
-
-                            <span>
-                                JavaScript · Node.js · Express · Socket.IO
-                            </span>
-
-                            <small>
-                                Web Development
-                            </small>
-
+                            <strong>MySQL Database</strong>
+                            <span>Relational Database · SQL</span>
+                            <small>Database</small>
                         </div>
-
-                        <button class="change-button">
-                            Change/Remove
-                        </button>
-
+                        <button class="change-button" type="button">Change/Remove</button>
                     </div>
-
-
-                    <!-- DATABASE -->
 
                     <div class="skill-program">
-
                         <div class="skill-program-icon">
-                            🗄️
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/sqlite/sqlite-original.svg" alt="SQLite logo" loading="lazy" onerror="this.style.display='none'; this.parentElement.textContent='SQL';">
                         </div>
-
                         <div class="skill-program-info">
-
-                            <strong>
-                                Database Systems
-                            </strong>
-
-                            <span>
-                                MySQL · SQLite · Oracle Database
-                            </span>
-
-                            <small>
-                                Database
-                            </small>
-
+                            <strong>SQLite</strong>
+                            <span>Embedded Relational Database</span>
+                            <small>Database</small>
                         </div>
-
-                        <button class="change-button">
-                            Change/Remove
-                        </button>
-
+                        <button class="change-button" type="button">Change/Remove</button>
                     </div>
-
-
-                    <!-- SQL -->
 
                     <div class="skill-program">
-
                         <div class="skill-program-icon">
-                            SQL
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg" alt="HTML5 logo" loading="lazy" onerror="this.style.display='none'; this.parentElement.textContent='HTM';">
                         </div>
-
                         <div class="skill-program-info">
-
-                            <strong>
-                                SQL Tools
-                            </strong>
-
-                            <span>
-                                SQL · Data Modeling · Relational Databases
-                            </span>
-
-                            <small>
-                                Database
-                            </small>
-
+                            <strong>HTML5</strong>
+                            <span>Semantic Markup · Web Structure</span>
+                            <small>Web Development</small>
                         </div>
-
-                        <button class="change-button">
-                            Change/Remove
-                        </button>
-
+                        <button class="change-button" type="button">Change/Remove</button>
                     </div>
-
-
-                    <!-- HTML CSS -->
 
                     <div class="skill-program">
-
                         <div class="skill-program-icon">
-                            🌐
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-original.svg" alt="CSS3 logo" loading="lazy" onerror="this.style.display='none'; this.parentElement.textContent='CSS';">
                         </div>
-
                         <div class="skill-program-info">
-
-                            <strong>
-                                Web Development Pack
-                            </strong>
-
-                            <span>
-                                HTML5 · CSS3 · JavaScript · REST · WebSockets
-                            </span>
-
-                            <small>
-                                Web
-                            </small>
-
+                            <strong>CSS3</strong>
+                            <span>Styling · Responsive Interfaces</span>
+                            <small>Web Development</small>
                         </div>
-
-                        <button class="change-button">
-                            Change/Remove
-                        </button>
-
+                        <button class="change-button" type="button">Change/Remove</button>
                     </div>
-
-
-                    <!-- GIT -->
 
                     <div class="skill-program">
-
                         <div class="skill-program-icon">
-                            🐙
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg" alt="JavaScript logo" loading="lazy" onerror="this.style.display='none'; this.parentElement.textContent='Jav';">
                         </div>
-
                         <div class="skill-program-info">
-
-                            <strong>
-                                Git & GitHub
-                            </strong>
-
-                            <span>
-                                Version Control · GitHub Projects · GitHub Desktop
-                            </span>
-
-                            <small>
-                                Development Tools
-                            </small>
-
+                            <strong>JavaScript</strong>
+                            <span>Frontend · Node.js · Express · Socket.IO</span>
+                            <small>Web Development</small>
                         </div>
-
-                        <button class="change-button">
-                            Change/Remove
-                        </button>
-
+                        <button class="change-button" type="button">Change/Remove</button>
                     </div>
-
-
-                    <!-- DOCKER -->
 
                     <div class="skill-program">
-
                         <div class="skill-program-icon">
-                            🐳
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg" alt="Git logo" loading="lazy" onerror="this.style.display='none'; this.parentElement.textContent='Git';">
                         </div>
-
                         <div class="skill-program-info">
-
-                            <strong>
-                                Docker
-                            </strong>
-
-                            <span>
-                                Containers · Development Environment
-                            </span>
-
-                            <small>
-                                Infrastructure
-                            </small>
-
+                            <strong>Git</strong>
+                            <span>Version Control</span>
+                            <small>Development Tools</small>
                         </div>
-
-                        <button class="change-button">
-                            Change/Remove
-                        </button>
-
+                        <button class="change-button" type="button">Change/Remove</button>
                     </div>
-
-
-                    <!-- LINUX -->
 
                     <div class="skill-program">
-
                         <div class="skill-program-icon">
-                            🐧
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/github/github-original.svg" alt="GitHub logo" loading="lazy" onerror="this.style.display='none'; this.parentElement.textContent='Git';">
                         </div>
-
                         <div class="skill-program-info">
-
-                            <strong>
-                                Linux Environment
-                            </strong>
-
-                            <span>
-                                Linux · Windows · System Environment
-                            </span>
-
-                            <small>
-                                Operating Systems
-                            </small>
-
+                            <strong>GitHub</strong>
+                            <span>Repositories · Projects · Collaboration</span>
+                            <small>Development Tools</small>
                         </div>
-
-                        <button class="change-button">
-                            Change/Remove
-                        </button>
-
+                        <button class="change-button" type="button">Change/Remove</button>
                     </div>
-
-
-                    <!-- TOOLS -->
 
                     <div class="skill-program">
-
                         <div class="skill-program-icon">
-                            🛠️
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postman/postman-original.svg" alt="Postman logo" loading="lazy" onerror="this.style.display='none'; this.parentElement.textContent='Pos';">
                         </div>
-
                         <div class="skill-program-info">
-
-                            <strong>
-                                Developer Toolkit
-                            </strong>
-
-                            <span>
-                                IntelliJ · Eclipse · VS Code · Postman · Maven
-                            </span>
-
-                            <small>
-                                Tools
-                            </small>
-
+                            <strong>Postman</strong>
+                            <span>API Testing · HTTP Requests</span>
+                            <small>Development Tools</small>
                         </div>
-
-                        <button class="change-button">
-                            Change/Remove
-                        </button>
-
+                        <button class="change-button" type="button">Change/Remove</button>
                     </div>
-
-
-                    <!-- DESIGN -->
 
                     <div class="skill-program">
-
                         <div class="skill-program-icon">
-                            🎨
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/eclipse/eclipse-original.svg" alt="Eclipse logo" loading="lazy" onerror="this.style.display='none'; this.parentElement.textContent='Ecl';">
                         </div>
-
                         <div class="skill-program-info">
-
-                            <strong>
-                                Design Tools
-                            </strong>
-
-                            <span>
-                                Figma · Canva · SceneBuilder · brModelo
-                            </span>
-
-                            <small>
-                                Design
-                            </small>
-
+                            <strong>Eclipse IDE</strong>
+                            <span>Java Development Environment</span>
+                            <small>Development Tools</small>
                         </div>
-
-                        <button class="change-button">
-                            Change/Remove
-                        </button>
-
+                        <button class="change-button" type="button">Change/Remove</button>
                     </div>
 
+                    <div class="skill-program">
+                        <div class="skill-program-icon">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/intellij/intellij-original.svg" alt="IntelliJ IDEA logo" loading="lazy" onerror="this.style.display='none'; this.parentElement.textContent='Int';">
+                        </div>
+                        <div class="skill-program-info">
+                            <strong>IntelliJ IDEA</strong>
+                            <span>Java · Spring Boot</span>
+                            <small>Development Tools</small>
+                        </div>
+                        <button class="change-button" type="button">Change/Remove</button>
+                    </div>
+
+                    <div class="skill-program">
+                        <div class="skill-program-icon">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/clion/clion-original.svg" alt="CLion logo" loading="lazy" onerror="this.style.display='none'; this.parentElement.textContent='CLi';">
+                        </div>
+                        <div class="skill-program-info">
+                            <strong>CLion</strong>
+                            <span>C/C++ Development Environment</span>
+                            <small>Development Tools</small>
+                        </div>
+                        <button class="change-button" type="button">Change/Remove</button>
+                    </div>
+
+                    <div class="skill-program">
+                        <div class="skill-program-icon">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vscode/vscode-original.svg" alt="Visual Studio Code logo" loading="lazy" onerror="this.style.display='none'; this.parentElement.textContent='Vis';">
+                        </div>
+                        <div class="skill-program-info">
+                            <strong>Visual Studio Code</strong>
+                            <span>Code Editor · Extensions</span>
+                            <small>Development Tools</small>
+                        </div>
+                        <button class="change-button" type="button">Change/Remove</button>
+                    </div>
+
+                    <div class="skill-program">
+                        <div class="skill-program-icon">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/figma/figma-original.svg" alt="Figma logo" loading="lazy" onerror="this.style.display='none'; this.parentElement.textContent='Fig';">
+                        </div>
+                        <div class="skill-program-info">
+                            <strong>Figma</strong>
+                            <span>Interface Design · Prototyping</span>
+                            <small>Design</small>
+                        </div>
+                        <button class="change-button" type="button">Change/Remove</button>
+                    </div>
+
+                    <div class="skill-program">
+                        <div class="skill-program-icon">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/linux/linux-original.svg" alt="Linux logo" loading="lazy" onerror="this.style.display='none'; this.parentElement.textContent='Lin';">
+                        </div>
+                        <div class="skill-program-info">
+                            <strong>Linux</strong>
+                            <span>Operating System · Development Environment</span>
+                            <small>Operating Systems</small>
+                        </div>
+                        <button class="change-button" type="button">Change/Remove</button>
+                    </div>
+
+                    <div class="skill-program">
+                        <div class="skill-program-icon">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/windows8/windows8-original.svg" alt="Windows logo" loading="lazy" onerror="this.style.display='none'; this.parentElement.textContent='Win';">
+                        </div>
+                        <div class="skill-program-info">
+                            <strong>Windows</strong>
+                            <span>Operating System · Desktop Environment</span>
+                            <small>Operating Systems</small>
+                        </div>
+                        <button class="change-button" type="button">Change/Remove</button>
+                    </div>
+
+                    <div class="skill-program">
+                        <div class="skill-program-icon">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg" alt="Docker logo" loading="lazy" onerror="this.style.display='none'; this.parentElement.textContent='Doc';">
+                        </div>
+                        <div class="skill-program-info">
+                            <strong>Docker</strong>
+                            <span>Containers · Development Environment</span>
+                            <small>Infrastructure</small>
+                        </div>
+                        <button class="change-button" type="button">Change/Remove</button>
+                    </div>
+
+                    <div class="skill-program">
+                        <div class="skill-program-icon">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/oracle/oracle-original.svg" alt="Oracle Database logo" loading="lazy" onerror="this.style.display='none'; this.parentElement.textContent='Ora';">
+                        </div>
+                        <div class="skill-program-info">
+                            <strong>Oracle Database</strong>
+                            <span>SQL · Relational Database</span>
+                            <small>Database</small>
+                        </div>
+                        <button class="change-button" type="button">Change/Remove</button>
+                    </div>
+
+                    <div class="skill-program">
+                        <div class="skill-program-icon">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/oracle/oracle-original.svg" alt="Oracle Cloud logo" loading="lazy" onerror="this.style.display='none'; this.parentElement.textContent='Ora';">
+                        </div>
+                        <div class="skill-program-info">
+                            <strong>Oracle Cloud Infrastructure</strong>
+                            <span>Cloud Services · Oracle Ecosystem</span>
+                            <small>Cloud</small>
+                        </div>
+                        <button class="change-button" type="button">Change/Remove</button>
+                    </div>
 
                 </div>
 
@@ -1319,7 +1240,7 @@
 
 
             <div class="window-statusbar">
-                12 programs currently installed
+                21 programs currently installed
             </div>
 
         </section>
@@ -1334,7 +1255,7 @@
             <div class="window-titlebar">
 
                 <div class="window-title">
-                    🌐 Internet Explorer
+                     Internet Explorer
                 </div>
 
                 <div class="window-controls">
@@ -1361,7 +1282,7 @@
                 <button>←</button>
                 <button>→</button>
                 <button>↻</button>
-                <button>🏠</button>
+                <button><img class="windows-emoji-icon" src="img/icons/windows-xp/xp-desktop.ico" alt="" aria-hidden="true"></button>
 
                 <div class="toolbar-address">
                     https://github.com/markeis24
@@ -1389,11 +1310,11 @@
                     </h2>
 
                     <p>
-                        GitHub
+                        <a class="browser-link" href="https://github.com/markeis24" target="_blank" rel="noopener noreferrer">GitHub</a>
                     </p>
 
                     <p>
-                        LinkedIn
+                        <a class="browser-link" href="https://www.linkedin.com/in/giovanna-marques-221998397" target="_blank" rel="noopener noreferrer">LinkedIn</a>
                     </p>
 
                 </div>
@@ -1407,74 +1328,76 @@
              MEDIA PLAYER
         ====================================================== -->
 
-        <section class="os-window" id="media-window">
+        <section class="os-window media-player-window" id="media-window">
 
-            <div class="window-titlebar media-titlebar">
+            <div class="media-player-shell">
 
-                <div class="window-title">
-                    🎵 Windows Media Player
-                </div>
+                <div class="media-player-top">
 
-                <div class="window-controls">
-                    <button class="window-minimize">_</button>
-                    <button class="window-maximize">□</button>
-                    <button class="window-close">X</button>
-                </div>
-
-            </div>
-
-
-            <div class="media-player-content">
-
-                <div class="media-screen">
-
-                    <div class="media-visualizer">
-
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                        <span></span>
-
+                    <div class="media-player-brand">
+                        GIOVANNA MEDIA PLAYER
                     </div>
 
-                    <div class="media-title">
-                        GIOVANNA.EXE
-                    </div>
-
-                    <div class="media-subtitle">
-                        portfolio soundtrack
+                    <div class="media-player-window-controls">
+                        <button type="button" class="mp-window-button" data-mp-action="minimize">−</button>
+                        <button type="button" class="mp-window-button" data-mp-action="maximize">□</button>
+                        <button type="button" class="mp-window-button mp-close" data-mp-action="close">×</button>
                     </div>
 
                 </div>
 
+                <div class="media-player-display">
 
-                <div class="media-controls">
+                    <div class="mp-display-grid"></div>
 
-                    <button>◀</button>
-                    <button>▶</button>
-                    <button>■</button>
-                    <button>▶▶</button>
+                    <div class="mp-display-content">
+                        <div class="mp-display-label">NOW PLAYING</div>
+                        <div class="mp-track-title" id="mp-track-title">ESTACAO-TI</div>
+                        <div class="mp-track-subtitle" id="mp-track-subtitle">Giovanna Marques</div>
+
+                        <div class="mp-time-row">
+                            <span id="mp-current-time">00:00</span>
+                            <span>/</span>
+                            <span id="mp-total-time">03:42</span>
+                        </div>
+                    </div>
+
+                    <div class="mp-visualizer" id="mp-visualizer">
+                        <span></span><span></span><span></span><span></span><span></span>
+                        <span></span><span></span><span></span><span></span><span></span>
+                        <span></span><span></span><span></span><span></span><span></span>
+                    </div>
 
                 </div>
 
-
-                <div class="media-progress">
-
-                    <div></div>
-
+                <div class="mp-progress-area">
+                    <div class="mp-progress-track" id="mp-progress-track">
+                        <div class="mp-progress-fill" id="mp-progress-fill"></div>
+                        <div class="mp-progress-thumb" id="mp-progress-thumb"></div>
+                    </div>
                 </div>
 
+                <div class="mp-controls">
+                    <button type="button" class="mp-round-button mp-prev" data-mp-action="previous" title="Previous">◀◀</button>
+                    <button type="button" class="mp-round-button mp-play" id="mp-play-button" data-mp-action="play" title="Play">▶</button>
+                    <button type="button" class="mp-round-button" data-mp-action="stop" title="Stop">■</button>
+                    <button type="button" class="mp-round-button mp-next" data-mp-action="next" title="Next">▶▶</button>
+                </div>
 
-                <div class="media-status">
+                <div class="mp-bottom">
+                    <button type="button" class="mp-small-button" data-mp-action="playlist">PLAYLIST</button>
 
-                    00:00 / 03:37
+                    <div class="mp-volume">
+                        <span class="mp-volume-icon"><img class="windows-emoji-icon" src="img/icons/windows-xp/xp-midi.ico" alt="" aria-hidden="true"></span>
+                        <input type="range" id="mp-volume-control" min="0" max="100" value="75">
+                    </div>
 
+                    <button type="button" class="mp-small-button" data-mp-action="equalizer">EQ</button>
+                </div>
+
+                <div class="mp-status-bar">
+                    <span id="mp-status">READY</span>
+                    <span class="mp-status-right">GIOVANNA OS MEDIA</span>
                 </div>
 
             </div>
@@ -1491,7 +1414,7 @@
             <div class="start-header">
 
                 <div class="start-avatar">
-                    👩🏻‍💻
+                    <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-computer.ico" alt="" aria-hidden="true">
                 </div>
 
                 <div>
@@ -1507,23 +1430,23 @@
                 <div class="start-column">
 
                     <button data-window="about-window">
-                        👩🏻‍💻 About Me
+                        <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-computer.ico" alt="" aria-hidden="true"> About Me
                     </button>
 
                     <button data-window="projects-window">
-                        📁 My Projects
+                        <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-folder.ico" alt="" aria-hidden="true"> My Projects
                     </button>
 
                     <button data-window="skills-window">
-                        ⚙️ Skills
+                        <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-settings.ico" alt="" aria-hidden="true"> Skills
                     </button>
 
                     <button data-window="internet-window">
-                        🌐 Internet
+                        <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-internet.ico" alt="" aria-hidden="true"> Internet
                     </button>
 
                     <button data-window="media-window">
-                        🎵 Media Player
+                        <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-midi.ico" alt="" aria-hidden="true"> Media Player
                     </button>
 
                 </div>
@@ -1532,27 +1455,27 @@
                 <div class="start-column right">
 
                     <button data-window="computer-window">
-                        💻 My Computer
+                        <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-computer.ico" alt="" aria-hidden="true"> My Computer
                     </button>
 
                     <button>
-                        📄 My Documents
+                        <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-write.ico" alt="" aria-hidden="true"> My Documents
                     </button>
 
                     <button>
-                        🖼️ My Pictures
+                        <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-image.ico" alt="" aria-hidden="true"> My Pictures
                     </button>
 
                     <button>
-                        🎵 My Music
+                        <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-midi.ico" alt="" aria-hidden="true"> My Music
                     </button>
 
                     <button>
-                        ⚙️ Control Panel
+                        <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-settings.ico" alt="" aria-hidden="true"> Control Panel
                     </button>
 
                     <button>
-                        🔎 Search
+                        <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-search.ico" alt="" aria-hidden="true"> Search
                     </button>
 
                     <button>
@@ -1567,11 +1490,11 @@
             <div class="start-footer">
 
                 <button>
-                    🚪 Log Off
+                    <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-logoff.ico" alt="" aria-hidden="true"> Log Off
                 </button>
 
                 <button>
-                    ⏻ Turn Off Computer
+                    <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-shutdown.ico" alt="" aria-hidden="true"> Turn Off Computer
                 </button>
 
             </div>
@@ -1588,7 +1511,7 @@
             <button id="start-button">
 
                 <span class="windows-logo">
-                    🪟
+                    <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-desktop.ico" alt="" aria-hidden="true">
                 </span>
 
                 <strong>
@@ -1605,11 +1528,11 @@
             <div id="taskbar-tray">
 
                 <span class="tray-icon">
-                    🔊
+                    <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-media-player.ico" alt="" aria-hidden="true">
                 </span>
 
                 <span class="tray-icon">
-                    🌐
+                    <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-internet.ico" alt="" aria-hidden="true">
                 </span>
 
                 <span id="clock">
