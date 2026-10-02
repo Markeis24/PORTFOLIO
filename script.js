@@ -212,54 +212,27 @@ const explorerData = {
         details: "Development environment",
 
         items: [
-            {
-                name: "C Programming",
-                icon: ICONS.msdos,
-                type: "Language",
-                description: "C programming and algorithms."
-            },
-            {
-                name: "Java Development Kit",
-                icon: ICONS.program,
-                type: "Language",
-                description: "Java and object-oriented programming."
-            },
-            {
-                name: "Spring Boot",
-                icon: ICONS.program,
-                type: "Framework",
-                description: "Java backend and REST APIs."
-            },
-            {
-                name: "MySQL Database",
-                icon: ICONS.hardDrive,
-                type: "Database",
-                description: "Relational database and SQL."
-            },
-            {
-                name: "SQLite",
-                icon: ICONS.hardDrive,
-                type: "Database",
-                description: "Embedded relational database."
-            },
-            {
-                name: "HTML5",
-                icon: ICONS.internetDoc,
-                type: "Web",
-                description: "Web page structure."
-            },
-            {
-                name: "CSS3",
-                icon: ICONS.internetDoc,
-                type: "Web",
-                description: "Web interface styling."
-            },
-            {
-                name: "JavaScript",
-                icon: ICONS.internetDoc,
-                type: "Language",
-                description: "Frontend and backend scripting."
-            }
+            { name: "C Programming", icon: ICONS.msdos, type: "Development", description: "Algorithms · Logic · Programming" },
+            { name: "Java Development Kit", icon: ICONS.program, type: "Development", description: "Java · Object-Oriented Programming" },
+            { name: "Spring Boot", icon: ICONS.program, type: "Development", description: "Java Backend · REST APIs" },
+            { name: "MySQL Database", icon: ICONS.hardDrive, type: "Database", description: "Relational Database · SQL" },
+            { name: "SQLite", icon: ICONS.hardDrive, type: "Database", description: "Embedded Relational Database" },
+            { name: "HTML5", icon: ICONS.internetDoc, type: "Web Development", description: "Semantic Markup · Web Structure" },
+            { name: "CSS3", icon: ICONS.internetDoc, type: "Web Development", description: "Styling · Responsive Interfaces" },
+            { name: "JavaScript", icon: ICONS.internetDoc, type: "Web Development", description: "Frontend · Node.js · Express · Socket.IO" },
+            { name: "Git", icon: ICONS.configuration, type: "Development Tools", description: "Version Control" },
+            { name: "GitHub", icon: ICONS.internet, type: "Development Tools", description: "Repositories · Projects · Collaboration" },
+            { name: "Postman", icon: ICONS.program, type: "Development Tools", description: "API Testing · HTTP Requests" },
+            { name: "Eclipse IDE", icon: ICONS.program, type: "Development Tools", description: "Java Development Environment" },
+            { name: "IntelliJ IDEA", icon: ICONS.program, type: "Development Tools", description: "Java · Spring Boot" },
+            { name: "CLion", icon: ICONS.program, type: "Development Tools", description: "C/C++ Development Environment" },
+            { name: "Visual Studio Code", icon: ICONS.program, type: "Development Tools", description: "Code Editor · Extensions" },
+            { name: "Figma", icon: ICONS.image, type: "Design", description: "Interface Design · Prototyping" },
+            { name: "Linux", icon: ICONS.computer, type: "Operating Systems", description: "Operating System · Development Environment" },
+            { name: "Windows", icon: ICONS.computer, type: "Operating Systems", description: "Operating System · Desktop Environment" },
+            { name: "Docker", icon: ICONS.configuration, type: "Infrastructure", description: "Containers · Development Environment" },
+            { name: "Oracle Database", icon: ICONS.hardDrive, type: "Database", description: "SQL · Relational Database" },
+            { name: "Oracle Cloud Infrastructure", icon: ICONS.network, type: "Cloud", description: "Cloud Services · Oracle Ecosystem" }
         ]
     }
 };
