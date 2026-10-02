@@ -5259,3 +5259,28 @@ a.xp-button:focus-visible {
     outline: 1px dotted #000;
     outline-offset: 2px;
 }
+
+
+/* Google homepage, circa early 2000s, inside the Internet Explorer window. */
+#internet-window .google-era-content { background:#fff; color:#000; font:13px Arial, Helvetica, sans-serif; }
+#internet-window .google-era-page { min-height:100%; box-sizing:border-box; padding:65px 20px 22px; background:#fff; text-align:center; }
+#internet-window .google-era-logo { display:flex; justify-content:center; align-items:baseline; gap:0; margin:0 auto 2px; font-family:Arial,Helvetica,sans-serif; font-size:64px; line-height:1.15; font-weight:bold; letter-spacing:-4px; }
+#internet-window .google-era-logo span:nth-child(1), #internet-window .google-era-logo span:nth-child(4) { color:#3366cc; }
+#internet-window .google-era-logo span:nth-child(2), #internet-window .google-era-logo span:nth-child(6) { color:#cc0000; }
+#internet-window .google-era-logo span:nth-child(3) { color:#ffcc00; }
+#internet-window .google-era-logo span:nth-child(5) { color:#339933; }
+#internet-window .google-era-tagline { color:#000; font-size:14px; margin:0 0 24px; }
+#internet-window .google-era-form { max-width:560px; margin:0 auto; }
+#internet-window .google-search-wrap { position:relative; max-width:480px; margin:0 auto; }
+#internet-window .google-era-search { width:100%; height:29px; box-sizing:border-box; padding:4px 7px; border:1px solid #7f9db9; border-top-color:#555; background:#fff; font:16px Arial,sans-serif; outline:none; }
+#internet-window .google-era-search:focus { border-color:#316ac5; box-shadow:0 0 0 1px #c3d9f9; }
+#internet-window .google-era-suggestions { position:absolute; z-index:20; top:100%; left:0; right:0; text-align:left; background:#fff; border:1px solid #7f9db9; box-shadow:2px 3px 5px #777; }
+#internet-window .google-suggestion-heading { padding:7px 9px; background:#ece9d8; border-bottom:1px solid #c5c5c5; color:#555; font-size:11px; }
+#internet-window .google-era-suggestions a { display:block; padding:8px 10px; color:#00c; text-decoration:none; border-bottom:1px solid #eee; }
+#internet-window .google-era-suggestions a:hover, #internet-window .google-era-suggestions a:focus { background:#e8f0fe; }
+#internet-window .google-era-suggestions strong { display:block; font-size:13px; }
+#internet-window .google-era-suggestions small { display:block; margin-top:2px; color:#555; font-size:11px; }
+#internet-window .google-era-actions { display:flex; justify-content:center; gap:8px; margin-top:18px; }
+#internet-window .google-era-actions button { padding:4px 10px; color:#222; font:12px Arial,sans-serif; border:1px solid #aaa; border-radius:2px; background:linear-gradient(#fff,#e5e5e5); cursor:pointer; }
+#internet-window .google-era-actions button:hover { border-color:#777; }
+#internet-window .google-era-footer { margin:44px auto 0; color:#777; font-size:11px; }

@@ -1251,76 +1251,45 @@
         ====================================================== -->
 
         <section class="os-window" id="internet-window">
-
             <div class="window-titlebar">
-
-                <div class="window-title">
-                     Internet Explorer
-                </div>
-
+                <div class="window-title">Internet Explorer</div>
                 <div class="window-controls">
                     <button class="window-minimize">_</button>
                     <button class="window-maximize">□</button>
                     <button class="window-close">X</button>
                 </div>
-
             </div>
-
             <div class="window-menu">
-
-                <span>File</span>
-                <span>Edit</span>
-                <span>View</span>
-                <span>Favorites</span>
-                <span>Tools</span>
-                <span>Help</span>
-
+                <span>File</span><span>Edit</span><span>View</span><span>Favorites</span><span>Tools</span><span>Help</span>
             </div>
-
             <div class="window-toolbar">
-
-                <button>←</button>
-                <button>→</button>
-                <button>↻</button>
-                <button><img class="windows-emoji-icon" src="img/icons/windows-xp/xp-desktop.ico" alt="" aria-hidden="true"></button>
-
-                <div class="toolbar-address">
-                    https://github.com/markeis24
-                </div>
-
+                <button type="button" title="Back">←</button>
+                <button type="button" title="Forward">→</button>
+                <button type="button" title="Refresh">↻</button>
+                <button type="button" title="Home"><img class="windows-emoji-icon" src="img/icons/windows-xp/xp-desktop.ico" alt="" aria-hidden="true"></button>
+                <div class="toolbar-address">http://www.google.com</div>
             </div>
-
-
-            <div class="window-content browser-content">
-
-                <div class="browser-page">
-
-                    <h1>
-                        GIOVANNA ONLINE
-                    </h1>
-
-                    <p>
-                        Welcome to my personal development network.
-                    </p>
-
-                    <hr>
-
-                    <h2>
-                        External Links
-                    </h2>
-
-                    <p>
-                        <a class="browser-link" href="https://github.com/markeis24" target="_blank" rel="noopener noreferrer">GitHub</a>
-                    </p>
-
-                    <p>
-                        <a class="browser-link" href="https://www.linkedin.com/in/giovanna-marques-221998397" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-                    </p>
-
+            <div class="window-content browser-content google-era-content">
+                <div class="google-era-page">
+                    <div class="google-era-logo" aria-label="Google"><span>G</span><span>o</span><span>o</span><span>g</span><span>l</span><span>e</span></div>
+                    <div class="google-era-tagline">Search the web</div>
+                    <form class="google-era-form" id="google-era-form" autocomplete="off">
+                        <div class="google-search-wrap">
+                            <input id="google-era-search" class="google-era-search" type="text" aria-label="Search only Giovanna's profiles" placeholder="Search GitHub or LinkedIn" autocomplete="off" spellcheck="false">
+                            <div class="google-era-suggestions" id="google-era-suggestions" hidden>
+                                <div class="google-suggestion-heading">Search Giovanna's profiles</div>
+                                <a href="https://github.com/markeis24" target="_blank" rel="noopener noreferrer" data-search-profile="github"><strong>GitHub</strong><small>github.com/markeis24</small></a>
+                                <a href="https://www.linkedin.com/in/giovanna-marques-221998397" target="_blank" rel="noopener noreferrer" data-search-profile="linkedin"><strong>LinkedIn</strong><small>linkedin.com/in/giovanna-marques-221998397</small></a>
+                            </div>
+                        </div>
+                        <div class="google-era-actions">
+                            <button type="submit">Google Search</button>
+                            <button type="button" id="google-era-lucky">I'm Feeling Lucky</button>
+                        </div>
+                    </form>
+                    <div class="google-era-footer">Search is limited to Giovanna's GitHub and LinkedIn profiles.</div>
                 </div>
-
             </div>
-
         </section>
 
 

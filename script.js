@@ -4304,3 +4304,36 @@ window.addEventListener(
             });
     }
 );
+
+/* Google-style search: only the owner's GitHub and LinkedIn are searchable. */
+document.addEventListener("DOMContentLoaded", () => {
+    const input = document.getElementById("google-era-search");
+    const suggestions = document.getElementById("google-era-suggestions");
+    const form = document.getElementById("google-era-form");
+    const lucky = document.getElementById("google-era-lucky");
+    if (!input || !suggestions || !form) return;
+
+    const profiles = {
+        github: "https://github.com/markeis24",
+        linkedin: "https://www.linkedin.com/in/giovanna-marques-221998397"
+    };
+    const showSuggestions = () => { suggestions.hidden = false; };
+    const hideSuggestions = () => { suggestions.hidden = true; };
+    const destinationFor = (query) => /linkedin|linked\s*in|profissional|carreira|curr[ií]culo/i.test(query)
+        ? profiles.linkedin
+        : profiles.github;
+
+    input.addEventListener("focus", showSuggestions);
+    input.addEventListener("click", showSuggestions);
+    input.addEventListener("input", showSuggestions);
+    document.addEventListener("click", (event) => {
+        if (!event.target.closest(".google-search-wrap")) hideSuggestions();
+    });
+    form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        window.open(destinationFor(input.value.trim()), "_blank", "noopener,noreferrer");
+    });
+    if (lucky) lucky.addEventListener("click", () => {
+        window.open(destinationFor(input.value.trim()), "_blank", "noopener,noreferrer");
+    });
+});
