@@ -80,8 +80,6 @@ let gioBuddyMoveToken = 0;
 
 const GIOBUDDY_SPRITE_BASE = "img/GioBuddy/frames/";
 
-// Cada frame tem duas versões: a normal (ex.: blink-1.png) e a invertida
-// (ex.: blink-1.2.png). Usamos a versão invertida quando o GioBuddy vai para a esquerda.
 let gioBuddyFacing = "right";
 
 function makeGioBuddyFrames(folder, count) {
@@ -92,7 +90,6 @@ function makeGioBuddyFrames(folder, count) {
 }
 
 const GIOBUDDY_SPRITES = {
-    // Somente as quatro animações escolhidas: idle, blink, happy e talk.
     idle: makeGioBuddyFrames("idle", 6),
     blink: makeGioBuddyFrames("blink", 5),
     happy: makeGioBuddyFrames("happy", 5),
@@ -834,12 +831,16 @@ function closeWindow(id) {
         return;
     }
 
-    win.style.display = "none";
-
+    // Remova o estado maximizado antes de ocultar a janela.
+    // O CSS das janelas maximizadas usa display: flex !important,
+    // que pode prevalecer sobre o display: none inline.
     win.classList.remove(
+        "maximized",
         "active-window",
         "focused-window"
     );
+
+    win.style.setProperty("display", "none", "important");
 
     removeTaskbarButton(id);
 
@@ -2835,7 +2836,7 @@ function initializeGioBuddy() {
     setTimeout(() => {
         if (buddyEnabled) {
             buddySay(
-                "Oi! Eu sou o GioBuddy.exe "
+                "Oi oi! Eu sou o GioBuddy "
             );
         }
     }, 1200);
@@ -3267,8 +3268,6 @@ function setGioBuddyPosition(x, y) {
 }
 
 function chooseGioBuddyWalkAnimation(dx, dy) {
-    // O GioBuddy se desloca pelo desktop, mas não usa frames de caminhada
-    // gerados por IA; assim evitamos sprites tortos ou quebrados.
     return "idle";
 }
 
@@ -3634,7 +3633,7 @@ function startBuddyRandomEvents() {
             }
 
             schedule();
-        }, 9000 + Math.floor(Math.random() * 7000));
+        }, 35000 + Math.floor(Math.random() * 20000));
     };
 
     schedule();
@@ -4305,23 +4304,55 @@ window.addEventListener(
     }
 );
 
-/* Google-style search: only the owner's GitHub and LinkedIn are searchable. */
+/* Google-style search: profile previews stay inside the Internet Explorer window. */
 document.addEventListener("DOMContentLoaded", () => {
     const input = document.getElementById("google-era-search");
     const suggestions = document.getElementById("google-era-suggestions");
     const form = document.getElementById("google-era-form");
     const lucky = document.getElementById("google-era-lucky");
-    if (!input || !suggestions || !form) return;
+    const browserContent = document.querySelector("#internet-window .browser-content");
+    const address = document.querySelector("#internet-window .toolbar-address");
+    if (!input || !suggestions || !form || !browserContent) return;
 
     const profiles = {
-        github: "https://github.com/markeis24",
-        linkedin: "https://www.linkedin.com/in/giovanna-marques-221998397"
+        github: {
+            label: "GitHub",
+            url: "https://github.com/markeis24",
+            host: "github.com/markeis24",
+            title: "markeis24",
+            description: "Projetos, repositórios e experiências de desenvolvimento de Giovanna.",
+            icon: "⌘",
+            details: ["Repositórios de projetos", "Código-fonte e estudos", "Portfólio de desenvolvimento"]
+        },
+        linkedin: {
+            label: "LinkedIn",
+            url: "https://www.linkedin.com/in/giovanna-marques-221998397",
+            host: "linkedin.com/in/giovanna-marques-221998397",
+            title: "Giovanna Marques",
+            description: "Perfil profissional, trajetória acadêmica e experiências na área de tecnologia.",
+            icon: "in",
+            details: ["Perfil profissional", "Formação e experiências", "Conexões na área de tecnologia"]
+        }
     };
+
     const showSuggestions = () => { suggestions.hidden = false; };
     const hideSuggestions = () => { suggestions.hidden = true; };
-    const destinationFor = (query) => /linkedin|linked\s*in|profissional|carreira|curr[ií]culo/i.test(query)
+    const chooseProfile = (query) => /linkedin|linked\s*in|profissional|carreira|curr[ií]culo/i.test(query)
         ? profiles.linkedin
         : profiles.github;
+
+    const openExternalProfile = (profile) => {
+        hideSuggestions();
+        // Open the real profile in a separate browser tab; third-party sites
+        // commonly block being embedded inside another site's window.
+        window.open(profile.url, "_blank", "noopener,noreferrer");
+    };
+
+    const showHome = () => {
+        input.value = "";
+        hideSuggestions();
+        if (address) address.textContent = "http://www.google.com";
+    };
 
     input.addEventListener("focus", showSuggestions);
     input.addEventListener("click", showSuggestions);
@@ -4329,11 +4360,55 @@ document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener("click", (event) => {
         if (!event.target.closest(".google-search-wrap")) hideSuggestions();
     });
+
+    suggestions.querySelectorAll("a[data-search-profile]").forEach((link) => {
+        link.addEventListener("click", (event) => {
+            event.preventDefault();
+            openExternalProfile(profiles[link.dataset.searchProfile] || profiles.github);
+        });
+    });
+
     form.addEventListener("submit", (event) => {
         event.preventDefault();
-        window.open(destinationFor(input.value.trim()), "_blank", "noopener,noreferrer");
+        openExternalProfile(chooseProfile(input.value.trim()));
     });
     if (lucky) lucky.addEventListener("click", () => {
-        window.open(destinationFor(input.value.trim()), "_blank", "noopener,noreferrer");
+        openExternalProfile(chooseProfile(input.value.trim()));
     });
+
+    const homeButton = document.querySelector('#internet-window .window-toolbar button[title="Home"]');
+    if (homeButton) homeButton.addEventListener("click", showHome);
 });
+
+
+/* =========================================================
+   FIX DEFINITIVO DOS BOTÕES X
+   Fecha no pointerdown em fase de captura, antes que qualquer
+   listener da barra de título ou da janela possa interceptar
+   o gesto. O click fica como fallback para acessibilidade.
+========================================================= */
+function handleWindowCloseControl(event) {
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+
+    const closeButton = target.closest(".window-controls .window-close");
+    if (!closeButton) return;
+
+    const windowElement = closeButton.closest(".os-window");
+    if (!windowElement) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+    if (typeof event.stopImmediatePropagation === "function") {
+        event.stopImmediatePropagation();
+    }
+
+    // Evita disparos duplicados quando o navegador também gera click.
+    if (windowElement.style.display !== "none") {
+        closeWindow(windowElement.id);
+    }
+}
+
+document.addEventListener("pointerdown", handleWindowCloseControl, true);
+document.addEventListener("mousedown", handleWindowCloseControl, true);
+document.addEventListener("click", handleWindowCloseControl, true);
