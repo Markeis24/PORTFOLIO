@@ -4477,6 +4477,347 @@ function handleWindowCloseControl(event) {
     }
 }
 
-document.addEventListener("pointerdown", handleWindowCloseControl, true);
-document.addEventListener("mousedown", handleWindowCloseControl, true);
-document.addEventListener("click", handleWindowCloseControl, true);
+// Delegação única para controles das janelas principais. Usar pointerdown/mousedown
+// para fechar fazia a janela desaparecer antes do click e podia quebrar os controles
+// quando a janela estava maximizada (especialmente por cima do desktop/taskbar).
+document.removeEventListener("pointerdown", handleWindowCloseControl, true);
+document.removeEventListener("mousedown", handleWindowCloseControl, true);
+document.removeEventListener("click", handleWindowCloseControl, true);
+document.addEventListener("click", function handleAllWindowControls(event) {
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+    const control = target.closest(".window-controls .window-close, .window-controls .window-minimize, .window-controls .window-maximize");
+    if (!control) return;
+    const win = control.closest(".os-window");
+    if (!win) return;
+    event.preventDefault();
+    event.stopPropagation();
+    event.stopImmediatePropagation();
+    if (control.classList.contains("window-close")) closeWindow(win.id);
+    else if (control.classList.contains("window-minimize")) minimizeWindow(win.id);
+    else if (control.classList.contains("window-maximize")) maximizeWindow(win.id);
+}, true);
+
+/* =========================================================
+   XP START MENU UTILITIES — DOCUMENTS / PICTURES / SYSTEM
+========================================================= */
+(function initializeXpStartUtilities() {
+    const photoExtensions = ["jpg", "jpeg", "png", "webp", "gif"];
+    const photoBase = "img/imgpessoal/";
+    let photoIndex = 1;
+    let photoExtensionIndex = 0;
+    let photoImages = [];
+
+    function closeStartMenu() {
+        document.getElementById("start-menu")?.classList.remove("open");
+    }
+
+    let xpUtilityWindowCounter = 0;
+
+    function removeXpDialog() {
+        document.querySelectorAll(".xp-utility-overlay").forEach(el => el.remove());
+        document.querySelectorAll(".xp-restore-window").forEach(el => el.remove());
+    }
+
+    function makeDialog(title, body, options = {}) {
+        removeXpDialog();
+        const overlay = document.createElement("div");
+        overlay.className = "xp-utility-overlay";
+        overlay.innerHTML = `
+          <section class="xp-utility-window" role="dialog" aria-modal="true" aria-label="${title}">
+            <header class="xp-utility-titlebar"><span class="xp-title-caption"><img src="img/icons/${title.toLowerCase().includes('picture') ? 'MyPictures.png' : title.toLowerCase().includes('document') ? 'MyDocuments.png' : title.toLowerCase().includes('control') || title.toLowerCase().includes('system') ? 'ControlPanel.png' : title.toLowerCase().includes('search') ? 'Search.png' : title.toLowerCase().includes('run') ? 'Run.png' : title.toLowerCase().includes('paint') ? 'Paint.png' : title.toLowerCase().includes('note') ? 'Notepad.png' : title.toLowerCase().includes('calcul') ? 'Calculator.png' : 'Explorer.png'}" alt="">${title}</span><div class="xp-title-controls"><button type="button" class="xp-title-min" aria-label="Minimizar">_</button><button type="button" class="xp-title-max" aria-label="Maximizar">□</button><button type="button" class="xp-utility-close" aria-label="Fechar">×</button></div></header>
+            <div class="xp-utility-content">${body}</div>
+            ${options.footer === false ? "" : `<footer class="xp-utility-footer"><button type="button" class="xp-utility-ok">OK</button></footer>`}
+          </section>`;
+        document.body.appendChild(overlay);
+        overlay.querySelector(".xp-utility-close")?.addEventListener("click", removeXpDialog);
+        overlay.querySelector(".xp-utility-ok")?.addEventListener("click", removeXpDialog);
+        const minButton = overlay.querySelector(".xp-title-min");
+        const utilityWindow = overlay.querySelector(".xp-utility-window");
+        const utilityId = `xp-utility-${++xpUtilityWindowCounter}`;
+        overlay.dataset.utilityId = utilityId;
+
+        minButton?.addEventListener("click", event => {
+            event.preventDefault();
+            event.stopPropagation();
+            if (!utilityWindow) return;
+
+            // Retira o overlay inteiro do viewport ao minimizar. Apenas esconder
+            // o conteúdo deixava uma camada fixa sobre o desktop e causava a faixa
+            // visual bugada acima da taskbar.
+            overlay.classList.add("xp-utility-minimized-overlay");
+            utilityWindow.hidden = true;
+            overlay.style.display = "none";
+
+            // Cada janela recebe seu próprio botão de restauração; isso evita
+            // que o minimizador de Paint/Calculadora/Notepad reutilize um botão antigo.
+            let restore = document.querySelector(`[data-restore-utility="${utilityId}"]`);
+            if (!restore) {
+                restore = document.createElement("button");
+                restore.type = "button";
+                restore.className = "xp-restore-window";
+                restore.dataset.restoreUtility = utilityId;
+                restore.style.setProperty("--xp-restore-offset", `${(xpUtilityWindowCounter - 1) * 190}px`);
+                const iconName = title.toLowerCase().includes("paint") ? "Paint.png"
+                    : title.toLowerCase().includes("calcul") ? "Calculator.png"
+                    : title.toLowerCase().includes("note") ? "Notepad.png"
+                    : title.toLowerCase().includes("music") ? "MyMusic.png"
+                    : title.toLowerCase().includes("internet") ? "InternetExplorer6.png"
+                    : title.toLowerCase().includes("date") ? "DateTime.png"
+                    : "Explorer.png";
+                restore.innerHTML = `<img src="img/icons/${iconName}" alt="">${title}`;
+                document.body.appendChild(restore);
+            }
+
+            restore.onclick = () => {
+                overlay.style.display = "flex";
+                overlay.classList.remove("xp-utility-minimized-overlay");
+                utilityWindow.hidden = false;
+                restore.remove();
+                overlay.style.zIndex = String(20000 + Date.now() % 10000);
+            };
+        });
+        overlay.querySelector(".xp-title-max")?.addEventListener("click", event => {
+            event.preventDefault();
+            event.stopPropagation();
+            utilityWindow?.classList.toggle("xp-utility-maximized");
+        });
+        overlay.addEventListener("click", e => { if (e.target === overlay) removeXpDialog(); });
+        return overlay;
+    }
+
+    function openDocuments() {
+        const body = `<div class="xp-explorer-address"><img src="img/icons/MyComputer.png" alt=""> Address: <span>C:\\Documents and Settings\\Giovanna\\My Documents</span></div><div class="xp-explorer-list"><div class="xp-explorer-file"><img src="img/icons/GenericDocument.png" onerror="this.src='img/icons/GenericDocument.png'" alt=""><div><strong>Curriculo-Giovanna.pdf</strong><small>Adobe PDF Document · Documento pessoal</small></div><a class="xp-utility-link" href="documents/Curriculo-Giovanna.pdf" target="_blank" rel="noopener noreferrer">Open</a><a class="xp-utility-link" href="documents/Curriculo-Giovanna.pdf" download>Save</a></div></div><div class="xp-statusbar">1 object · My Documents</div>`;
+        makeDialog("My Documents", body);
+    }
+
+    function buildGallery() {
+        photoImages = [];
+        for (let i = 1; i <= 13; i++) {
+            photoImages.push({ number: i, src: photoBase + `imagem${i}.jpg`, ext: 0, found: false });
+        }
+        photoIndex = 1;
+        renderPhotoGallery();
+    }
+
+    function renderPhotoGallery() {
+        const overlay = makeDialog("My Pictures — Personal Gallery", `
+          <div class="xp-gallery">
+            <div class="xp-gallery-frame"><img id="xp-gallery-image" alt="Imagem pessoal ${photoIndex}" src="${photoBase}imagem${photoIndex}.jpg"><div id="xp-gallery-empty" class="xp-gallery-empty" hidden>Coloque suas fotos em <code>img/imgpessoal/</code> com os nomes <code>imagem1</code> até <code>imagem13</code>.<br>Extensões aceitas: JPG, JPEG, PNG, WEBP ou GIF.</div></div>
+            <div class="xp-gallery-thumbnails" id="xp-gallery-thumbnails"></div>
+            <div class="xp-gallery-caption"><span id="xp-gallery-counter">Imagem ${photoIndex} de 13</span><span>My Pictures</span></div>
+            <div class="xp-gallery-controls"><button type="button" id="xp-gallery-prev">◀ Previous</button><button type="button" id="xp-gallery-next">Next ▶</button></div>
+          </div>`, { footer: false });
+        const img = overlay.querySelector("#xp-gallery-image");
+        let extIndex = 0;
+        function tryExtension() {
+            if (extIndex >= photoExtensions.length) {
+                img.hidden = true;
+                overlay.querySelector("#xp-gallery-empty").hidden = false;
+                return;
+            }
+            img.hidden = false;
+            overlay.querySelector("#xp-gallery-empty").hidden = true;
+            img.src = `${photoBase}imagem${photoIndex}.${photoExtensions[extIndex]}`;
+        }
+        img.onerror = () => { extIndex++; tryExtension(); };
+        img.onload = () => { img.hidden = false; overlay.querySelector("#xp-gallery-empty").hidden = true; };
+        function change(delta) {
+            photoIndex = ((photoIndex - 1 + delta + 13) % 13) + 1;
+            extIndex = 0;
+            overlay.querySelector("#xp-gallery-counter").textContent = `Imagem ${photoIndex} de 13`;
+            img.alt = `Imagem pessoal ${photoIndex}`;
+            tryExtension();
+        }
+        overlay.querySelector("#xp-gallery-prev").addEventListener("click", () => change(-1));
+        overlay.querySelector("#xp-gallery-next").addEventListener("click", () => change(1));
+        const strip=overlay.querySelector("#xp-gallery-thumbnails");
+        for(let n=1;n<=13;n++){
+            const thumb=document.createElement("button");thumb.type="button";thumb.className="xp-gallery-thumb";thumb.title=`Imagem ${n}`;thumb.innerHTML=`<img alt="" src="${photoBase}imagem${n}.jpg"><span>${n}</span>`;
+            const thumbImg=thumb.querySelector("img");let thumbExt=0;thumbImg.onerror=()=>{thumbExt++;if(thumbExt<photoExtensions.length)thumbImg.src=`${photoBase}imagem${n}.${photoExtensions[thumbExt]}`;else thumb.classList.add("xp-gallery-thumb-missing")};
+            thumb.addEventListener("click",()=>{const delta=n-photoIndex;change(delta);});strip.appendChild(thumb);
+        }
+        tryExtension();
+    }
+
+    function openControlPanel() {
+        makeDialog("Control Panel", `<div class="xp-control-grid">
+          <button type="button" data-control-action="appearance"><img src="img/icons/DisplayProperties.png" alt=""><strong>Display</strong><span>Aparência da área de trabalho</span></button>
+          <button type="button" data-control-action="system"><img src="img/icons/SystemInformation.png" alt=""><strong>System</strong><span>Informações do Giovanna OS</span></button>
+          <button type="button" data-control-action="internet"><img src="img/icons/InternetOptions.png" alt=""><strong>Internet Options</strong><span>Links e navegação</span></button>
+          <button type="button" data-control-action="sound"><img src="img/icons/VolumeLevel.png" alt=""><strong>Sounds and Audio Devices</strong><span>Volume e sons da interface</span></button>
+          <button type="button" data-control-action="date"><img src="img/icons/DateandTime.png" alt=""><strong>Date and Time</strong><span>Relógio e calendário</span></button>
+          <button type="button" data-control-action="wallpaper"><img src="img/icons/DisplayProperties.png" alt=""><strong>Desktop Background</strong><span>Escolher papel de parede</span></button>
+        </div><p class="xp-utility-note">Control Panel · Pick a task</p>`, {footer:false});
+        const panel = document.querySelector('.xp-utility-overlay');
+        panel.querySelectorAll('[data-control-action]').forEach(btn => btn.addEventListener('click', () => {
+            const action = btn.dataset.controlAction;
+            if (action === 'appearance') {
+                const overlay = makeDialog('Display Properties', `<div class="xp-property-tabs"><button class="active">Themes</button><button>Appearance</button><button>Settings</button></div><div class="xp-display-preview"><div class="xp-display-preview-screen" id="xp-display-preview-screen">Giovanna OS</div><p>Choose a desktop background in Desktop Background.</p></div><div class="xp-property-actions"><button type="button" id="xp-display-wallpaper">Desktop Background...</button></div>`, {footer:false});
+                overlay.querySelector('#xp-display-wallpaper').addEventListener('click', openWallpaperPicker);
+            }
+            if (action === 'system') makeDialog('System Properties', `<div class="xp-system-info"><img src="img/icons/SystemInformation.png" alt=""><div><h3>Giovanna OS</h3><p>Windows XP-inspired personal portfolio</p><p>Usuária: Giovanna Marques</p><p>Estudante de Banco de Dados · Estagiária de TI</p></div></div><div class="xp-statusbar">General · Computer name · Hardware</div>`);
+            if (action === 'internet') {
+                const internetOverlay = makeDialog('Internet Properties', `<div class="xp-property-tabs"><button class="active">General</button><button>Security</button><button>Privacy</button><button>Connections</button><button>Programs</button><button>Advanced</button></div><div class="xp-internet-properties"><img src="img/icons/InternetExplorer6.png" alt=""><div><strong>Home page</strong><p>Choose the home page used by Internet Explorer in this portfolio.</p><input id="xp-homepage" value="https://github.com/Markeis24" aria-label="Home page URL"><div class="xp-internet-actions"><button type="button" data-ie-home="github">Use GitHub</button><button type="button" data-ie-home="linkedin">Use LinkedIn</button><button type="button" data-ie-home="default">Use default</button></div></div></div><p class="xp-utility-note">These settings affect the simulated browser inside Giovanna OS only.</p>`, {footer:false});
+                internetOverlay.querySelectorAll('[data-ie-home]').forEach(b => b.addEventListener('click', () => { const v=b.dataset.ieHome; internetOverlay.querySelector('#xp-homepage').value=v==='linkedin'?'https://www.linkedin.com/':v==='default'?'https://www.google.com/':'https://github.com/Markeis24'; }));
+            }
+            if (action === 'sound') {
+                document.body.classList.toggle('xp-sounds-muted');
+                makeDialog('Sounds and Audio Devices Properties', `<div class="xp-sound-panel"><img src="img/icons/VolumeLevel.png" alt=""><div><strong>Sound scheme</strong><p>${document.body.classList.contains('xp-sounds-muted')?'No sounds · Interface sounds are muted.':'Windows Default · Interface sounds enabled.'}</p><button type="button" id="xp-sound-toggle">${document.body.classList.contains('xp-sounds-muted')?'Enable interface sounds':'Mute interface sounds'}</button></div></div>`, {footer:false});
+                document.querySelector('#xp-sound-toggle').addEventListener('click',()=>{document.body.classList.toggle('xp-sounds-muted');openControlPanel()});
+            }
+            if (action === 'date') openDateTimeProperties();
+            if (action === 'wallpaper' || action === 'appearance') { if(action==='wallpaper') openWallpaperPicker(); }
+        }));
+    }
+
+    function openDateTimeProperties() {
+        const now = new Date();
+        const overlay = makeDialog('Date and Time Properties', `<div class="xp-date-properties"><div class="xp-date-calendar"><div class="xp-date-month" id="xp-date-month"></div><div class="xp-date-weekdays"><span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span></div><div class="xp-date-days" id="xp-date-days"></div></div><div class="xp-date-clock"><div class="xp-clock-face"><span class="xp-clock-hand xp-clock-hour"></span><span class="xp-clock-hand xp-clock-minute"></span><span class="xp-clock-hand xp-clock-second"></span><i></i></div><strong id="xp-date-time"></strong><p>Current local time</p></div></div><p class="xp-utility-note">Date and time are read from your browser and operating system.</p>`, {footer:false});
+        const month = overlay.querySelector('#xp-date-month'); const days = overlay.querySelector('#xp-date-days');
+        const d = new Date(); month.textContent = d.toLocaleDateString('en-US',{month:'long',year:'numeric'});
+        const first = new Date(d.getFullYear(),d.getMonth(),1).getDay(); const total = new Date(d.getFullYear(),d.getMonth()+1,0).getDate();
+        days.innerHTML = Array(first).fill('<span></span>').join('') + Array.from({length:total},(_,i)=>`<span class="${i+1===d.getDate()?'today':''}">${i+1}</span>`).join('');
+        const tick=()=>{const t=new Date();overlay.querySelector('#xp-date-time').textContent=t.toLocaleTimeString('en-US');const h=overlay.querySelector('.xp-clock-hour'),m=overlay.querySelector('.xp-clock-minute'),sec=overlay.querySelector('.xp-clock-second'); if(h)h.style.transform=`rotate(${(t.getHours()%12)*30+t.getMinutes()/2}deg)`;if(m)m.style.transform=`rotate(${t.getMinutes()*6}deg)`;if(sec)sec.style.transform=`rotate(${t.getSeconds()*6}deg)`;};tick();const timer=setInterval(()=>{if(!overlay.isConnected){clearInterval(timer);return}tick()},1000);
+    }
+
+    function openWallpaperPicker() {
+        const wallpapers = [
+          {name:'Bliss (default)',file:'../img/bliss.jpg',desktop:'img/bliss.jpg'},
+          {name:'Blue Orbit',file:'img/wallpapers/blue-orbit.svg',desktop:'img/wallpapers/blue-orbit.svg'},
+          {name:'Green Hills',file:'img/wallpapers/green-hills.svg',desktop:'img/wallpapers/green-hills.svg'},
+          {name:'Desert Sunset',file:'img/wallpapers/desert-sunset.svg',desktop:'img/wallpapers/desert-sunset.svg'},
+          {name:'Midnight Space',file:'img/wallpapers/midnight-space.svg',desktop:'img/wallpapers/midnight-space.svg'}
+        ];
+        const overlay=makeDialog('Display Properties — Desktop Background', `<p>Select a background for your desktop.</p><div class="xp-wallpaper-grid">${wallpapers.map((w,i)=>`<button type="button" data-wallpaper-index="${i}" class="xp-wallpaper-option"><img src="${i===0?'img/bliss.jpg':w.file}" alt=""><span>${w.name}</span></button>`).join('')}</div><div class="xp-wallpaper-bottom"><label>Position <select id="xp-wallpaper-position"><option value="cover">Stretch</option><option value="contain">Center</option><option value="repeat">Tile</option></select></label><button type="button" id="xp-wallpaper-apply">Apply</button></div>`, {footer:false});
+        let selected=0; overlay.querySelectorAll('[data-wallpaper-index]').forEach(b=>b.addEventListener('click',()=>{selected=Number(b.dataset.wallpaperIndex);overlay.querySelectorAll('.xp-wallpaper-option').forEach(x=>x.classList.toggle('selected',x===b));}));
+        overlay.querySelector('#xp-wallpaper-apply').addEventListener('click',()=>{const w=wallpapers[selected];const targets=[document.getElementById('desktop'),document.getElementById('desktop-area')].filter(Boolean);const pos=overlay.querySelector('#xp-wallpaper-position').value;targets.forEach(el=>{el.style.backgroundImage=`url("${w.desktop}")`;el.style.backgroundColor='#245d9f';el.style.backgroundPosition='center';el.style.backgroundRepeat=pos==='repeat'?'repeat':'no-repeat';el.style.backgroundSize=pos==='cover'?'cover':pos==='contain'?'auto':'auto';});document.body.dataset.xpWallpaper=w.name;overlay.querySelector('#xp-wallpaper-apply').textContent='Applied';});
+        overlay.querySelector('[data-wallpaper-index="0"]').classList.add('selected');
+    }
+
+    function openSearch() {
+        const overlay = makeDialog("Search Results", `<form id="xp-search-form" class="xp-utility-form"><label for="xp-search-query">What are you looking for?</label><div><input id="xp-search-query" placeholder="Digite projetos, habilidades, sobre..." autocomplete="off"><button type="submit">Search</button></div></form><div id="xp-search-results" class="xp-search-results">Pesquise no conteúdo deste portfólio.</div>`);
+        overlay.querySelector("#xp-search-form").addEventListener("submit", e => {
+            e.preventDefault();
+            const q = overlay.querySelector("#xp-search-query").value.trim().toLocaleLowerCase("pt-BR");
+            const targets = [
+              {label:"About Me", terms:"sobre mim giovanna perfil estudante banco de dados fatec estagiaria ti", selector:'[data-window="about-window"]'},
+              {label:"My Projects", terms:"projetos api estacao ti github desenvolvimento", selector:'[data-window="projects-window"]'},
+              {label:"Skills", terms:"habilidades java spring boot sql mysql oracle docker git html css javascript", selector:'[data-window="skills-window"]'},
+              {label:"Internet", terms:"internet linkedin github navegador pesquisa", selector:'[data-window="internet-window"]'},
+              {label:"Media Player", terms:"musica músicas music media player playlist", selector:'[data-window="media-window"]'},
+              {label:"Currículo", terms:"curriculo currículo pdf experiência formação profissional documents", action:"documents"},
+              {label:"My Pictures", terms:"fotos imagens galeria pictures", action:"pictures"}
+            ];
+            const matches = targets.filter(t => (t.label + " " + t.terms).toLocaleLowerCase("pt-BR").includes(q));
+            const results = overlay.querySelector("#xp-search-results");
+            results.innerHTML = matches.length ? matches.map(t => `<button type="button" class="xp-search-result" data-result-label="${t.label}">${t.label}<span>Open</span></button>`).join("") : `<p>Nenhum resultado encontrado para “${q.replace(/[<>]/g, "") }”.</p>`;
+            results.querySelectorAll("[data-result-label]").forEach(btn => btn.addEventListener("click", () => {
+                const item = matches.find(t => t.label === btn.dataset.resultLabel);
+                removeXpDialog();
+                if (item.action === "documents") openDocuments(); else if (item.action === "pictures") buildGallery(); else document.querySelector(item.selector)?.click();
+            }));
+        });
+    }
+
+    function openMiniApp(kind) {
+        removeXpDialog();
+        if (kind === "notepad") {
+            const overlay=makeDialog("Untitled - Notepad", `<div class="xp-notepad-menu">File　 Edit　 Format　 View　 Help</div><textarea class="xp-notepad-area" aria-label="Notepad document" spellcheck="false"></textarea><div class="xp-statusbar">Windows Notepad · Ready</div>`, {footer:false});
+            overlay.querySelector(".xp-utility-window").style.width="min(680px,96vw)";
+        } else if (kind === "calc") {
+            const calcKeys = ["MC","7","8","9","/","sqrt","4","5","6","*","%","1","2","3","-","1/x","0","+/-",".","+","Back","CE","C","="];
+            const overlay=makeDialog("Calculator", `<div class="xp-calc-menubar"><span>Edit</span><span>View</span><span>Help</span></div><div class="xp-calculator"><div class="xp-calc-mode">Standard</div><input id="xp-calc-display" value="0" readonly aria-label="Calculator display"><div class="xp-calc-memory"><span> M </span><span> </span></div><div class="xp-calc-keys">${calcKeys.map(k=>`<button type="button" data-calc-key="${k}" class="${["/","*","-","+","=","sqrt","%","1/x"].includes(k)?"xp-calc-function":""}">${({sqrt:"√",Back:"←","1/x":"1/x","+/-":"±"})[k]||k}</button>`).join("")}</div></div>`,{footer:false});
+            let expr="", stored=0; const display=overlay.querySelector("#xp-calc-display");
+            overlay.querySelectorAll("[data-calc-key]").forEach(b=>b.addEventListener("click",()=>{
+                const k=b.dataset.calcKey; const current=Number(display.value);
+                if(k==="C"||k==="CE"){expr="";display.value="0"}
+                else if(k==="MC"){stored=0;overlay.querySelector(".xp-calc-memory").firstElementChild.textContent=" "}
+                else if(k==="Back"){expr=expr.slice(0,-1);display.value=expr||"0"}
+                else if(k==="+/-"){display.value=String(-current);expr=display.value}
+                else if(k==="sqrt"){display.value=current<0?"Error":String(Math.sqrt(current));expr=display.value}
+                else if(k==="1/x"){display.value=== "0" ? display.value="Cannot divide by zero" : display.value=String(1/current);expr=display.value}
+                else if(k==="%"){display.value=String(current/100);expr=display.value}
+                else if(k==="="){try{if(!/^[0-9+*/.() -]+$/.test(expr))throw Error(); const result=Function(`"use strict";return (${expr})`)(); if(!Number.isFinite(result))throw Error(); display.value=String(result);expr=display.value}catch{display.value="Error";expr=""}}
+                else if(["+","-","*","/"].includes(k)){expr=(expr||String(current))+k;display.value=expr}
+                else {if(display.value==="Error"||display.value==="Cannot divide by zero") {expr="";display.value="0"} expr+=k;display.value=expr}
+            }));
+        } else if (kind === "paint") {
+            const overlay=makeDialog("Untitled - Paint", `<div class="xp-paint-menubar"><span>File</span><span>Edit</span><span>View</span><span>Image</span><span>Colors</span><span>Help</span></div><div class="xp-paint-workspace"><aside class="xp-paint-tools" aria-label="Paint tools">${[
+              ['pencil','✎','Pencil'],['brush','🖌','Brush'],['eraser','▰','Eraser'],['fill','▨','Fill with Color'],['eyedropper','◉','Pick Color'],['magnifier','⌕','Magnifier'],['line','／','Line'],['curve','〰','Curve'],['rect','▱','Rectangle'],['filledrect','▰','Filled Rectangle'],['ellipse','◯','Ellipse'],['filledellipse','●','Filled Ellipse'],['text','A','Text']
+            ].map(([id,icon,label],i)=>`<button type="button" data-paint-tool="${id}" title="${label}" class="${i===0?'active':''}">${icon}</button>`).join('')}</aside><div class="xp-paint-canvas-wrap"><canvas id="xp-paint-canvas" width="760" height="430" aria-label="Paint canvas"></canvas></div></div><div class="xp-paint-bottom"><div class="xp-paint-colors" aria-label="Colors">${['#000000','#ffffff','#808080','#c0c0c0','#800000','#ff0000','#808000','#ffff00','#008000','#00ff00','#008080','#00ffff','#000080','#0000ff','#800080','#ff00ff','#804000','#ff8040','#804080','#ff80c0','#004080','#0080ff','#408080','#80ffff','#408000','#80ff00','#808040','#ffff80','#004000','#80ff80','#400080','#c080ff'].map((c,i)=>`<button type="button" data-paint-color="${c}" title="${c}" style="background:${c}" class="${i===0?'active':''}"></button>`).join('')}</div><div class="xp-paint-current"><span id="xp-paint-current-color"></span><label>Size <select id="xp-paint-size"><option value="1">1</option><option value="3" selected>3</option><option value="6">6</option><option value="10">10</option><option value="18">18</option></select></label><button type="button" id="xp-paint-clear">Clear Image</button><button type="button" id="xp-paint-save">Save</button></div></div><div class="xp-statusbar"><span id="xp-paint-status">For Help, click Help Topics on the Help Menu</span><span>760 × 430px</span></div>`,{footer:false});
+            const canvas=overlay.querySelector('#xp-paint-canvas'),ctx=canvas.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);let drawing=false,tool='pencil',color='#000000',startPoint=null,lastPoint=null;
+            const point=e=>{const r=canvas.getBoundingClientRect();return [(e.clientX-r.left)*canvas.width/r.width,(e.clientY-r.top)*canvas.height/r.height]};
+            const setStatus=t=>{overlay.querySelector('#xp-paint-status').textContent=t};
+            overlay.querySelectorAll('[data-paint-tool]').forEach(b=>b.addEventListener('click',()=>{tool=b.dataset.paintTool;overlay.querySelectorAll('[data-paint-tool]').forEach(x=>x.classList.toggle('active',x===b));setStatus(b.title)}));
+            overlay.querySelectorAll('[data-paint-color]').forEach(b=>b.addEventListener('click',()=>{color=b.dataset.paintColor;overlay.querySelectorAll('[data-paint-color]').forEach(x=>x.classList.toggle('active',x===b));overlay.querySelector('#xp-paint-current-color').style.background=color;}));
+            overlay.querySelector('#xp-paint-current-color').style.background=color;
+            canvas.addEventListener('pointerdown',e=>{drawing=true;canvas.setPointerCapture(e.pointerId);startPoint=point(e);lastPoint=startPoint;if(tool==='fill'){ctx.fillStyle=color;ctx.fillRect(0,0,canvas.width,canvas.height);drawing=false;return}if(tool==='eyedropper'){const px=ctx.getImageData(...startPoint.map(Math.round),1,1).data;color='#'+[...px.slice(0,3)].map(v=>v.toString(16).padStart(2,'0')).join('');overlay.querySelector('#xp-paint-current-color').style.background=color;drawing=false;return}ctx.beginPath();ctx.moveTo(...startPoint)});
+            canvas.addEventListener('pointermove',e=>{if(!drawing)return;const pt=point(e);ctx.strokeStyle=tool==='eraser'?'#ffffff':color;ctx.lineWidth=Number(overlay.querySelector('#xp-paint-size').value)*(tool==='brush'?2:1);ctx.lineCap='round';ctx.lineJoin='round';if(['line','rect','filledrect','ellipse','filledellipse'].includes(tool)){setStatus('Drawing shape…');return}ctx.lineTo(...pt);ctx.stroke();lastPoint=pt});
+            const finish=e=>{if(!drawing)return;const pt=point(e);if(['line','rect','filledrect','ellipse','filledellipse'].includes(tool)){ctx.strokeStyle=color;ctx.fillStyle=color;ctx.lineWidth=Number(overlay.querySelector('#xp-paint-size').value);ctx.beginPath();if(tool==='line'){ctx.moveTo(...startPoint);ctx.lineTo(...pt);ctx.stroke()}else if(tool.includes('rect')){const x=startPoint[0],y=startPoint[1],w=pt[0]-x,h=pt[1]-y;tool==='filledrect'?ctx.fillRect(x,y,w,h):ctx.strokeRect(x,y,w,h)}else{const x=(startPoint[0]+pt[0])/2,y=(startPoint[1]+pt[1])/2;ctx.ellipse(x,y,Math.abs(pt[0]-startPoint[0])/2,Math.abs(pt[1]-startPoint[1])/2,0,0,Math.PI*2);tool==='filledellipse'?ctx.fill():ctx.stroke()}}drawing=false;setStatus('Ready')};
+            canvas.addEventListener('pointerup',finish);canvas.addEventListener('pointercancel',()=>drawing=false);
+            overlay.querySelector('#xp-paint-clear').addEventListener('click',()=>{ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);setStatus('Image cleared')});
+            overlay.querySelector('#xp-paint-save').addEventListener('click',()=>{const a=document.createElement('a');a.download='untitled.bmp.png';a.href=canvas.toDataURL('image/png');a.click();});
+            overlay.querySelector('.xp-utility-window').style.width='min(900px,98vw)';
+            overlay.querySelector('.xp-utility-window').style.maxHeight='92vh';
+        }
+    }
+
+    function openRun() {
+        const overlay = makeDialog("Run", `<div class="xp-run-intro"><img src="img/icons/Run.png" alt=""><p>Type the name of a program, folder, document, or Internet resource, and Windows will open it for you.</p></div><form id="xp-run-form" class="xp-utility-form"><label for="xp-run-command">Open:</label><div><input id="xp-run-command" autocomplete="off" autofocus><button type="submit">OK</button><button type="button" id="xp-run-cancel">Cancel</button><button type="button" id="xp-run-browse">Browse...</button></div></form><p class="xp-utility-note">Try: notepad, calc, mspaint, explorer, wmplayer, help</p>`);
+        overlay.querySelector("#xp-run-cancel").addEventListener("click", removeXpDialog);
+        overlay.querySelector("#xp-run-browse").addEventListener("click",()=>{overlay.querySelector("#xp-run-command").value="explorer";});
+        overlay.querySelector("#xp-run-form").addEventListener("submit", e => {
+            e.preventDefault();
+            const raw=overlay.querySelector("#xp-run-command").value.trim();
+            const cmd=raw.toLocaleLowerCase("pt-BR").replace(/\.exe$/i,"");
+            const aliases = {about:'[data-window="about-window"]', projects:'[data-window="projects-window"]', skills:'[data-window="skills-window"]', internet:'[data-window="internet-window"]', music:'[data-window="media-window"]', wmplayer:'[data-window="media-window"]', explorer:'[data-window="computer-window"]', "my computer":'[data-window="computer-window"]'};
+            if (cmd==="help") { overlay.querySelector(".xp-utility-note").textContent="Available commands: notepad, calc, mspaint, explorer, wmplayer, iexplore, about, projects, skills, internet, music, pictures, documents, control panel."; }
+            else if (["notepad","write"].includes(cmd)) { removeXpDialog(); openMiniApp("notepad"); }
+            else if (["calc","calculator"].includes(cmd)) { removeXpDialog(); openMiniApp("calc"); }
+            else if (["mspaint","paint","pbrush"].includes(cmd)) { removeXpDialog(); openMiniApp("paint"); }
+            else if (aliases[cmd]) { removeXpDialog(); const target=document.querySelector(aliases[cmd]); if(target){ const id=target.dataset.window || target.id; if(typeof openWindow==='function' && id) openWindow(id); else target.click(); } }
+            else if (["iexplore","internet options"].includes(cmd)) { removeXpDialog(); if(typeof openWindow==='function') openWindow("internet-window"); }
+            else if (["pictures","my pictures","fotos","galeria"].includes(cmd)) { removeXpDialog(); buildGallery(); }
+            else if (["documents","my documents","curriculo","currículo"].includes(cmd)) { removeXpDialog(); openDocuments(); }
+            else if (["control panel","controlpanel","painel"].includes(cmd)) { removeXpDialog(); openControlPanel(); }
+            else { overlay.querySelector(".xp-utility-note").textContent = `Windows cannot find '${raw}'. Make sure you typed the name correctly, and then try again.`; }
+        });
+    }
+
+    function showPowerScreen(isLogoff) {
+        closeStartMenu(); removeXpDialog(); document.querySelectorAll(".xp-power-screen").forEach(el=>el.remove());
+        const overlay=document.createElement("div"); overlay.className="xp-power-screen";
+        if (isLogoff) {
+            overlay.innerHTML=`<div class="xp-welcome-top"><div class="xp-welcome-brand"><span class="xp-mini-flag"><i></i><i></i><i></i><i></i></span><span>Microsoft <strong>Windows XP</strong></span></div><span class="xp-welcome-edition">Professional</span></div><div class="xp-welcome-center"><div class="xp-welcome-avatar"><img src="img/icons/UserAccounts.png" onerror="this.src='img/icons/MyComputer.png'" alt=""></div><div class="xp-welcome-copy"><h1>Welcome</h1><p>To begin, click your user name</p><button type="button" data-power-return><img src="img/icons/UserAccounts.png" onerror="this.src='img/icons/MyComputer.png'" alt=""><span><strong>Giovanna</strong><small>Personal Computer</small></span><b>➜</b></button></div></div><div class="xp-welcome-bottom"><span>After you log on, you can add or change accounts.</span><button type="button" data-power-cancel>Cancel</button><span>Windows XP Professional</span></div>`;
+            document.body.appendChild(overlay);
+            overlay.querySelector("[data-power-return]").addEventListener("click",()=>overlay.remove());
+            overlay.querySelector("[data-power-cancel]").addEventListener("click",()=>overlay.remove());
+        } else {
+            overlay.innerHTML=`<div class="xp-shutdown-dialog"><div class="xp-shutdown-title"><span>Turn off computer</span><button type="button" data-power-cancel aria-label="Close">×</button></div><div class="xp-shutdown-body"><p>What do you want the computer to do?</p><div class="xp-shutdown-choices"><button type="button" data-power-standby><span class="xp-power-icon standby">☾</span><strong>Stand By</strong></button><button type="button" data-power-off><span class="xp-power-icon turnoff">⏻</span><strong>Turn Off</strong></button><button type="button" data-power-restart><span class="xp-power-icon restart">↻</span><strong>Restart</strong></button></div><div class="xp-exit-question">Por que está querendo sair?<small>O sistema ainda tem muitas memórias para compartilhar.</small></div><div class="xp-shutdown-bottom"><button type="button" data-power-cancel>Cancel</button></div></div></div>`;
+            document.body.appendChild(overlay);
+            overlay.querySelectorAll("[data-power-cancel]").forEach(b=>b.addEventListener("click",()=>overlay.remove()));
+            const finish=(heading,detail)=>{overlay.innerHTML=`<div class="xp-ending-screen"><div class="xp-ending-brand"><span class="xp-mini-flag"><i></i><i></i><i></i><i></i></span><span>Microsoft <strong>Windows XP</strong></span></div><div class="xp-ending-message"><h1>${heading}</h1><p>${detail}</p><button type="button" data-power-return>Return to Giovanna OS</button></div><div class="xp-ending-footer">Giovanna OS · simulated power state</div></div>`;overlay.querySelector("[data-power-return]").addEventListener("click",()=>overlay.remove())};
+            overlay.querySelector("[data-power-off]").addEventListener("click",()=>finish("It's now safe to turn off your computer.","O Giovanna OS vai sentir sua falta. 💙"));
+            overlay.querySelector("[data-power-restart]").addEventListener("click",()=>finish("Restarting...","Sua sessão foi reiniciada de forma simulada."));
+            overlay.querySelector("[data-power-standby]").addEventListener("click",()=>finish("Entering Stand By...","Clique abaixo para retornar ao desktop."));
+        }
+    }
+
+    document.addEventListener("click", event => {
+        const btn = event.target.closest("[data-start-action]");
+        if (!btn) return;
+        event.preventDefault();
+        event.stopPropagation();
+        closeStartMenu();
+        const action = btn.dataset.startAction;
+        if (action === "documents") openDocuments();
+        else if (action === "pictures") buildGallery();
+        else if (action === "music") { if (typeof openWindow === "function") openWindow("media-window"); else document.querySelector('[data-window="media-window"]')?.click(); }
+        else if (action === "control-panel") openControlPanel();
+        else if (action === "search") openSearch();
+        else if (action === "run") openRun();
+        else if (action === "logoff") showPowerScreen(true);
+        else if (action === "shutdown") showPowerScreen(false);
+    });
+})();
