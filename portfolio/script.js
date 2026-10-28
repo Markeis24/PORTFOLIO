@@ -2,37 +2,37 @@
 const ICON_PATH = "img/icons/";
 
 const ICONS = {
-    computer: "windows-xp/xp-computer.ico",
-    projects: "windows-xp/xp-folder-open.ico",
-    about: "windows-xp/xp-documents.ico",
-    skills: "windows-xp/xp-settings.ico",
-    internet: "windows-xp/xp-internet.ico",
-    media: "windows-xp/xp-media-player.ico",
+    computer: "MyComputer.png",
+    projects: "FolderOpened.png",
+    about: "MyDocuments.png",
+    skills: "ControlPanel.png",
+    internet: "InternetExplorer6.png",
+    media: "WindowsMediaPlayer9.png",
 
-    folder: "windows-xp/xp-folder-open.ico",
-    closedFolder: "windows-xp/xp-folder.ico",
+    folder: "FolderOpened.png",
+    closedFolder: "FolderClosed.png",
 
-    hardDrive: "windows-xp/xp-harddrive.ico",
-    network: "windows-xp/xp-network.ico",
+    hardDrive: "LocalDisk.png",
+    network: "NetworkConnections.png",
 
-    document: "windows-xp/xp-document.ico",
-    image: "windows-xp/xp-image.ico",
-    sound: "windows-xp/xp-audio-file.ico",
-    video: "windows-xp/xp-video.ico",
+    document: "GenericDocument.png",
+    image: "MyPictures.png",
+    sound: "GenericAudio.png",
+    video: "GenericVideo.png",
 
-    program: "windows-xp/xp-program.ico",
-    programGroup: "windows-xp/xp-program-group.ico",
+    program: "ApplicationWindow.png",
+    programGroup: "StartMenuPrograms.png",
 
-    settings: "windows-xp/xp-settings.ico",
-    controlPanel: "windows-xp/xp-control-panel.ico",
+    settings: "ControlPanel.png",
+    controlPanel: "ControlPanel.png",
 
-    internetDoc: "windows-xp/xp-internet-document.ico",
-    msdos: "windows-xp/xp-msdos.ico",
+    internetDoc: "InternetShortcut.png",
+    msdos: "CommandPrompt.png",
 
-    desktop: "windows-xp/xp-desktop.ico",
-    recycle: "windows-xp/xp-recycle.ico",
+    desktop: "Desktop.png",
+    recycle: "RecycleBin(empty).png",
 
-    configuration: "windows-xp/xp-config.ico"
+    configuration: "SystemProperties.png"
 };
 
 const TASKBAR_ICONS = {
@@ -2017,7 +2017,7 @@ function showExplorerMessage(
 
         <div class="gio-alert-body">
             <div class="gio-alert-icon">
-                <img src="img/icons/windows-xp/xp-help.ico" alt="" aria-hidden="true" width="32" height="32">
+                <img src="img/icons/HelpandSupport.png" alt="" aria-hidden="true" width="32" height="32">
             </div>
 
             <div class="gio-alert-text">
@@ -3935,7 +3935,7 @@ function showBuddyAlert() {
 
         <div class="gio-alert-body">
             <div class="gio-alert-icon">
-                <img src="img/icons/windows-xp/xp-help.ico" alt="" aria-hidden="true" width="32" height="32">
+                <img src="img/icons/HelpandSupport.png" alt="" aria-hidden="true" width="32" height="32">
             </div>
 
             <div class="gio-alert-text">
@@ -4144,14 +4144,14 @@ function showBuddyContextMenu(
     );
 
     const items = [
-        ["windows-xp/xp-write.ico", "What are you doing?", () => buddySay("Estou ajudando. Tecnicamente.")],
-        ["windows-xp/xp-run.ico", "Do a trick", () => buddyRandomPhrase()],
-        ["windows-xp/xp-folder.ico", "Show Projects", () => {
+        ["MyDocuments.png", "What are you doing?", () => buddySay("Estou ajudando. Tecnicamente.")],
+        ["Run.png", "Do a trick", () => buddyRandomPhrase()],
+        ["FolderClosed.png", "Show Projects", () => {
             openWindow("projects-window");
             buddySay("Projetos encontrados.");
         }],
-        ["windows-xp/xp-help.ico", "System Warning", () => showBuddyAlert()],
-        ["windows-xp/xp-shutdown.ico", "Disable GioBuddy", () => disableGioBuddy()]
+        ["HelpandSupport.png", "System Warning", () => showBuddyAlert()],
+        ["Power.png", "Disable GioBuddy", () => disableGioBuddy()]
     ];
 
     items.forEach(
