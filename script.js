@@ -1,11 +1,3 @@
-/* =========================================================
-   GIOVANNA OS - SYSTEM SCRIPT
-   Windows 2000 / XP inspired portfolio OS
-========================================================= */
-
-/* =========================================================
-   CONFIGURAÇÕES
-========================================================= */
 
 const ICON_PATH = "img/icons/";
 
@@ -57,9 +49,9 @@ const TASKBAR_ICONS = {
     "estacao-window": ICONS.sound
 };
 
-/* =========================================================
+/* ===================
    ESTADO DO SISTEMA
-========================================================= */
+====================== */
 
 let highestZIndex = 200;
 
@@ -104,9 +96,9 @@ const GIOBUDDY_ANIMATION_SPEED = {
 };
 let buddyDragState = null;
 
-/* =========================================================
+/*===========
    EXPLORER
-========================================================= */
+=============*/
 
 let explorerHistory = ["computer"];
 let explorerHistoryIndex = 0;
@@ -234,41 +226,47 @@ const explorerData = {
     }
 };
 
-/* =========================================================
+/* ==============
    MEDIA PLAYER
-========================================================= */
+================= */
 
-const mediaTracks = [
-    {
-        title: "ESTACAO-TI",
-        artist: "Giovanna Marques",
-        duration: 222
-    },
-    {
-        title: "PORTFOLIO.EXE",
-        artist: "Giovanna OS",
-        duration: 187
-    },
-    {
-        title: "HALL OF CODE",
-        artist: "System Audio",
-        duration: 204
-    },
-    {
-        title: "DATABASE DRIVE",
-        artist: "FATEC SYSTEM",
-        duration: 239
-    }
+const mediaTrackInfo = [
+    { title: "El Vals del Obrero", artist: "Ska-P" },
+    { title: "Huipulla tuulee", artist: "Klamydia" },
+    { title: "Schmerzengel", artist: "And One" },
+    { title: "Vencidos", artist: "Arte no Escuro" },
+    { title: "So Klingt Liebe", artist: "And One" },
+    { title: "Boom!", artist: "System of a Down" },
+    { title: "Dictatorshit", artist: "Sepultura" },
+    { title: "Radio", artist: "Rammstein" },
+    { title: "Violência Gratuita", artist: "Project 46" },
+    { title: "Desespero", artist: "Lost Lenore" }
 ];
+
+const mediaTracks = mediaTrackInfo.map((track, index) => ({
+    ...track,
+    src: `songs/musica${index + 1}.mp3`,
+    duration: 0
+}));
 
 let mediaIndex = 0;
 let mediaSeconds = 0;
 let mediaPlaying = false;
 let mediaTimer = null;
+let mediaAudio = null;
+let mediaAudioContext = null;
+let mediaEqFilters = [];
+let mediaEqSource = null;
+let mediaEqEnabled = true;
+let mediaAnalyser = null;
+let mediaVisualFrame = null;
+let mediaVisualMode = "psychedelic";
+let mediaShuffle = false;
+let mediaRepeat = false;
 
-/* =========================================================
+/*=========
    BOOT
-========================================================= */
+=========*/
 
 document.addEventListener("DOMContentLoaded", initializeBoot);
 
@@ -338,9 +336,9 @@ function initializeBoot() {
     }, 220);
 }
 
-/* =========================================================
+/*==========================
    INICIALIZAÇÃO GERAL
-========================================================= */
+==========================*/
 
 function initializeSystem() {
     initializeClock();
@@ -360,9 +358,9 @@ function initializeSystem() {
     updateTaskbarFromOpenWindows();
 }
 
-/* =========================================================
+/*==========
    CLOCK
-========================================================= */
+==========*/
 
 function initializeClock() {
     const clock =
@@ -385,9 +383,9 @@ function initializeClock() {
     setInterval(updateClock, 1000);
 }
 
-/* =========================================================
+/*===============
    ICON SYSTEM
-========================================================= */
+================*/
 
 function iconUrl(file) {
     return `${ICON_PATH}${file.split("/").map(encodeURIComponent).join("/")}`;
@@ -413,9 +411,9 @@ function makeIconImage(
     return img;
 }
 
-/* =========================================================
+/*================
    DESKTOP ICONS
-========================================================= */
+==================*/
 
 function applyDesktopIcons() {
     const map = {
@@ -453,9 +451,9 @@ function applyDesktopIcons() {
         });
 }
 
-/* =========================================================
+/* ====================
    WINDOW TITLE ICONS
-========================================================= */
+======================= */
 
 function applyWindowTitleIcons() {
     const map = {
@@ -497,9 +495,9 @@ function applyWindowTitleIcons() {
         });
 }
 
-/* =========================================================
+/* ===============
    PROJECT ICONS
-========================================================= */
+==================*/
 
 function applyProjectIcons() {
     const map = {
@@ -538,9 +536,9 @@ function applyProjectIcons() {
         });
 }
 
-/* =========================================================
+/* ================
    COMPUTER ICONS
-========================================================= */
+=================== */
 
 function applyComputerIcons() {
     const map = {
@@ -580,9 +578,9 @@ function applyComputerIcons() {
         });
 }
 
-/* =========================================================
+/* ==============
    SKILLS ICONS
-========================================================= */
+================= */
 
 function applySkillIcons() {
     const map = {
@@ -670,9 +668,9 @@ function applySkillIcons() {
         });
 }
 
-/* =========================================================
+/* =============
    START ICON
-========================================================= */
+================ */
 
 function applyStartIcon() {
     const holder =
@@ -692,9 +690,9 @@ function applyStartIcon() {
     );
 }
 
-/* =========================================================
+/* ===========
    TRAY ICONS
-========================================================= */
+============== */
 
 function initializeTrayIcons() {
     const tray =
@@ -725,9 +723,9 @@ function initializeTrayIcons() {
         });
 }
 
-/* =========================================================
+/* ======================
    APLICAÇÃO DOS ÍCONES
-========================================================= */
+========================= */
 
 function applyWindowsIcons() {
     applyDesktopIcons();
@@ -738,9 +736,9 @@ function applyWindowsIcons() {
     applyStartIcon();
 }
 
-/* =========================================================
+/* ==============
    WINDOW SYSTEM
-========================================================= */
+================= */
 
 function initializeWindows() {
     document
@@ -831,9 +829,6 @@ function closeWindow(id) {
         return;
     }
 
-    // Remova o estado maximizado antes de ocultar a janela.
-    // O CSS das janelas maximizadas usa display: flex !important,
-    // que pode prevalecer sobre o display: none inline.
     win.classList.remove(
         "maximized",
         "active-window",
@@ -942,9 +937,9 @@ function focusTopVisibleWindow() {
     }
 }
 
-/* =========================================================
+/* ===============================
    DESKTOP / PROJECTS / COMPUTER
-========================================================= */
+================================== */
 
 function bindDoubleOpen(selector) {
     document
@@ -978,9 +973,9 @@ function initializeComputerItems() {
     bindDoubleOpen(".computer-item");
 }
 
-/* =========================================================
+/* ==========
    EXPLORER
-========================================================= */
+============= */
 
 function initializeExplorer() {
     const explorer =
@@ -1483,9 +1478,9 @@ function initializeComputerItems() {
     bindDoubleOpen(".computer-item");
 }
 
-/* =========================================================
+/* =========
    EXPLORER
-========================================================= */
+============ */
 
 function initializeExplorer() {
     const explorer =
@@ -2066,9 +2061,9 @@ function buddySayExplorer(
     }
 }
 
-/* =========================================================
+/* ================
    WINDOW DRAGGING
-========================================================= */
+=================== */
 
 function initializeWindowDragging() {
     document
@@ -2237,9 +2232,9 @@ function endWindowDrag(event) {
         "";
 }
 
-/* =========================================================
+/* =========
    TASKBAR
-========================================================= */
+============ */
 
 function initializeTaskbar() {
     const startButton =
@@ -2410,9 +2405,9 @@ function updateTaskbarFromOpenWindows() {
         });
 }
 
-/* =========================================================
+/* ============
    START MENU
-========================================================= */
+=============== */
 
 function initializeStartMenu() {
     const menu =
@@ -2468,366 +2463,450 @@ function initializeStartMenu() {
     );
 }
 
-/* =========================================================
+/* ==============
    MEDIA PLAYER
-========================================================= */
+================= */
 
 function initializeMediaPlayer() {
-    const player =
-        document.getElementById(
-            "media-window"
-        );
+    const player = document.getElementById("media-window");
+    if (!player || player.dataset.initialized === "true") return;
+    player.dataset.initialized = "true";
 
-    if (
-        !player ||
-        player.dataset.initialized ===
-            "true"
-    ) {
-        return;
-    }
+    mediaAudio = new Audio();
+    mediaAudio.preload = "metadata";
+    mediaAudio.volume = 0.75;
+    mediaAudio.addEventListener("loadedmetadata", () => {
+        const track = mediaTracks[mediaIndex];
+        track.duration = Number.isFinite(mediaAudio.duration) ? Math.floor(mediaAudio.duration) : 0;
+        updateMediaDisplay();
+    });
+    mediaAudio.addEventListener("timeupdate", () => {
+        mediaSeconds = Math.floor(mediaAudio.currentTime || 0);
+        updateMediaDisplay();
+    });
+    mediaAudio.addEventListener("play", () => { mediaPlaying = true; initializeMediaEqualizer(); if (mediaAudioContext && mediaAudioContext.state === "suspended") mediaAudioContext.resume(); updateMediaDisplay(); renderMediaPlaylist(); animateMediaVisualizer(); });
+    mediaAudio.addEventListener("pause", () => { mediaPlaying = false; if (mediaVisualFrame) cancelAnimationFrame(mediaVisualFrame); mediaVisualFrame = null; updateMediaDisplay(); renderMediaPlaylist(); });
+    mediaAudio.addEventListener("ended", () => { if (mediaRepeat) loadMediaTrack(mediaIndex, true); else changeMediaTrack(mediaShuffle ? Math.floor(Math.random() * (mediaTracks.length - 1)) + 1 : 1, true); });
+    mediaAudio.addEventListener("error", () => {
+        const status = document.getElementById("mp-status");
+        if (status) status.textContent = "ERRO AO ABRIR ARQUIVO";
+    });
 
-    player.dataset.initialized =
-        "true";
-
-    player
-        .querySelectorAll(
-            "[data-mp-action]"
-        )
-        .forEach(button => {
-            button.addEventListener(
-                "click",
-                () => {
-                    handleMediaAction(
-                        button.dataset
-                            .mpAction
-                    );
-                }
-            );
+    player.querySelectorAll("[data-mp-action]").forEach(button => {
+        button.addEventListener("click", () => handleMediaAction(button.dataset.mpAction));
+    });
+    renderMediaPlaylist();
+    setMediaVisualMode("psychedelic");
+    player.querySelectorAll("[data-mp-menu]").forEach(button => button.addEventListener("click", event => {
+        event.stopPropagation();
+        const name = button.dataset.mpMenu;
+        const popup = player.querySelector(`[data-mp-popup="${name}"]`);
+        const wasOpen = popup && !popup.hidden;
+        closeMediaMenus();
+        if (popup && !wasOpen) { popup.hidden = false; button.setAttribute("aria-expanded", "true"); }
+    }));
+    player.querySelectorAll("[data-mp-menu-action]").forEach(button => button.addEventListener("click", () => {
+        const action = button.dataset.mpMenuAction;
+        closeMediaMenus();
+        if (action === "open-playlist") toggleMediaDock("playlist");
+        else if (action === "open-equalizer") toggleMediaDock("equalizer");
+        else if (action === "close-player") handleMediaAction("close");
+        else handleMediaAction(action);
+    }));
+    player.querySelectorAll("[data-mp-visual]").forEach(button => button.addEventListener("click", () => {
+        setMediaVisualMode(button.dataset.mpVisual);
+        closeMediaMenus();
+    }));
+    player.querySelectorAll("[data-mp-toggle]").forEach(button => button.addEventListener("click", () => {
+        const key = button.dataset.mpToggle;
+        if (key === "shuffle") mediaShuffle = !mediaShuffle;
+        if (key === "repeat") mediaRepeat = !mediaRepeat;
+        button.classList.toggle("is-enabled", key === "shuffle" ? mediaShuffle : mediaRepeat);
+        button.textContent = `${key === "shuffle" ? (mediaShuffle ? "☑" : "☐") + " Reprodução aleatória" : (mediaRepeat ? "☑" : "☐") + " Repetir faixa"}`;
+        const status = document.getElementById("mp-status");
+        if (status) status.textContent = `${key === "shuffle" ? "ALEATÓRIA" : "REPETIÇÃO"}: ${(key === "shuffle" ? mediaShuffle : mediaRepeat) ? "ATIVADA" : "DESATIVADA"}`;
+        closeMediaMenus();
+    }));
+    document.addEventListener("click", event => { if (!player.contains(event.target)) closeMediaMenus(); });
+    player.querySelectorAll("[data-eq-band]").forEach(input => {
+        input.addEventListener("input", () => {
+            const band = Number(input.dataset.eqBand);
+            const output = input.parentElement.querySelector("output");
+            if (output) output.textContent = `${input.value} dB`;
+            if (mediaEqFilters[band]) mediaEqFilters[band].gain.value = mediaEqEnabled ? Number(input.value) : 0;
         });
+    });
+    const eqEnabled = document.getElementById("mp-eq-enabled");
+    if (eqEnabled) eqEnabled.addEventListener("change", () => {
+        mediaEqEnabled = eqEnabled.checked;
+        mediaEqFilters.forEach((filter, index) => {
+            const slider = player.querySelector(`[data-eq-band="${index}"]`);
+            filter.gain.value = mediaEqEnabled && slider ? Number(slider.value) : 0;
+        });
+    });
+    player.querySelectorAll("[data-eq-preset]").forEach(button => button.addEventListener("click", () => applyMediaEqPreset(button.dataset.eqPreset)));
 
-    const track =
-        document.getElementById(
-            "mp-progress-track"
-        );
-
-    if (track) {
-        track.addEventListener(
-            "click",
-            event => {
-                const rect =
-                    track.getBoundingClientRect();
-
-                if (!rect.width) {
-                    return;
-                }
-
-                const ratio =
-                    Math.max(
-                        0,
-                        Math.min(
-                            1,
-                            (
-                                event.clientX -
-                                rect.left
-                            ) /
-                            rect.width
-                        )
-                    );
-
-                mediaSeconds =
-                    Math.round(
-                        mediaTracks[
-                            mediaIndex
-                        ].duration *
-                        ratio
-                    );
-
-                updateMediaDisplay();
-            }
-        );
+    const progress = document.getElementById("mp-progress-track");
+    if (progress) {
+        progress.setAttribute("role", "slider");
+        progress.setAttribute("aria-label", "Progresso da música");
+        progress.tabIndex = 0;
+        const seek = event => {
+            if (!mediaAudio || !Number.isFinite(mediaAudio.duration) || !mediaAudio.duration) return;
+            const rect = progress.getBoundingClientRect();
+            const clientX = event.clientX ?? (rect.left + (event.offsetX || 0));
+            mediaAudio.currentTime = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width)) * mediaAudio.duration;
+        };
+        progress.addEventListener("click", seek);
+        progress.addEventListener("keydown", event => {
+            if (event.key === "ArrowRight" && mediaAudio) mediaAudio.currentTime = Math.min(mediaAudio.duration || 0, mediaAudio.currentTime + 5);
+            if (event.key === "ArrowLeft" && mediaAudio) mediaAudio.currentTime = Math.max(0, mediaAudio.currentTime - 5);
+        });
     }
 
-    const volume =
-        document.getElementById(
-            "mp-volume-control"
-        );
-
+    const volume = document.getElementById("mp-volume-control");
     if (volume) {
-        volume.addEventListener(
-            "input",
-            () => {
-                const status =
-                    document.getElementById(
-                        "mp-status"
-                    );
-
-                if (status) {
-                    status.textContent =
-                        `VOLUME ${volume.value}%`;
-                }
-            }
-        );
+        volume.addEventListener("input", () => {
+            if (mediaAudio) mediaAudio.volume = Number(volume.value) / 100;
+            const status = document.getElementById("mp-status");
+            if (status) status.textContent = `VOLUME ${volume.value}%`;
+        });
     }
-
-    updateMediaDisplay();
+    loadMediaTrack(0, false);
 }
 
-function handleMediaAction(
-    action
-) {
+function initializeMediaEqualizer() {
+    if (!mediaAudio || mediaAudioContext || !window.AudioContext && !window.webkitAudioContext) return;
+    try {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        mediaAudioContext = new AudioContextClass();
+        mediaEqSource = mediaAudioContext.createMediaElementSource(mediaAudio);
+        const frequencies = [60, 170, 310, 1000, 6000, 12000];
+        mediaEqFilters = frequencies.map((frequency, index) => {
+            const filter = mediaAudioContext.createBiquadFilter();
+            filter.type = index === 0 ? "lowshelf" : index === frequencies.length - 1 ? "highshelf" : "peaking";
+            filter.frequency.value = frequency;
+            filter.Q.value = 1;
+            filter.gain.value = 0;
+            return filter;
+        });
+        mediaAnalyser = mediaAudioContext.createAnalyser();
+        mediaAnalyser.fftSize = 256;
+        mediaEqSource.connect(mediaEqFilters[0]);
+        mediaEqFilters.forEach((filter, index) => filter.connect(mediaEqFilters[index + 1] || mediaAnalyser));
+        mediaAnalyser.connect(mediaAudioContext.destination);
+    } catch (error) {
+        mediaEqFilters = [];
+        console.warn("Equalizador indisponível neste navegador:", error);
+    }
+}
+
+function applyMediaEqPreset(preset) {
+    const presets = {
+        flat: [0, 0, 0, 0, 0, 0],
+        bass: [8, 6, 3, 0, -1, 0],
+        pop: [-1, 2, 5, 4, 2, -1],
+        rock: [5, 3, -1, 2, 5, 4]
+    };
+    const values = presets[preset] || presets.flat;
+    document.querySelectorAll("#media-window [data-eq-band]").forEach((input, index) => {
+        input.value = values[index];
+        const output = input.parentElement.querySelector("output");
+        if (output) output.textContent = `${values[index]} dB`;
+        if (mediaEqFilters[index]) mediaEqFilters[index].gain.value = mediaEqEnabled ? values[index] : 0;
+    });
+    const status = document.getElementById("mp-status");
+    if (status) status.textContent = `EQUALIZADOR: ${preset.toUpperCase()}`;
+}
+
+function renderMediaPlaylist() {
+    const list = document.getElementById("mp-playlist-list");
+    if (!list) return;
+    list.innerHTML = mediaTracks.map((track, index) => `
+        <button type="button" class="mp-playlist-item${index === mediaIndex ? " is-current" : ""}" data-mp-track="${index}" aria-current="${index === mediaIndex ? "true" : "false"}">
+            <span class="mp-playlist-number">${String(index + 1).padStart(2, "0")}</span>
+            <span class="mp-playlist-note">♫</span>
+            <span class="mp-playlist-track"><strong>${track.title}</strong><small>${track.artist}</small></span>
+            <span class="mp-playlist-state">${index === mediaIndex ? (mediaPlaying ? "▶" : "♪") : ""}</span>
+        </button>`).join("");
+    list.querySelectorAll("[data-mp-track]").forEach(button => button.addEventListener("click", () => loadMediaTrack(Number(button.dataset.mpTrack), true)));
+}
+
+function toggleMediaDock(mode) {
+    const dock = document.getElementById("mp-dock");
+    const playlist = document.getElementById("mp-playlist-panel");
+    const equalizer = document.getElementById("mp-equalizer-panel");
+    const title = document.getElementById("mp-dock-title");
+    if (!dock || !playlist || !equalizer) return;
+    const alreadyOpen = !dock.hidden && (mode === "playlist" ? !playlist.hidden : !equalizer.hidden);
+    dock.hidden = alreadyOpen;
+    playlist.hidden = mode !== "playlist" || alreadyOpen;
+    equalizer.hidden = mode !== "equalizer" || alreadyOpen;
+    if (title) title.textContent = mode === "playlist" ? "LISTA DE REPRODUÇÃO" : "EFEITOS DE ÁUDIO";
+    if (mode === "playlist") renderMediaPlaylist();
+    if (!alreadyOpen && mode === "equalizer") initializeMediaEqualizer();
+}
+
+function closeMediaMenus() {
+    const player = document.getElementById("media-window");
+    if (!player) return;
+    player.querySelectorAll("[data-mp-popup]").forEach(popup => popup.hidden = true);
+    player.querySelectorAll("[data-mp-menu]").forEach(button => button.setAttribute("aria-expanded", "false"));
+}
+
+function setMediaVisualMode(mode) {
+    const display = document.querySelector("#media-window .media-player-display");
+    if (!display) return;
+    mediaVisualMode = ["bars", "wave", "orbit", "classic", "psychedelic"].includes(mode) ? mode : "bars";
+    display.dataset.visualMode = mediaVisualMode;
+    const status = document.getElementById("mp-status");
+    const labels = { bars: "BARRAS ANIMADAS", wave: "ONDA DIGITAL", orbit: "ÓRBITA", classic: "VISUALIZAÇÃO CLÁSSICA", psychedelic: "FORMAS PSICODÉLICAS" };
+    if (status) status.textContent = `VISUALIZAÇÃO: ${labels[mediaVisualMode]}`;
+    display.querySelectorAll(".mp-visualizer span").forEach((bar, index) => {
+        bar.style.animationDelay = `${-(index % 7) * 0.13}s`;
+    });
+    const canvas = document.getElementById("mp-psychedelic-canvas");
+    if (canvas) canvas.hidden = mediaVisualMode !== "psychedelic";
+    const bars = display.querySelectorAll(".mp-visualizer span");
+    bars.forEach(bar => bar.hidden = mediaVisualMode === "psychedelic");
+}
+
+function animateMediaVisualizer() {
+    if (mediaVisualFrame) cancelAnimationFrame(mediaVisualFrame);
+    const bars = [...document.querySelectorAll("#mp-visualizer span")];
+    const canvas = document.getElementById("mp-psychedelic-canvas");
+    const ctx = canvas ? canvas.getContext("2d", { alpha: false, desynchronized: true }) : null;
+    const data = mediaAnalyser ? new Uint8Array(mediaAnalyser.frequencyBinCount) : null;
+    let phase = 0;
+    let lastFrameAt = 0;
+    let canvasWidth = 0;
+    let canvasHeight = 0;
+    let renderScale = 1;
+
+    const resizeCanvas = () => {
+        if (!canvas || !ctx) return;
+        const rect = canvas.getBoundingClientRect();
+        canvasWidth = Math.max(1, Math.floor(rect.width));
+        canvasHeight = Math.max(1, Math.floor(rect.height));
+        renderScale = Math.min(1, 900 / canvasWidth, 560 / canvasHeight);
+        const backingWidth = Math.max(1, Math.floor(canvasWidth * renderScale));
+        const backingHeight = Math.max(1, Math.floor(canvasHeight * renderScale));
+        if (canvas.width !== backingWidth || canvas.height !== backingHeight) {
+            canvas.width = backingWidth;
+            canvas.height = backingHeight;
+        }
+        ctx.setTransform(renderScale, 0, 0, renderScale, 0, 0);
+    };
+
+    //parte psicodélica do media player
+    const drawPsychedelic = (values) => {
+        if (!canvas || !ctx || mediaVisualMode !== "psychedelic") return;
+        const rect = canvas.getBoundingClientRect();
+        if (Math.abs(rect.width - canvasWidth) > 2 || Math.abs(rect.height - canvasHeight) > 2) resizeCanvas();
+        const width = canvasWidth;
+        const height = canvasHeight;
+        const energy = values ? values.reduce((sum, v) => sum + v, 0) / values.length / 255 : 0.38;
+        const bass = values ? (values[2] || 0) / 255 : 0.35;
+        const treble = values ? (values[Math.min(values.length - 1, 30)] || 0) / 255 : 0.4;
+        const cx = width / 2, cy = height / 2;
+        const size = Math.min(width, height);
+        const base = size * (0.16 + bass * 0.15);
+
+        ctx.globalCompositeOperation = "source-over";
+        ctx.fillStyle = "rgba(1, 2, 18, 0.22)";
+        ctx.fillRect(0, 0, width, height);
+        const rainbow = ctx.createRadialGradient(cx, cy, 1, cx, cy, size * .65);
+        rainbow.addColorStop(0, `hsla(${(phase * 40) % 360},100%,55%,${.10 + energy * .12})`);
+        rainbow.addColorStop(.55, `hsla(${(phase * 40 + 130) % 360},100%,45%,.045)`);
+        rainbow.addColorStop(1, "rgba(0,0,10,0)");
+        ctx.fillStyle = rainbow;
+        ctx.fillRect(0, 0, width, height);
+        ctx.globalCompositeOperation = "lighter";
+
+        for (let layer = 0; layer < 7; layer++) {
+            const points = 100;
+            const hue = (phase * 68 + layer * 43 + bass * 100) % 360;
+            const petalCount = 3 + (layer % 7);
+            const spin = phase * (layer % 2 ? .38 : -.29) + layer * .31;
+            ctx.beginPath();
+            for (let i = 0; i <= points; i++) {
+                const a = i / points * Math.PI * 2;
+                const bin = values ? (values[Math.floor(i / points * (values.length - 1))] || 0) / 255 : .38;
+                const petals = Math.sin(a * petalCount + phase * (1.5 + layer * .08) + layer) * (base * (.22 + bin * .85));
+                const wave = Math.cos(a * (petalCount * 2 + 1) - phase * 1.7 + layer) * base * (.08 + treble * .2);
+                const radius = base * (.55 + layer * .19) + petals + wave;
+                const x = cx + Math.cos(a + spin) * radius * (1.05 + .15 * Math.sin(phase * .7 + layer));
+                const y = cy + Math.sin(a + spin) * radius * (.62 + .22 * Math.cos(phase + layer));
+                if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+            }
+            ctx.closePath();
+            ctx.strokeStyle = `hsla(${hue},100%,${58 + energy * 30}%,${.42 + (layer % 3) * .12})`;
+            ctx.lineWidth = .9 + energy * 2.4 + treble;
+            ctx.stroke();
+        }
+
+        for (let ring = 0; ring < 4; ring++) {
+            const radius = base * (.55 + ring * .58) * (1 + Math.sin(phase * 1.4 + ring) * (.04 + bass * .08));
+            ctx.beginPath();
+            ctx.ellipse(cx, cy, radius, radius * (.48 + .1 * Math.sin(phase + ring)), phase * .22 * (ring % 2 ? 1 : -1), 0, Math.PI * 2);
+            ctx.strokeStyle = `hsla(${(phase * 82 + ring * 48) % 360},100%,65%,${.18 + energy * .22})`;
+            ctx.lineWidth = 1 + treble * 1.5;
+            ctx.stroke();
+        }
+
+        for (let i = 0; i < 22; i++) {
+            const a = i / 22 * Math.PI * 2 + phase * (i % 2 ? .8 : -.55);
+            const r = size * (.12 + ((i * 17) % 61) / 100 + energy * .12);
+            const pulse = 1.2 + (values ? (values[i % values.length] || 0) / 255 * 3.5 : 2);
+            ctx.beginPath();
+            ctx.arc(cx + Math.cos(a) * r, cy + Math.sin(a * 1.12) * r * .62, pulse, 0, Math.PI * 2);
+            ctx.fillStyle = `hsla(${(phase * 95 + i * 19) % 360},100%,${65 + treble * 25}%,.82)`;
+            ctx.fill();
+        }
+        ctx.globalCompositeOperation = "source-over";
+    };
+
+    const tick = (timestamp) => {
+        if (!mediaPlaying) { mediaVisualFrame = null; return; }
+        if (timestamp - lastFrameAt < 33) {
+            mediaVisualFrame = requestAnimationFrame(tick);
+            return;
+        }
+        lastFrameAt = timestamp;
+        if (document.hidden) {
+            mediaVisualFrame = requestAnimationFrame(tick);
+            return;
+        }
+        if (mediaAnalyser && data) mediaAnalyser.getByteFrequencyData(data);
+        if (mediaVisualMode === "psychedelic") drawPsychedelic(data);
+        else if (mediaAnalyser && data) {
+            bars.forEach((bar, index) => {
+                const value = data[Math.floor(index / Math.max(1, bars.length) * data.length)] || 0;
+                bar.style.height = `${Math.max(8, value / 255 * 92)}%`;
+                bar.style.opacity = `${0.45 + value / 255 * 0.55}`;
+            });
+        }
+        phase += 0.035 + (data ? (data[4] || 0) / 255 * 0.08 : 0.02);
+        mediaVisualFrame = requestAnimationFrame(tick);
+    };
+
+    resizeCanvas();
+    mediaVisualFrame = requestAnimationFrame(tick);
+}
+
+function loadMediaTrack(index, autoplay = false) {
+    if (!mediaTracks.length || !mediaAudio) return;
+    mediaIndex = (index + mediaTracks.length) % mediaTracks.length;
+    mediaSeconds = 0;
+    mediaAudio.pause();
+    mediaPlaying = false;
+    mediaAudio.src = mediaTracks[mediaIndex].src;
+    mediaAudio.load();
+    updateMediaDisplay();
+    renderMediaPlaylist();
+    if (autoplay) {
+        initializeMediaEqualizer();
+        if (mediaAudioContext && mediaAudioContext.state === "suspended") mediaAudioContext.resume();
+        mediaAudio.play().catch(() => {
+            const status = document.getElementById("mp-status");
+            if (status) status.textContent = "CLIQUE EM PLAY PARA OUVIR";
+        });
+    }
+}
+
+function changeMediaTrack(step, autoplay = mediaPlaying) {
+    loadMediaTrack(mediaIndex + step, autoplay);
+}
+
+function handleMediaAction(action) {
     switch (action) {
         case "play":
-            mediaPlaying =
-                !mediaPlaying;
-
-            if (mediaPlaying) {
-                startMediaTimer();
-            } else {
-                stopMediaTimer();
-            }
-
+            if (!mediaAudio) return;
+            if (mediaAudio.paused) {
+                initializeMediaEqualizer();
+                if (mediaAudioContext && mediaAudioContext.state === "suspended") mediaAudioContext.resume();
+                mediaAudio.play().catch(() => {
+                    const status = document.getElementById("mp-status");
+                    if (status) status.textContent = "NAO FOI POSSIVEL REPRODUZIR";
+                });
+            } else mediaAudio.pause();
             break;
-
         case "stop":
-            mediaPlaying = false;
-            stopMediaTimer();
+            if (mediaAudio) { mediaAudio.pause(); mediaAudio.currentTime = 0; }
             mediaSeconds = 0;
             break;
-
         case "previous":
-            mediaIndex =
-                (
-                    mediaIndex -
-                    1 +
-                    mediaTracks.length
-                ) %
-                mediaTracks.length;
-
-            mediaSeconds = 0;
+            changeMediaTrack(-1, true);
             break;
-
         case "next":
-            mediaIndex =
-                (
-                    mediaIndex +
-                    1
-                ) %
-                mediaTracks.length;
-
-            mediaSeconds = 0;
+            changeMediaTrack(1, true);
             break;
-
         case "playlist":
-            showExplorerMessage(
-                "Playlist",
-                mediaTracks
-                    .map(
-                        (track, index) =>
-                            `${index + 1}. ${track.title} — ${track.artist}`
-                    )
-                    .join("<br>")
-            );
+            toggleMediaDock("playlist");
             break;
-
         case "equalizer":
-            showExplorerMessage(
-                "Equalizer",
-                "Equalizer visual is enabled.<br><br>" +
-                "Audio output is simulated in this portfolio version."
-            );
+            toggleMediaDock("equalizer");
             break;
-
-        case "minimize":
-            minimizeWindow(
-                "media-window"
-            );
+        case "dock-close": {
+            const dock = document.getElementById("mp-dock");
+            if (dock) dock.hidden = true;
             break;
-
-        case "maximize":
-            maximizeWindow(
-                "media-window"
-            );
-            break;
-
+        }
+        case "minimize": minimizeWindow("media-window"); break;
+        case "maximize": maximizeWindow("media-window"); break;
         case "close":
-            closeWindow(
-                "media-window"
-            );
+            if (mediaAudio) mediaAudio.pause();
+            closeWindow("media-window");
             break;
     }
-
     updateMediaDisplay();
 }
 
 function startMediaTimer() {
     stopMediaTimer();
-
-    mediaTimer =
-        setInterval(() => {
-            mediaSeconds++;
-
-            if (
-                mediaSeconds >=
-                mediaTracks[
-                    mediaIndex
-                ].duration
-            ) {
-                mediaIndex =
-                    (
-                        mediaIndex +
-                        1
-                    ) %
-                    mediaTracks.length;
-
-                mediaSeconds = 0;
-            }
-
-            updateMediaDisplay();
-        }, 1000);
 }
 
 function stopMediaTimer() {
-    if (mediaTimer) {
-        clearInterval(mediaTimer);
-    }
-
+    if (mediaTimer) clearInterval(mediaTimer);
     mediaTimer = null;
 }
 
-function formatMediaTime(
-    seconds
-) {
-    return (
-        `${String(
-            Math.floor(
-                seconds / 60
-            )
-        ).padStart(2, "0")}:` +
-        `${String(
-            seconds % 60
-        ).padStart(2, "0")}`
-    );
+function formatMediaTime(seconds) {
+    const safeSeconds = Number.isFinite(seconds) ? Math.max(0, Math.floor(seconds)) : 0;
+    return `${String(Math.floor(safeSeconds / 60)).padStart(2, "0")}:${String(safeSeconds % 60).padStart(2, "0")}`;
 }
 
 function updateMediaDisplay() {
-    const track =
-        mediaTracks[mediaIndex];
-
-    if (!track) {
-        return;
+    const track = mediaTracks[mediaIndex];
+    if (!track) return;
+    const title = document.getElementById("mp-track-title");
+    const artist = document.getElementById("mp-track-subtitle");
+    const current = document.getElementById("mp-current-time");
+    const total = document.getElementById("mp-total-time");
+    const fill = document.getElementById("mp-progress-fill");
+    const thumb = document.getElementById("mp-progress-thumb");
+    const play = document.getElementById("mp-play-button");
+    const status = document.getElementById("mp-status");
+    const duration = (mediaAudio && Number.isFinite(mediaAudio.duration)) ? mediaAudio.duration : track.duration;
+    if (title) title.textContent = track.title;
+    if (artist) artist.textContent = track.artist;
+    if (current) current.textContent = formatMediaTime(mediaAudio ? mediaAudio.currentTime : mediaSeconds);
+    if (total) total.textContent = formatMediaTime(duration);
+    const percent = duration > 0 ? ((mediaAudio ? mediaAudio.currentTime : mediaSeconds) / duration) * 100 : 0;
+    if (fill) fill.style.width = `${percent}%`;
+    if (thumb) thumb.style.left = `${percent}%`;
+    if (play) play.textContent = mediaPlaying ? "||" : "▶";
+    if (status && !status.textContent.startsWith("ERRO") && !status.textContent.startsWith("NAO FOI") && !status.textContent.startsWith("CLIQUE")) {
+        status.textContent = mediaPlaying ? "PLAYING" : "READY";
     }
-
-    const title =
-        document.getElementById(
-            "mp-track-title"
-        );
-
-    const artist =
-        document.getElementById(
-            "mp-track-subtitle"
-        );
-
-    const current =
-        document.getElementById(
-            "mp-current-time"
-        );
-
-    const total =
-        document.getElementById(
-            "mp-total-time"
-        );
-
-    const fill =
-        document.getElementById(
-            "mp-progress-fill"
-        );
-
-    const thumb =
-        document.getElementById(
-            "mp-progress-thumb"
-        );
-
-    const play =
-        document.getElementById(
-            "mp-play-button"
-        );
-
-    const status =
-        document.getElementById(
-            "mp-status"
-        );
-
-    if (title) {
-        title.textContent =
-            track.title;
-    }
-
-    if (artist) {
-        artist.textContent =
-            track.artist;
-    }
-
-    if (current) {
-        current.textContent =
-            formatMediaTime(
-                mediaSeconds
-            );
-    }
-
-    if (total) {
-        total.textContent =
-            formatMediaTime(
-                track.duration
-            );
-    }
-
-    const percent =
-        track.duration
-            ? (
-                mediaSeconds /
-                track.duration
-            ) * 100
-            : 0;
-
-    if (fill) {
-        fill.style.width =
-            `${percent}%`;
-    }
-
-    if (thumb) {
-        thumb.style.left =
-            `${percent}%`;
-    }
-
-    if (play) {
-        play.textContent =
-            mediaPlaying
-                ? "||"
-                : "▶";
-    }
-
-    if (status) {
-        status.textContent =
-            mediaPlaying
-                ? "PLAYING"
-                : "READY";
-    }
-
-    document
-        .querySelectorAll(
-            "#mp-visualizer span"
-        )
-        .forEach(bar => {
-            bar.style.animationPlayState =
-                mediaPlaying
-                    ? "running"
-                    : "paused";
-        });
+    document.querySelectorAll("#mp-visualizer span").forEach(bar => {
+        bar.style.animationPlayState = mediaPlaying ? "running" : "paused";
+    });
 }
 
-/* =========================================================
+/* ===========
    GIOBUDDY
-========================================================= */
+============== */
 
 function initializeGioBuddy() {
     injectGioBuddyStyles();
@@ -3144,8 +3223,7 @@ function setGioBuddyFrame(relativePath) {
     };
 
     testImage.onerror = () => {
-        // Se algum frame faltar, simplesmente ignora esse frame.
-        // Isso evita o ícone quebrado do navegador.
+        // Se algum frame faltar simplesmente ignora esse frame
     };
 
     testImage.src = nextSrc;
@@ -3208,9 +3286,9 @@ function scheduleGioBuddyBlink() {
     }, 3500 + Math.floor(Math.random() * 3500));
 }
 
-/* =========================================================
+/* ===================
    GIOBUDDY MOVEMENT
-========================================================= */
+====================== */
 
 function stopGioBuddyWandering() {
     gioBuddyMoveToken++;
@@ -3319,7 +3397,6 @@ function moveGioBuddyTo(targetX, targetY, duration = 2600, onComplete) {
         return;
     }
 
-    // As imagens .2.png são a versão virada para a esquerda.
     if (Math.abs(dx) > 2) {
         gioBuddyFacing = dx < 0 ? "left" : "right";
     }
@@ -3433,8 +3510,8 @@ function startGioBuddyWandering() {
                 moveGioBuddyRandomly(() => {
                     if (buddyEnabled && !buddyDragging) {
                         const arrivalPhrases = [
-                            "Cheguei. Eu precisava dar uma voltinha.",
-                            "Pronto. Patrulha do desktop concluída.",
+                            "Cheguei! Eu precisava dar uma voltinha.",
+                            "Pronto! Patrulha do desktop concluída.",
                             "Essa área parecia suspeita. Resolvido.",
                             "Andar pelo sistema é praticamente meu trabalho.",
                             "Olá de novo! Eu estava ali agora há pouco."
@@ -3459,9 +3536,9 @@ function startGioBuddyWandering() {
     schedule();
 }
 
-/* =========================================================
+/* =================
    GIOBUDDY SPEECH
-========================================================= */
+==================== */
 
 function buddySay(
     message,
@@ -3639,9 +3716,9 @@ function startBuddyRandomEvents() {
     schedule();
 }
 
-/* =========================================================
+/* ===============
    GIOBUDDY DRAG
-========================================================= */
+================== */
 
 function startBuddyDrag(event) {
     if (
@@ -3815,9 +3892,9 @@ function startBuddyDrag(event) {
     );
 }
 
-/* =========================================================
+/* ================
    GIOBUDDY ALERT
-========================================================= */
+=================== */
 
 function showBuddyAlert() {
     if (!buddyEnabled) {
@@ -3984,9 +4061,9 @@ function restoreGioBuddy() {
     startGioBuddyWandering();
 }
 
-/* =========================================================
+/* =======================
    GIOBUDDY CONTEXT MENU
-========================================================= */
+========================== */
 
 document.addEventListener(
     "contextmenu",
@@ -4158,9 +4235,9 @@ function showBuddyContextMenu(
     }, 0);
 }
 
-/* =========================================================
+/* ==========
    KEYBOARD
-========================================================= */
+============= */
 
 document.addEventListener(
     "keydown",
@@ -4174,7 +4251,6 @@ document.addEventListener(
             tag === "TEXTAREA" ||
             tag === "SELECT";
 
-        /* G = GioBuddy */
         if (
             !typing &&
             event.key.toLowerCase() === "g" &&
@@ -4193,7 +4269,6 @@ document.addEventListener(
             }
         }
 
-        /* ESC = fechar menus */
         if (
             event.key === "Escape"
         ) {
@@ -4226,9 +4301,9 @@ document.addEventListener(
     }
 );
 
-/* =========================================================
+/* ===============
    RESIZE SAFETY
-========================================================= */
+================== */
 
 window.addEventListener(
     "resize",
@@ -4304,7 +4379,7 @@ window.addEventListener(
     }
 );
 
-/* Google-style search: profile previews stay inside the Internet Explorer window. */
+/* Google da época */
 document.addEventListener("DOMContentLoaded", () => {
     const input = document.getElementById("google-era-search");
     const suggestions = document.getElementById("google-era-suggestions");
@@ -4343,8 +4418,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const openExternalProfile = (profile) => {
         hideSuggestions();
-        // Open the real profile in a separate browser tab; third-party sites
-        // commonly block being embedded inside another site's window.
+
         window.open(profile.url, "_blank", "noopener,noreferrer");
     };
 
@@ -4381,12 +4455,6 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-/* =========================================================
-   FIX DEFINITIVO DOS BOTÕES X
-   Fecha no pointerdown em fase de captura, antes que qualquer
-   listener da barra de título ou da janela possa interceptar
-   o gesto. O click fica como fallback para acessibilidade.
-========================================================= */
 function handleWindowCloseControl(event) {
     const target = event.target;
     if (!(target instanceof Element)) return;
@@ -4403,7 +4471,7 @@ function handleWindowCloseControl(event) {
         event.stopImmediatePropagation();
     }
 
-    // Evita disparos duplicados quando o navegador também gera click.
+    // Evita disparos duplicados quando o navegador também gera click
     if (windowElement.style.display !== "none") {
         closeWindow(windowElement.id);
     }

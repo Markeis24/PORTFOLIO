@@ -2,228 +2,120 @@
 
 <html lang="pt-BR">
 
-
-
 <head>
-
        <meta charset="UTF-8">
-
        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-
 
        <title>GIOVANNA OS</title>
 
-
-
        <link rel="stylesheet" href="style.css">
-
 </head>
-
 
 
 <body>
 
-
-
-<!-- =========================================================
-
-            BOOT SCREEN
-
-       ========================================================== -->
-
-
+<!-- =============
+    BOOT SCREEN
+========================================================== -->
 
        <div id="boot-screen">
-
-
-
            <div class="boot-content">
-
-
-
                <div class="boot-logo">
-
                    GIOVANNA OS
-
                </div>
-
-
 
                <div class="boot-version">
-
                    Personal Development Environment
-
                </div>
-
-
 
                <div class="boot-line">
-
                    Starting system...
-
                </div>
-
-
 
                <div class="boot-progress">
-
                    <div id="boot-progress-bar"></div>
-
                </div>
-
-
 
                <div id="boot-status">
-
                    Initializing system...
-
                </div>
-
-
-
            </div>
-
-
-
        </div>
 
 
-
-
-
 <!-- =========================================================
-
-            DESKTOP
-
-       ========================================================== -->
-
-
+     DESKTOP
+========================================================== -->
 
        <main id="desktop">
 
-
-
 <!-- =====================================================
+    DESKTOP ICONS
 
-                DESKTOP ICONS
-
-           ====================================================== -->
-
-
+====================================================== -->
 
            <div class="desktop-icons">
-
-
-
                <div class="desktop-icon" data-window="computer-window">
-
                    <div class="desktop-icon-image"></div>
 
                    <span>My Computer</span>
-
                </div>
 
-
-
                <div class="desktop-icon" data-window="projects-window">
-
                    <div class="desktop-icon-image"></div>
 
                    <span>Projects</span>
-
                </div>
 
 
 
                <div class="desktop-icon" data-window="about-window">
-
                    <div class="desktop-icon-image"></div>
 
                    <span>About Me</span>
-
                </div>
 
-
-
                <div class="desktop-icon" data-window="skills-window">
-
                    <div class="desktop-icon-image"></div>
 
                    <span>Skills</span>
-
                </div>
 
-
-
                <div class="desktop-icon" data-window="internet-window">
-
                    <div class="desktop-icon-image"></div>
 
                    <span>Internet</span>
-
                </div>
 
-
-
                <div class="desktop-icon" data-window="media-window">
-
                    <div class="desktop-icon-image"></div>
 
                    <span>Media Player</span>
-
                </div>
 
-
-
            </div>
-
-
-
 
 
 <!-- =====================================================
-
-                MY COMPUTER
-
-           ====================================================== -->
-
-
+    MY COMPUTER
+====================================================== -->
 
 <section class="os-window explorer-window" id="computer-window">
-
-
-
        <div class="window-titlebar">
-
-
-
            <div class="window-title" id="computer-window-title">
-
                 My Computer
-
            </div>
 
-
-
            <div class="window-controls">
-
                <button class="window-minimize">_</button>
 
                <button class="window-maximize">□</button>
 
                <button class="window-close">X</button>
-
            </div>
-
-
-
        </div>
 
-
-
        <div class="window-menu explorer-menu">
-
            <span>File</span>
 
            <span>Edit</span>
@@ -235,255 +127,130 @@
            <span>Tools</span>
 
            <span>Help</span>
-
        </div>
 
-
-
        <div class="window-toolbar explorer-toolbar">
-
-
-
            <button class="explorer-nav" data-explorer-action="back" title="Back">←</button>
 
            <button class="explorer-nav" data-explorer-action="forward" title="Forward">→</button>
 
            <button class="explorer-nav" data-explorer-action="up" title="Up one level">↑</button>
 
-
-
            <div class="explorer-separator"></div>
-
-
 
            <button class="explorer-tool" data-explorer-action="search" title="Search"><img class="windows-emoji-icon" src="img/icons/windows-xp/xp-search.ico" alt="" aria-hidden="true"></button>
 
            <button class="explorer-tool" data-explorer-action="folders" title="Folders"><img class="windows-emoji-icon" src="img/icons/windows-xp/xp-folder.ico" alt="" aria-hidden="true"></button>
 
-
-
            <div class="toolbar-address explorer-address">
-
                <span class="address-computer"><img class="windows-emoji-icon" src="img/icons/windows-xp/xp-computer.ico" alt="" aria-hidden="true"></span>
 
                <span id="explorer-address-text">My Computer</span>
-
            </div>
 
-
-
            <button class="explorer-go" data-explorer-action="go" title="Go">▶</button>
-
-
-
        </div>
 
-
-
        <div class="explorer-body">
-
-
-
            <aside class="explorer-sidebar">
-
-
-
                <div class="explorer-side-title">
-
                    <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-folder.ico" alt="" aria-hidden="true"> File and Folder Tasks
-
                </div>
-
-
 
                <button data-explorer-path="projects">
-
                    <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-folder.ico" alt="" aria-hidden="true"> View my projects
-
                </button>
-
-
 
                <button data-explorer-path="skills">
-
                    <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-settings.ico" alt="" aria-hidden="true"> View installed skills
-
                </button>
-
-
 
                <button data-window="about-window">
-
                    <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-computer.ico" alt="" aria-hidden="true"> View my profile
-
                </button>
 
-
-
                <div class="explorer-side-title explorer-side-title-second">
-
                    <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-computer.ico" alt="" aria-hidden="true"> Other Places
-
                </div>
-
-
 
                <button class="explorer-side-link" data-explorer-path="computer">
-
                    <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-computer.ico" alt="" aria-hidden="true"> My Computer
-
                </button>
-
-
 
                <button class="explorer-side-link" data-explorer-path="projects">
-
                    <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-folder.ico" alt="" aria-hidden="true"> My Projects
-
                </button>
-
-
 
                <button class="explorer-side-link" data-window="internet-window">
-
                    <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-internet.ico" alt="" aria-hidden="true"> Internet
-
                </button>
 
-
-
                <div class="explorer-side-title explorer-side-title-second">
-
                    <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-help.ico" alt="" aria-hidden="true"> Details
-
                </div>
 
-
-
                <div class="explorer-details">
-
                    <strong id="explorer-details-name">My Computer</strong>
 
                    <span id="explorer-details-description">
-
                        Personal Development Environment
-
                    </span>
-
                </div>
-
-
-
            </aside>
 
-
-
            <div class="explorer-main">
-
-
-
                <div class="explorer-heading">
-
                    <div>
-
                        <h2 id="explorer-heading-title">My Computer</h2>
 
                        <p id="explorer-heading-subtitle">
-
                            Files and folders stored on this computer
-
                        </p>
-
                    </div>
-
-
 
                    <div class="explorer-view-label">
-
                        View: <strong>Icons</strong> ▼
-
                    </div>
-
                </div>
 
-
-
                <div class="explorer-items" id="explorer-items">
+
 
 <!-- Populated by script.js -->
 
                </div>
-
-
-
            </div>
-
-
-
        </div>
 
-
-
        <div class="window-statusbar explorer-statusbar">
-
            <span id="explorer-status-count">6 objects</span>
 
            <span id="explorer-status-path">My Computer</span>
-
        </div>
-
-
 
 </section>
 
 
-
-
-
-
-
 <!-- =====================================================
-
-                PROJECTS
-
-           ====================================================== -->
-
-
+    PROJECTS
+====================================================== -->
 
            <section class="os-window" id="projects-window">
-
-
-
                <div class="window-titlebar">
-
-
-
                    <div class="window-title">
-
                         My Projects
-
                    </div>
 
-
-
                    <div class="window-controls">
-
                        <button class="window-minimize">_</button>
 
                        <button class="window-maximize">□</button>
 
                        <button class="window-close">X</button>
-
                    </div>
-
-
-
                </div>
 
-
-
                <div class="window-menu">
-
                    <span>File</span>
 
                    <span>Edit</span>
@@ -495,15 +262,9 @@
                    <span>Tools</span>
 
                    <span>Help</span>
-
                </div>
 
-
-
                <div class="window-toolbar">
-
-
-
                    <button>←</button>
 
                    <button>→</button>
@@ -511,335 +272,151 @@
                    <button>↑</button>
 
 
-
                    <div class="toolbar-address">
-
                        C:\Giovanna\Projects
-
                    </div>
-
-
-
                </div>
 
 
-
-
-
                <div class="window-content projects-content">
-
-
-
                    <div class="explorer-projects-hint"><img class="windows-emoji-icon" src="img/icons/windows-xp/xp-folder.ico" alt="" aria-hidden="true"> C:\\\Giovanna\\\Projects</div>
 
-
-
                    <div class="projects-header">
-
-
-
                        <div>
-
                            <h2>My Projects</h2>
 
                            <p>
-
                                Double-click a project to open it.
-
                            </p>
-
                        </div>
-
-
-
                    </div>
-
-
-
 
 
                    <div class="project-grid">
 
-
-
 <!-- API 1 -->
-
-
-
                        <div class="project-item" data-window="api1-window">
-
-
-
                            <div class="project-icon">
 
                            </div>
 
-
-
                            <div class="project-name">
-
                                API-1
-
                            </div>
-
-
 
                            <div class="project-type">
-
                                Algorithms
-
                            </div>
-
-
-
                        </div>
-
-
-
-
 
 <!-- API 2 -->
-
-
-
                        <div class="project-item" data-window="api2-window">
-
-
-
                            <div class="project-icon">
 
                            </div>
 
-
-
                            <div class="project-name">
-
                                API-2
-
                            </div>
-
-
 
                            <div class="project-type">
-
                                Java / MySQL
-
                            </div>
-
-
-
                        </div>
-
-
-
-
 
 <!-- API 3 -->
-
-
-
                        <div class="project-item" data-window="api3-window">
-
-
-
                            <div class="project-icon">
 
                            </div>
 
-
-
                            <div class="project-name">
-
                                API-3
-
                            </div>
-
-
 
                            <div class="project-type">
-
                                Spring Boot
-
                            </div>
-
-
-
                        </div>
-
-
-
-
 
 <!-- ESTAÇÃO TI -->
-
-
-
                        <div class="project-item" data-window="estacao-window">
-
-
-
                            <div class="project-icon">
 
                            </div>
 
-
-
                            <div class="project-name">
-
                                Estação-TI
-
                            </div>
-
-
 
                            <div class="project-type">
-
                                Node.js / WebSockets
-
                            </div>
-
-
-
                        </div>
-
-
-
                    </div>
-
-
-
                </div>
-
-
-
 
 
                <div class="window-statusbar">
-
                    4 objects
-
                </div>
-
-
-
            </section>
 
 
-
-
-
 <!-- =====================================================
-
-                API 1
-
-           ====================================================== -->
-
-
-
+    API 1
+====================================================== -->
            <section class="os-window project-window" id="api1-window">
-
-
-
                <div class="window-titlebar">
-
-
-
                    <div class="window-title">
-
                         API-1.exe
-
                    </div>
 
-
-
                    <div class="window-controls">
-
                        <button class="window-minimize">_</button>
 
                        <button class="window-maximize">□</button>
 
                        <button class="window-close">X</button>
-
                    </div>
-
-
-
                </div>
 
-
-
                <div class="window-content project-app">
-
-
-
                    <div class="app-header">
-
-
-
                        <div class="app-icon">
-
                            <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-help.ico" alt="" aria-hidden="true">
-
                        </div>
 
-
-
                        <div>
-
                            <h1>API-1</h1>
 
                            <p>Aplicação de Cálculo de Sequências Lógicas</p>
-
                        </div>
-
-
-
                    </div>
-
-
 
                    <hr>
 
-
-
                    <h3>Project information</h3>
 
-
-
                    <p>
-
                        Primeiro projeto desenvolvido durante a formação em Banco de Dados.
 
                        O projeto trabalha conceitos de lógica, algoritmos e raciocínio
 
                        computacional através de diferentes sequências matemáticas.
-
                    </p>
 
-
-
                    <div class="tech-list">
-
-
-
                        <span>Visualg</span>
 
                        <span>Algorithms</span>
 
                        <span>Logic</span>
-
-
-
                    </div>
-
-
 
                    <h3>Implemented algorithms</h3>
 
-
-
                    <ul>
-
                        <li>Fibonacci</li>
 
                        <li>Números primos</li>
@@ -851,121 +428,58 @@
                        <li>Progressão geométrica</li>
 
                        <li>Quadrados perfeitos</li>
-
                    </ul>
 
-
-
                    <a class="xp-button" href="https://github.com/Markeis24/API-1" target="_blank" rel="noopener noreferrer">
-
                        Open project
-
                    </a>
-
-
-
                </div>
-
-
-
            </section>
 
 
-
-
-
 <!-- =====================================================
-
-                API 2
-
-           ====================================================== -->
-
-
+    API 2
+====================================================== -->
 
            <section class="os-window project-window" id="api2-window">
-
-
-
                <div class="window-titlebar">
-
-
-
                    <div class="window-title">
-
                         API-2.exe
-
                    </div>
 
-
-
                    <div class="window-controls">
-
                        <button class="window-minimize">_</button>
 
                        <button class="window-maximize">□</button>
 
                        <button class="window-close">X</button>
-
                    </div>
-
-
-
                </div>
 
-
-
                <div class="window-content project-app">
-
-
-
                    <div class="app-header">
-
-
-
                        <div class="app-icon">
-
                            <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-default.ico" alt="" aria-hidden="true">
-
                        </div>
 
-
-
                        <div>
-
                            <h1>BlueTech</h1>
 
                            <p>Plataforma para entrega de TG</p>
-
                        </div>
-
-
-
                    </div>
-
-
 
                    <hr>
 
-
-
                    <h3>Project information</h3>
 
-
-
                    <p>
-
                        Sistema desenvolvido para organizar o processo de entrega,
 
                        acompanhamento e aprovação de Trabalhos de Graduação.
-
                    </p>
 
-
-
                    <div class="tech-list">
-
-
-
                        <span>Java</span>
 
                        <span>JavaFX</span>
@@ -977,19 +491,11 @@
                        <span>SceneBuilder</span>
 
                        <span>Git</span>
-
-
-
                    </div>
-
-
 
                    <h3>Features</h3>
 
-
-
                    <ul>
-
                        <li>Entrega de trabalhos</li>
 
                        <li>Controle de versões</li>
@@ -1005,119 +511,57 @@
                        <li>Controle de usuários</li>
 
                        <li>Aprovação final</li>
-
                    </ul>
 
-
-
                    <a class="xp-button" href="https://github.com/Markeis24/API-2" target="_blank" rel="noopener noreferrer">
-
                        Open project
-
                    </a>
-
-
-
                </div>
-
-
-
            </section>
 
 
-
-
-
 <!-- =====================================================
-
-                API 3
-
-           ====================================================== -->
-
-
+    API 3
+====================================================== -->
 
            <section class="os-window project-window" id="api3-window">
-
-
-
                <div class="window-titlebar">
-
-
-
                    <div class="window-title">
-
                         IPEMControl.exe
-
                    </div>
 
-
-
                    <div class="window-controls">
-
                        <button class="window-minimize">_</button>
 
                        <button class="window-maximize">□</button>
 
                        <button class="window-close">X</button>
-
                    </div>
-
-
-
                </div>
 
-
-
                <div class="window-content project-app ipem-app">
-
-
-
                    <div class="app-header">
-
-
-
                        <div class="app-icon">
-
                            <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-computer.ico" alt="" aria-hidden="true">
-
                        </div>
 
-
-
                        <div>
-
                            <h1>IPEMControl</h1>
 
                            <p>Vehicle & Fuel Management System</p>
-
                        </div>
-
-
-
                    </div>
-
-
 
                    <hr>
 
-
-
                    <p>
-
                        Sistema de controle e análise de veículos e abastecimentos
 
                        desenvolvido para o IPEM.
-
                    </p>
 
-
-
                    <div class="dashboard-grid">
-
-
-
                        <div class="dashboard-card">
-
                            <strong>Backend</strong>
 
                            <span>Java</span>
@@ -1125,13 +569,9 @@
                            <span>Spring Boot</span>
 
                            <span>Maven</span>
-
                        </div>
 
-
-
                        <div class="dashboard-card">
-
                            <strong>Frontend</strong>
 
                            <span>HTML</span>
@@ -1139,25 +579,17 @@
                            <span>CSS</span>
 
                            <span>JavaScript</span>
-
                        </div>
 
-
-
                        <div class="dashboard-card">
-
                            <strong>Database</strong>
 
                            <span>SQL</span>
 
                            <span>Relational DB</span>
-
                        </div>
 
-
-
                        <div class="dashboard-card">
-
                            <strong>Tools</strong>
 
                            <span>IntelliJ</span>
@@ -1165,21 +597,12 @@
                            <span>Postman</span>
 
                            <span>GitHub</span>
-
                        </div>
-
-
-
                    </div>
-
-
 
                    <h3>System modules</h3>
 
-
-
                    <ul>
-
                        <li>Vehicle management</li>
 
                        <li>Fuel management</li>
@@ -1189,117 +612,56 @@
                        <li>Reports</li>
 
                        <li>Data analysis</li>
-
                    </ul>
 
-
-
                    <a class="xp-button" href="https://github.com/Markeis24/API-3" target="_blank" rel="noopener noreferrer">
-
                        Open project
-
                    </a>
-
-
-
                </div>
-
-
-
            </section>
 
 
-
-
-
 <!-- =====================================================
-
-                ESTAÇÃO-TI
-
-           ====================================================== -->
-
-
+    ESTAÇÃO-TI
+====================================================== -->
 
            <section class="os-window project-window" id="estacao-window">
-
-
-
                <div class="window-titlebar">
-
-
-
                    <div class="window-title">
-
                         Estacao-TI.exe
-
                    </div>
 
-
-
                    <div class="window-controls">
-
                        <button class="window-minimize">_</button>
 
                        <button class="window-maximize">□</button>
 
                        <button class="window-close">X</button>
-
                    </div>
-
-
-
                </div>
 
-
-
                <div class="window-content project-app station-app">
-
-
-
                    <div class="app-header">
-
-
-
                        <div class="app-icon">
-
                            <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-network-neighborhood.ico" alt="" aria-hidden="true">
-
                        </div>
 
-
-
                        <div>
-
                            <h1>Estação-TI</h1>
 
                            <p>Real-time collaborative platform</p>
-
                        </div>
-
-
-
                    </div>
-
-
 
                    <hr>
 
-
-
                    <p>
-
                        Plataforma colaborativa com comunicação em tempo real,
 
                        integração com YouTube e sincronização entre usuários.
-
                    </p>
 
-
-
                    <div class="waveform">
-
-
-
                        <span></span>
 
                        <span></span>
@@ -1329,33 +691,17 @@
                        <span></span>
 
                        <span></span>
-
-
-
                    </div>
 
-
-
                    <div class="player-controls">
-
-
-
                        <button>◀◀</button>
 
                        <button>▶</button>
 
                        <button>▶▶</button>
-
-
-
                    </div>
 
-
-
                    <div class="tech-list">
-
-
-
                        <span>Node.js</span>
 
                        <span>Express</span>
@@ -1369,19 +715,11 @@
                        <span>YouTube API</span>
 
                        <span>Render</span>
-
-
-
                    </div>
-
-
 
                    <h3>Features</h3>
 
-
-
                    <ul>
-
                        <li>Real-time communication</li>
 
                        <li>Shared rooms</li>
@@ -1393,75 +731,35 @@
                        <li>Frontend / Backend integration</li>
 
                        <li>Deployment</li>
-
                    </ul>
 
-
-
                    <a class="xp-button" href="https://github.com/Markeis24/Estacao-TI" target="_blank" rel="noopener noreferrer">
-
                        Open project
-
                    </a>
-
-
-
                </div>
-
-
-
            </section>
 
 
-
-
-
 <!-- =====================================================
-
-                ABOUT.EXE
-
-           ====================================================== -->
-
-
+    ABOUT.EXE
+====================================================== -->
 
            <section class="os-window" id="about-window">
-
-
-
                <div class="window-titlebar">
-
-
-
                    <div class="window-title">
-
                         ABOUT.EXE
-
                    </div>
 
-
-
                    <div class="window-controls">
-
                        <button class="window-minimize">_</button>
 
                        <button class="window-maximize">□</button>
 
                        <button class="window-close">X</button>
-
                    </div>
-
-
-
                </div>
 
-
-
-
-
                <div class="window-menu">
-
-
-
                    <span>File</span>
 
                    <span>Edit</span>
@@ -1469,293 +767,136 @@
                    <span>View</span>
 
                    <span>Help</span>
-
-
-
                </div>
 
-
-
-
-
                <div class="window-content about-content">
-
-
-
                    <div class="about-top">
-
-
-
                        <div class="about-avatar">
-
                            <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-computer.ico" alt="" aria-hidden="true">
-
                        </div>
-
-
 
                        <div>
-
-
-
                            <div class="about-name">
-
                                GIOVANNA MARQUES
-
                            </div>
-
-
 
                            <div class="about-role">
-
                                Database Student · IT Intern
-
                            </div>
-
-
 
                            <div class="about-status">
-
                                ● SYSTEM USER
-
                            </div>
-
-
-
                        </div>
-
-
-
                    </div>
 
 
-
-
-
                    <div class="about-box">
-
-
-
                        <div class="about-box-title">
-
                            ABOUT ME
-
                        </div>
 
-
-
                        <p>
-
                            Olá! Eu sou a Giovanna, estudante de Banco de Dados
-
                            na FATEC e apaixonada por tecnologia, programação,
-
                            dados e automação.
-
                        </p>
 
-
-
                        <p>
-
                            Atualmente atuo como estagiária de TI, trabalhando
-
                            principalmente com automação de processos e buscando
-
                            transformar tarefas repetitivas em soluções mais
-
                            eficientes.
-
                        </p>
 
 
 
                        <p>
-
                            Minha formação combina desenvolvimento de software,
-
                            bancos de dados e análise de dados, com projetos
-
                            envolvendo Java, Spring Boot, SQL, JavaScript,
-
                            Node.js e outras tecnologias.
-
                        </p>
-
-
-
                    </div>
 
-
-
-
-
                    <div class="about-box">
-
-
-
                        <div class="about-box-title">
-
                            CURRENT STATUS
-
                        </div>
-
-
 
                        <div class="system-info">
-
-
-
                            <div>
-
                                <strong>USER:</strong>
 
                                Giovanna
-
                            </div>
 
-
-
                            <div>
-
                                <strong>ROLE:</strong>
 
                                IT Intern
-
                            </div>
 
-
-
                            <div>
-
                                <strong>EDUCATION:</strong>
 
                                Database
-
                            </div>
 
-
-
                            <div>
-
                                <strong>INTEREST:</strong>
 
                                Technology / Data / Automation
-
                            </div>
 
-
-
                            <div>
-
                                <strong>STATUS:</strong>
 
                                Learning...
-
                            </div>
-
-
-
                        </div>
-
-
-
                    </div>
-
-
-
 
 
                    <div class="about-links">
-
-
-
                        <a class="xp-button github-button" href="https://github.com/markeis24" target="_blank" rel="noopener noreferrer">
-
                            GitHub
-
                        </a>
 
-
-
-                       <a class="xp-button linkedin-button" href="https://www.linkedin.com/in/SEU-USUARIO-AQUI" target="_blank" rel="noopener noreferrer">
-
+                       <a class="xp-button linkedin-button" href="https://www.linkedin.com/in/giovanna-marques-221998397" target="_blank" rel="noopener noreferrer">
                            LinkedIn
-
                        </a>
-
-
-
                    </div>
-
-
-
                </div>
-
-
-
 
 
                <div class="window-statusbar">
-
                    ABOUT.EXE — Giovanna OS
-
                </div>
-
-
-
            </section>
 
 
-
-
-
 <!-- =====================================================
-
-                SKILLS.EXE
-
-           ====================================================== -->
-
-
+    SKILLS.EXE
+====================================================== -->
 
            <section class="os-window" id="skills-window">
-
-
-
                <div class="window-titlebar">
-
-
-
                    <div class="window-title">
-
                         SKILLS.EXE
-
                    </div>
 
-
-
                    <div class="window-controls">
-
                        <button class="window-minimize">_</button>
 
                        <button class="window-maximize">□</button>
 
                        <button class="window-close">X</button>
-
                    </div>
-
-
-
                </div>
 
 
-
-
-
                <div class="window-menu">
-
-
-
                    <span>File</span>
 
                    <span>Edit</span>
@@ -1765,761 +906,477 @@
                    <span>Tools</span>
 
                    <span>Help</span>
-
-
-
                </div>
-
-
-
 
 
                <div class="skills-layout">
 
-
-
-
-
 <!-- LEFT SIDEBAR -->
-
-
-
                    <aside class="skills-sidebar">
-
-
-
                        <div class="skills-side-title">
-
                            Software Tasks
-
                        </div>
 
-
-
                        <button class="skills-side-button active">
-
                            <span><img class="windows-emoji-icon" src="img/icons/windows-xp/xp-cdrom.ico" alt="" aria-hidden="true"></span>
 
                            Installed Programs
-
                        </button>
 
-
-
                        <button class="skills-side-button">
-
                            <span><img class="windows-emoji-icon" src="img/icons/windows-xp/xp-run.ico" alt="" aria-hidden="true"></span>
 
                            Add New Program
-
                        </button>
 
-
-
                        <button class="skills-side-button">
-
                            <span><img class="windows-emoji-icon" src="img/icons/windows-xp/xp-program-group.ico" alt="" aria-hidden="true"></span>
 
                            Windows Components
-
                        </button>
-
-
-
 
 
                        <div class="skills-side-separator"></div>
 
 
-
-
-
                        <div class="skills-side-title">
-
                            See Also
-
                        </div>
 
-
-
                        <button class="skills-side-link">
-
                            <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-computer.ico" alt="" aria-hidden="true"> System
-
                        </button>
 
-
-
                        <button class="skills-side-link">
-
                            <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-internet.ico" alt="" aria-hidden="true"> Internet
-
                        </button>
-
-
 
                        <button class="skills-side-link">
-
                            <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-folder.ico" alt="" aria-hidden="true"> My Projects
-
                        </button>
-
-
-
                    </aside>
 
-
-
-
-
 <!-- MAIN CONTENT -->
-
-
-
                    <div class="skills-main">
-
-
-
                        <div class="skills-heading">
-
-
-
                            <div>
-
-
-
                                <h1>
-
                                    Add or Remove Programs
-
                                </h1>
 
-
-
                                <p>
-
                                    Currently installed programs
-
                                </p>
-
-
-
                            </div>
 
-
-
                            <label class="show-updates">
-
                                <input type="checkbox">
 
                                Show updates
-
                            </label>
-
-
-
                        </div>
 
 
-
-
-
                        <div class="skills-sort">
-
-
-
                            <span>
-
                                Sort by:
-
                            </span>
 
-
-
                            <select>
-
                                <option>Name</option>
 
                                <option>Size</option>
 
                                <option>Last Used</option>
-
                            </select>
-
-
-
                        </div>
 
-
-
-
-
 <!-- INSTALLED SKILLS: individual programs -->
-
-
-
                        <div class="skill-program">
-
                            <div class="skill-program-icon">
-
                                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/c/c-original.svg" alt="C logo" loading="lazy" onerror="this.style.display='none'; this.parentElement.textContent='C';">
-
                            </div>
 
                            <div class="skill-program-info">
-
                                <strong>C Programming</strong>
 
                                <span>Algorithms · Logic · Programming</span>
 
                                <small>Development</small>
-
                            </div>
 
                            <button class="change-button" type="button">Change/Remove</button>
-
                        </div>
 
-
-
                        <div class="skill-program">
-
                            <div class="skill-program-icon">
-
                                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/java/java-original.svg" alt="Java logo" loading="lazy" onerror="this.style.display='none'; this.parentElement.textContent='Jav';">
-
                            </div>
 
                            <div class="skill-program-info">
-
                                <strong>Java Development Kit</strong>
 
                                <span>Java · Object-Oriented Programming</span>
 
                                <small>Development</small>
-
                            </div>
 
                            <button class="change-button" type="button">Change/Remove</button>
-
                        </div>
 
-
-
                        <div class="skill-program">
-
                            <div class="skill-program-icon">
-
                                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/spring/spring-original.svg" alt="Spring Boot logo" loading="lazy" onerror="this.style.display='none'; this.parentElement.textContent='Spr';">
-
                            </div>
 
                            <div class="skill-program-info">
-
                                <strong>Spring Boot</strong>
 
                                <span>Java Backend · REST APIs</span>
 
                                <small>Development</small>
-
                            </div>
 
                            <button class="change-button" type="button">Change/Remove</button>
-
                        </div>
 
-
-
                        <div class="skill-program">
-
                            <div class="skill-program-icon">
-
                                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mysql/mysql-original.svg" alt="MySQL logo" loading="lazy" onerror="this.style.display='none'; this.parentElement.textContent='MyS';">
-
                            </div>
 
                            <div class="skill-program-info">
-
                                <strong>MySQL Database</strong>
 
                                <span>Relational Database · SQL</span>
 
                                <small>Database</small>
-
                            </div>
 
                            <button class="change-button" type="button">Change/Remove</button>
-
                        </div>
 
-
-
                        <div class="skill-program">
-
                            <div class="skill-program-icon">
-
                                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/sqlite/sqlite-original.svg" alt="SQLite logo" loading="lazy" onerror="this.style.display='none'; this.parentElement.textContent='SQL';">
-
                            </div>
 
                            <div class="skill-program-info">
-
                                <strong>SQLite</strong>
 
                                <span>Embedded Relational Database</span>
 
                                <small>Database</small>
-
                            </div>
 
                            <button class="change-button" type="button">Change/Remove</button>
-
                        </div>
 
 
 
                        <div class="skill-program">
-
                            <div class="skill-program-icon">
-
                                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg" alt="HTML5 logo" loading="lazy" onerror="this.style.display='none'; this.parentElement.textContent='HTM';">
-
                            </div>
 
                            <div class="skill-program-info">
-
                                <strong>HTML5</strong>
 
                                <span>Semantic Markup · Web Structure</span>
 
                                <small>Web Development</small>
-
                            </div>
 
                            <button class="change-button" type="button">Change/Remove</button>
-
                        </div>
 
-
-
                        <div class="skill-program">
-
                            <div class="skill-program-icon">
-
                                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-original.svg" alt="CSS3 logo" loading="lazy" onerror="this.style.display='none'; this.parentElement.textContent='CSS';">
-
                            </div>
 
                            <div class="skill-program-info">
-
                                <strong>CSS3</strong>
 
                                <span>Styling · Responsive Interfaces</span>
 
                                <small>Web Development</small>
-
                            </div>
 
                            <button class="change-button" type="button">Change/Remove</button>
-
                        </div>
 
 
 
                        <div class="skill-program">
-
                            <div class="skill-program-icon">
-
                                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg" alt="JavaScript logo" loading="lazy" onerror="this.style.display='none'; this.parentElement.textContent='Jav';">
-
                            </div>
 
                            <div class="skill-program-info">
-
                                <strong>JavaScript</strong>
 
                                <span>Frontend · Node.js · Express · Socket.IO</span>
 
                                <small>Web Development</small>
-
                            </div>
 
                            <button class="change-button" type="button">Change/Remove</button>
-
                        </div>
 
 
 
                        <div class="skill-program">
-
                            <div class="skill-program-icon">
-
                                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg" alt="Git logo" loading="lazy" onerror="this.style.display='none'; this.parentElement.textContent='Git';">
-
                            </div>
 
                            <div class="skill-program-info">
-
                                <strong>Git</strong>
 
                                <span>Version Control</span>
 
                                <small>Development Tools</small>
-
                            </div>
 
                            <button class="change-button" type="button">Change/Remove</button>
-
                        </div>
 
 
 
                        <div class="skill-program">
-
                            <div class="skill-program-icon">
-
                                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/github/github-original.svg" alt="GitHub logo" loading="lazy" onerror="this.style.display='none'; this.parentElement.textContent='Git';">
-
                            </div>
 
                            <div class="skill-program-info">
-
                                <strong>GitHub</strong>
 
                                <span>Repositories · Projects · Collaboration</span>
 
                                <small>Development Tools</small>
-
                            </div>
 
                            <button class="change-button" type="button">Change/Remove</button>
-
                        </div>
 
 
-
                        <div class="skill-program">
-
                            <div class="skill-program-icon">
-
                                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postman/postman-original.svg" alt="Postman logo" loading="lazy" onerror="this.style.display='none'; this.parentElement.textContent='Pos';">
-
                            </div>
 
                            <div class="skill-program-info">
-
                                <strong>Postman</strong>
 
                                <span>API Testing · HTTP Requests</span>
 
                                <small>Development Tools</small>
-
                            </div>
 
                            <button class="change-button" type="button">Change/Remove</button>
-
                        </div>
 
 
-
                        <div class="skill-program">
-
                            <div class="skill-program-icon">
-
                                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/eclipse/eclipse-original.svg" alt="Eclipse logo" loading="lazy" onerror="this.style.display='none'; this.parentElement.textContent='Ecl';">
-
                            </div>
 
                            <div class="skill-program-info">
-
                                <strong>Eclipse IDE</strong>
 
                                <span>Java Development Environment</span>
 
                                <small>Development Tools</small>
-
                            </div>
 
                            <button class="change-button" type="button">Change/Remove</button>
-
                        </div>
 
 
-
                        <div class="skill-program">
-
                            <div class="skill-program-icon">
-
                                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/intellij/intellij-original.svg" alt="IntelliJ IDEA logo" loading="lazy" onerror="this.style.display='none'; this.parentElement.textContent='Int';">
-
                            </div>
 
                            <div class="skill-program-info">
-
                                <strong>IntelliJ IDEA</strong>
 
                                <span>Java · Spring Boot</span>
 
                                <small>Development Tools</small>
-
                            </div>
 
                            <button class="change-button" type="button">Change/Remove</button>
-
                        </div>
 
 
-
                        <div class="skill-program">
-
                            <div class="skill-program-icon">
-
                                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/clion/clion-original.svg" alt="CLion logo" loading="lazy" onerror="this.style.display='none'; this.parentElement.textContent='CLi';">
-
                            </div>
 
                            <div class="skill-program-info">
-
                                <strong>CLion</strong>
 
                                <span>C/C++ Development Environment</span>
 
                                <small>Development Tools</small>
-
                            </div>
 
                            <button class="change-button" type="button">Change/Remove</button>
-
                        </div>
 
 
-
                        <div class="skill-program">
-
                            <div class="skill-program-icon">
-
                                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vscode/vscode-original.svg" alt="Visual Studio Code logo" loading="lazy" onerror="this.style.display='none'; this.parentElement.textContent='Vis';">
-
                            </div>
 
                            <div class="skill-program-info">
-
                                <strong>Visual Studio Code</strong>
 
                                <span>Code Editor · Extensions</span>
 
                                <small>Development Tools</small>
-
                            </div>
 
                            <button class="change-button" type="button">Change/Remove</button>
-
                        </div>
 
 
-
                        <div class="skill-program">
-
                            <div class="skill-program-icon">
-
                                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/figma/figma-original.svg" alt="Figma logo" loading="lazy" onerror="this.style.display='none'; this.parentElement.textContent='Fig';">
-
                            </div>
 
                            <div class="skill-program-info">
-
                                <strong>Figma</strong>
 
                                <span>Interface Design · Prototyping</span>
 
                                <small>Design</small>
-
                            </div>
 
                            <button class="change-button" type="button">Change/Remove</button>
-
                        </div>
 
 
-
                        <div class="skill-program">
-
                            <div class="skill-program-icon">
-
                                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/linux/linux-original.svg" alt="Linux logo" loading="lazy" onerror="this.style.display='none'; this.parentElement.textContent='Lin';">
-
                            </div>
 
                            <div class="skill-program-info">
-
                                <strong>Linux</strong>
 
                                <span>Operating System · Development Environment</span>
 
                                <small>Operating Systems</small>
-
                            </div>
 
                            <button class="change-button" type="button">Change/Remove</button>
-
                        </div>
 
 
-
                        <div class="skill-program">
-
                            <div class="skill-program-icon">
-
                                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/windows8/windows8-original.svg" alt="Windows logo" loading="lazy" onerror="this.style.display='none'; this.parentElement.textContent='Win';">
-
                            </div>
 
                            <div class="skill-program-info">
-
                                <strong>Windows</strong>
 
                                <span>Operating System · Desktop Environment</span>
 
                                <small>Operating Systems</small>
-
                            </div>
 
                            <button class="change-button" type="button">Change/Remove</button>
-
                        </div>
 
 
-
                        <div class="skill-program">
-
                            <div class="skill-program-icon">
-
                                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg" alt="Docker logo" loading="lazy" onerror="this.style.display='none'; this.parentElement.textContent='Doc';">
-
                            </div>
 
                            <div class="skill-program-info">
-
                                <strong>Docker</strong>
 
                                <span>Containers · Development Environment</span>
 
                                <small>Infrastructure</small>
-
                            </div>
 
                            <button class="change-button" type="button">Change/Remove</button>
-
                        </div>
 
 
-
                        <div class="skill-program">
-
                            <div class="skill-program-icon">
-
                                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/oracle/oracle-original.svg" alt="Oracle Database logo" loading="lazy" onerror="this.style.display='none'; this.parentElement.textContent='Ora';">
-
                            </div>
 
                            <div class="skill-program-info">
-
                                <strong>Oracle Database</strong>
 
                                <span>SQL · Relational Database</span>
 
                                <small>Database</small>
-
                            </div>
 
                            <button class="change-button" type="button">Change/Remove</button>
-
                        </div>
 
 
-
                        <div class="skill-program">
-
                            <div class="skill-program-icon">
-
                                <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/oracle/oracle-original.svg" alt="Oracle Cloud logo" loading="lazy" onerror="this.style.display='none'; this.parentElement.textContent='Ora';">
-
                            </div>
 
                            <div class="skill-program-info">
-
                                <strong>Oracle Cloud Infrastructure</strong>
 
                                <span>Cloud Services · Oracle Ecosystem</span>
 
                                <small>Cloud</small>
-
                            </div>
 
                            <button class="change-button" type="button">Change/Remove</button>
-
                        </div>
-
-
-
                    </div>
-
-
-
                </div>
-
-
-
 
 
                <div class="window-statusbar">
-
                    21 programs currently installed
-
                </div>
-
-
-
            </section>
 
-
-
-
-
 <!-- =====================================================
-
-                INTERNET
-
-           ====================================================== -->
-
-
+    INTERNET
+====================================================== -->
 
            <section class="os-window" id="internet-window">
-
                <div class="window-titlebar">
-
                    <div class="window-title">Internet Explorer</div>
 
                    <div class="window-controls">
-
                        <button class="window-minimize">_</button>
 
                        <button class="window-maximize">□</button>
 
                        <button class="window-close">X</button>
-
                    </div>
-
                </div>
 
                <div class="window-menu">
-
                    <span>File</span><span>Edit</span><span>View</span><span>Favorites</span><span>Tools</span><span>Help</span>
-
                </div>
 
                <div class="window-toolbar">
-
                    <button type="button" title="Back">←</button>
 
                    <button type="button" title="Forward">→</button>
@@ -2529,449 +1386,279 @@
                    <button type="button" title="Home"><img class="windows-emoji-icon" src="img/icons/windows-xp/xp-desktop.ico" alt="" aria-hidden="true"></button>
 
                    <div class="toolbar-address">http://www.google.com</div>
-
                </div>
 
                <div class="window-content browser-content google-era-content">
-
                    <div class="google-era-page">
-
                        <div class="google-era-logo" aria-label="Google"><span>G</span><span>o</span><span>o</span><span>g</span><span>l</span><span>e</span></div>
 
                        <div class="google-era-tagline">Search the web using Google!</div>
 
                        <form class="google-era-form" id="google-era-form" autocomplete="off">
-
                            <div class="google-search-wrap">
-
                                <input id="google-era-search" class="google-era-search" type="text" aria-label="Search only Giovanna's profiles" placeholder="Search GitHub or LinkedIn" autocomplete="off" spellcheck="false">
 
                                <div class="google-era-suggestions" id="google-era-suggestions" hidden>
-
                                    <div class="google-suggestion-heading">Search Giovanna's profiles</div>
 
                                    <a href="https://github.com/markeis24" target="_blank" rel="noopener noreferrer" data-search-profile="github"><strong>GitHub</strong><small>github.com/markeis24</small></a>
 
                                    <a href="https://www.linkedin.com/in/giovanna-marques-221998397" target="_blank" rel="noopener noreferrer" data-search-profile="linkedin"><strong>LinkedIn</strong><small>linkedin.com/in/giovanna-marques-221998397</small></a>
-
                                </div>
-
                            </div>
 
                            <div class="google-era-actions">
-
                                <button type="submit">Google Search</button>
 
                                <button type="button" id="google-era-lucky">I'm Feeling Lucky</button>
-
                            </div>
-
                        </form>
 
                        <div class="google-era-footer">Search is limited to Giovanna's GitHub and LinkedIn profiles.</div>
-
                    </div>
-
                </div>
-
            </section>
 
 
-
-
-
 <!-- =====================================================
-
-                MEDIA PLAYER
-
-           ====================================================== -->
-
-
+    MEDIA PLAYER
+====================================================== -->
 
            <section class="os-window media-player-window" id="media-window">
-
-
-
                <div class="media-player-shell">
-
-
-
                    <div class="media-player-top">
-
-
-
                        <div class="media-player-brand">
-
-                           GIOVANNA MEDIA PLAYER
-
+                           Media Player
                        </div>
 
-
-
                        <div class="media-player-window-controls">
-
                            <button type="button" class="mp-window-button" data-mp-action="minimize">−</button>
 
                            <button type="button" class="mp-window-button" data-mp-action="maximize">□</button>
 
                            <button type="button" class="mp-window-button mp-close" data-mp-action="close">×</button>
-
                        </div>
-
-
 
                    </div>
 
+                   <nav class="mp-menu-bar" aria-label="Menu do Media Player">
+                       <div class="mp-menu-wrap"><button type="button" class="mp-menu-trigger" data-mp-menu="arquivo" aria-expanded="false">Arquivo</button><div class="mp-menu-popup" data-mp-popup="arquivo" hidden>
+                           <button type="button" data-mp-menu-action="open-playlist">Abrir lista de reprodução</button><div class="mp-menu-separator"></div><button type="button" data-mp-menu-action="close-player">Sair</button>
+                       </div></div>
+                       <div class="mp-menu-wrap"><button type="button" class="mp-menu-trigger" data-mp-menu="exibir" aria-expanded="false">Exibir</button><div class="mp-menu-popup" data-mp-popup="exibir" hidden>
+                           <button type="button" data-mp-visual="bars">▥ Barras animadas</button><button type="button" data-mp-visual="wave">〰 Onda digital</button><button type="button" data-mp-visual="orbit">◉ Órbita</button><button type="button" data-mp-visual="classic">▦ Visualização clássica</button><button type="button" data-mp-visual="psychedelic">✺ Formas psicodélicas</button><div class="mp-menu-separator"></div><button type="button" data-mp-menu-action="open-equalizer">Equalizador gráfico...</button>
+                       </div></div>
+                       <div class="mp-menu-wrap"><button type="button" class="mp-menu-trigger" data-mp-menu="reproduzir" aria-expanded="false">Reproduzir</button><div class="mp-menu-popup" data-mp-popup="reproduzir" hidden>
+                           <button type="button" data-mp-menu-action="previous">⏮ Música anterior</button><button type="button" data-mp-menu-action="play">▶ Reproduzir / pausar</button><button type="button" data-mp-menu-action="stop">■ Parar</button><button type="button" data-mp-menu-action="next">⏭ Próxima música</button><div class="mp-menu-separator"></div><button type="button" data-mp-toggle="shuffle">☐ Reprodução aleatória</button><button type="button" data-mp-toggle="repeat">☐ Repetir faixa</button>
+                       </div></div>
+                       <div class="mp-menu-wrap"><button type="button" class="mp-menu-trigger" data-mp-menu="ferramentas" aria-expanded="false">Ferramentas</button><div class="mp-menu-popup" data-mp-popup="ferramentas" hidden>
+                           <button type="button" data-mp-menu-action="open-equalizer">Equalizador gráfico...</button><button type="button" data-mp-menu-action="open-playlist">Lista de reprodução</button>
+                       </div></div>
+                       <div class="mp-menu-wrap"><button type="button" class="mp-menu-trigger" data-mp-menu="ajuda" aria-expanded="false">Ajuda</button><div class="mp-menu-popup" data-mp-popup="ajuda" hidden>
+                           <div class="mp-menu-about"><strong>WMedia Player Series</strong><small>Giovanna OS</small><small>Reprodutor local de áudio</small></div>
+                       </div></div>
+                   </nav>
 
+                   <div class="mp-now-playing-tab"><span class="mp-tab-led"></span> EM REPRODUÇÃO <span class="mp-tab-caption">GIOVANNA OS • MEDIA</span></div>
 
                    <div class="media-player-display">
-
-
-
                        <div class="mp-display-grid"></div>
 
-
-
                        <div class="mp-display-content">
-
-                           <div class="mp-display-label">NOW PLAYING</div>
+                           <div class="mp-display-label">EM REPRODUÇÃO</div>
 
                            <div class="mp-track-title" id="mp-track-title">ESTACAO-TI</div>
 
                            <div class="mp-track-subtitle" id="mp-track-subtitle">Giovanna Marques</div>
 
 
-
                            <div class="mp-time-row">
-
                                <span id="mp-current-time">00:00</span>
 
                                <span>/</span>
 
                                <span id="mp-total-time">03:42</span>
-
                            </div>
-
                        </div>
-
-
 
                        <div class="mp-visualizer" id="mp-visualizer">
+                           <canvas id="mp-psychedelic-canvas" aria-label="Visualização psicodélica reativa à música" hidden></canvas>
 
                            <span></span><span></span><span></span><span></span><span></span>
 
                            <span></span><span></span><span></span><span></span><span></span>
-
+ Media Player
                            <span></span><span></span><span></span><span></span><span></span>
-
                        </div>
-
-
 
                    </div>
 
+                   <section class="mp-dock" id="mp-dock" hidden aria-label="Painel do Media Player">
+                       <div class="mp-dock-heading">
+                           <strong id="mp-dock-title">LISTA DE REPRODUÇÃO</strong>
+                           <button type="button" class="mp-dock-close" data-mp-action="dock-close" aria-label="Fechar painel">×</button>
+                       </div>
 
+                       <div class="mp-dock-body" id="mp-playlist-panel">
+                           <div class="mp-playlist-summary"><span>♫</span><div><strong>Minhas músicas</strong><small>GIOVANNA OS • 10 FAIXAS</small></div></div>
+                           <div class="mp-playlist-list" id="mp-playlist-list"></div>
+                       </div>
+
+                       <div class="mp-dock-body mp-equalizer-panel" id="mp-equalizer-panel" hidden>
+                           <div class="mp-eq-header"><strong>Equalizador gráfico</strong><label><input type="checkbox" id="mp-eq-enabled" checked> Ativado</label></div>
+                           
+                           <div class="mp-eq-sliders">
+                               <label><span>60 Hz</span><input type="range" data-eq-band="0" min="-12" max="12" value="0"><output>0 dB</output></label>
+                               <label><span>170 Hz</span><input type="range" data-eq-band="1" min="-12" max="12" value="0"><output>0 dB</output></label>
+                               <label><span>310 Hz</span><input type="range" data-eq-band="2" min="-12" max="12" value="0"><output>0 dB</output></label>
+                               <label><span>1 kHz</span><input type="range" data-eq-band="3" min="-12" max="12" value="0"><output>0 dB</output></label>
+                               <label><span>6 kHz</span><input type="range" data-eq-band="4" min="-12" max="12" value="0"><output>0 dB</output></label>
+                               <label><span>12 kHz</span><input type="range" data-eq-band="5" min="-12" max="12" value="0"><output>0 dB</output></label>
+                           </div>
+
+                           <div class="mp-eq-presets"><span>Predefinições:</span><button type="button" data-eq-preset="flat">Normal</button><button type="button" data-eq-preset="bass">Graves</button><button type="button" data-eq-preset="pop">Pop</button><button type="button" data-eq-preset="rock">Rock</button></div>
+                       </div>
+                   </section>
 
                    <div class="mp-progress-area">
-
                        <div class="mp-progress-track" id="mp-progress-track">
-
                            <div class="mp-progress-fill" id="mp-progress-fill"></div>
 
                            <div class="mp-progress-thumb" id="mp-progress-thumb"></div>
-
                        </div>
-
                    </div>
-
-
 
                    <div class="mp-controls">
+                       <button type="button" class="mp-round-button mp-prev" data-mp-action="previous" title="Música anterior">|◀</button>
 
-                       <button type="button" class="mp-round-button mp-prev" data-mp-action="previous" title="Previous">◀◀</button>
+                       <button type="button" class="mp-round-button mp-play" id="mp-play-button" data-mp-action="play" title="Reproduzir / pausar">▶</button>
 
-                       <button type="button" class="mp-round-button mp-play" id="mp-play-button" data-mp-action="play" title="Play">▶</button>
+                       <button type="button" class="mp-round-button" data-mp-action="stop" title="Parar">■</button>
 
-                       <button type="button" class="mp-round-button" data-mp-action="stop" title="Stop">■</button>
-
-                       <button type="button" class="mp-round-button mp-next" data-mp-action="next" title="Next">▶▶</button>
-
+                       <button type="button" class="mp-round-button mp-next" data-mp-action="next" title="Próxima música">▶|</button>
                    </div>
 
-
-
                    <div class="mp-bottom">
-
-                       <button type="button" class="mp-small-button" data-mp-action="playlist">PLAYLIST</button>
-
-
+                       <button type="button" class="mp-small-button" data-mp-action="playlist">LISTA DE REPRODUÇÃO</button>
 
                        <div class="mp-volume">
-
                            <span class="mp-volume-icon"><img class="windows-emoji-icon" src="img/icons/windows-xp/xp-midi.ico" alt="" aria-hidden="true"></span>
 
                            <input type="range" id="mp-volume-control" min="0" max="100" value="75">
-
                        </div>
 
-
-
-                       <button type="button" class="mp-small-button" data-mp-action="equalizer">EQ</button>
-
+                       <button type="button" class="mp-small-button" data-mp-action="equalizer">EFEITOS</button>
                    </div>
-
-
 
                    <div class="mp-status-bar">
-
-                       <span id="mp-status">READY</span>
+                       <span id="mp-status">PRONTO</span>
 
                        <span class="mp-status-right">GIOVANNA OS MEDIA</span>
-
                    </div>
-
-
-
                </div>
-
-
-
            </section>
 
 
-
-
-
 <!-- =====================================================
-
-                START MENU
-
-           ====================================================== -->
-
-
+    START MENU
+====================================================== -->
 
            <div id="start-menu">
-
-
-
                <div class="start-header">
-
-
-
                    <div class="start-avatar">
-
                        <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-computer.ico" alt="" aria-hidden="true">
-
                    </div>
 
-
-
                    <div>
-
                        <strong>Giovanna</strong>
 
                        <span>Personal Computer</span>
-
                    </div>
-
-
-
                </div>
-
-
-
 
 
                <div class="start-body">
-
-
-
                    <div class="start-column">
-
-
-
                        <button data-window="about-window">
-
                            <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-computer.ico" alt="" aria-hidden="true"> About Me
-
                        </button>
-
-
 
                        <button data-window="projects-window">
-
                            <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-folder.ico" alt="" aria-hidden="true"> My Projects
-
                        </button>
-
-
 
                        <button data-window="skills-window">
-
                            <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-settings.ico" alt="" aria-hidden="true"> Skills
-
                        </button>
-
-
 
                        <button data-window="internet-window">
-
                            <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-internet.ico" alt="" aria-hidden="true"> Internet
-
                        </button>
-
-
 
                        <button data-window="media-window">
-
                            <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-midi.ico" alt="" aria-hidden="true"> Media Player
-
                        </button>
-
-
-
                    </div>
-
-
-
 
 
                    <div class="start-column right">
-
-
-
                        <button data-window="computer-window">
-
                            <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-computer.ico" alt="" aria-hidden="true"> My Computer
-
                        </button>
 
-
-
                        <button>
-
                            <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-write.ico" alt="" aria-hidden="true"> My Documents
-
                        </button>
 
-
-
                        <button>
-
                            <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-image.ico" alt="" aria-hidden="true"> My Pictures
-
                        </button>
 
-
-
                        <button>
-
                            <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-midi.ico" alt="" aria-hidden="true"> My Music
-
                        </button>
 
-
-
                        <button>
-
                            <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-settings.ico" alt="" aria-hidden="true"> Control Panel
-
                        </button>
 
-
-
                        <button>
-
                            <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-search.ico" alt="" aria-hidden="true"> Search
-
                        </button>
-
-
 
                        <button>
-
                            ▶ Run...
-
                        </button>
-
-
-
                    </div>
-
-
-
                </div>
-
-
-
 
 
                <div class="start-footer">
-
-
-
                    <button>
-
                        <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-logoff.ico" alt="" aria-hidden="true"> Log Off
-
                    </button>
-
-
 
                    <button>
-
                        <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-shutdown.ico" alt="" aria-hidden="true"> Turn Off Computer
-
                    </button>
-
-
-
                </div>
-
-
-
            </div>
 
 
-
-
-
 <!-- =====================================================
-
-                TASKBAR
-
-           ====================================================== -->
-
-
+    TASKBAR
+====================================================== -->
 
            <footer id="taskbar">
-
-
-
                <button id="start-button">
-
-
-
                    <span class="windows-logo">
-
                        <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-desktop.ico" alt="" aria-hidden="true">
-
                    </span>
 
-
-
                    <strong>
-
                        Start
-
                    </strong>
-
-
-
                </button>
-
-
-
 
 
                <div id="taskbar-programs">
@@ -2979,57 +1666,23 @@
                </div>
 
 
-
-
-
                <div id="taskbar-tray">
-
-
-
                    <span class="tray-icon">
-
                        <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-media-player.ico" alt="" aria-hidden="true">
-
                    </span>
-
-
 
                    <span class="tray-icon">
-
                        <img class="windows-emoji-icon" src="img/icons/windows-xp/xp-internet.ico" alt="" aria-hidden="true">
-
                    </span>
-
-
 
                    <span id="clock">
-
                        00:00
-
                    </span>
-
-
-
                </div>
-
-
-
            </footer>
-
-
-
        </main>
 
-
-
-
-
        <script src="script.js"></script>
-
-
-
 </body>
-
-
 
 </html>
