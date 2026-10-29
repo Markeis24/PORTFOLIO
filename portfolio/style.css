@@ -2879,7 +2879,7 @@ body {
    ============ */
 
 #giobuddy {
-    position: absolute;
+    position: fixed;
 
     right: 28px;
     bottom: 44px;
@@ -2887,7 +2887,7 @@ body {
     width: 120px;
     height: 145px;
 
-    z-index: 9500;
+    z-index: 2147483000;
 
     cursor: grab;
 
@@ -5863,3 +5863,651 @@ a.xp-button:focus-visible {
 .xp-calc-keys button:hover{border-color:#316ac5;background:linear-gradient(#fff,#d8e8ff)}
 .xp-calc-keys button:active{background:#c9dafa;box-shadow:inset 1px 1px #7f9db9}
 .xp-calc-keys button.xp-calc-function{color:#183e73;font-weight:bold}
+
+/* Fix final: janelas maximizadas precisam poder ser minimizadas sem ficarem flutuando. */
+.os-window.minimized-window,
+.explorer-window.minimized-window {
+    display: none !important;
+}
+/* A calculadora clássica é uma janela de tamanho fixo. */
+.xp-utility-window.xp-utility-fixed-size {
+    width: 590px;
+    max-width: calc(100vw - 32px);
+    height: auto;
+    max-height: calc(100vh - 48px);
+}
+.xp-utility-window.xp-utility-fixed-size .xp-title-max {
+    display: none !important;
+}
+
+/* Final usability pass: classic Run/Calculator sizing and full-screen Google layout. */
+.xp-utility-window.xp-utility-fixed-size { width: 430px; max-width: calc(100vw - 24px); }
+.xp-utility-window.xp-utility-fixed-size .xp-title-max { display:none!important; }
+.xp-utility-window:has(#xp-run-form) { width:min(600px,calc(100vw - 24px)); }
+.xp-utility-window:has(#xp-run-form) .xp-title-max { display:none!important; }
+.xp-utility-window:has(.xp-gallery) { width:min(900px,calc(100vw - 24px)); max-height:calc(100vh - 30px); }
+.xp-utility-window:has(.xp-gallery) .xp-utility-content { max-height:calc(100vh - 82px); overflow:auto; }
+#internet-window.maximized .google-era-form { max-width:min(760px,80vw); }
+#internet-window.maximized .google-search-wrap { max-width:min(650px,75vw); }
+#internet-window.maximized .google-era-search { font-size:18px; min-height:38px; }
+#internet-window.maximized .google-era-logo { font-size:clamp(52px,6vw,84px); }
+#internet-window.maximized .google-era-tagline { font-size:16px; }
+
+/* Final visual corrections for maximized My Pictures and classic Paint */
+.xp-utility-overlay:has(.xp-gallery) {
+  padding: 0;
+  align-items: stretch;
+  justify-content: stretch;
+}
+.xp-utility-overlay:has(.xp-gallery) .xp-utility-window {
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: none !important;
+  max-height: none !important;
+  margin: 0;
+  border-radius: 0;
+  border-left: 0;
+  border-right: 0;
+  border-bottom: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.xp-utility-overlay:has(.xp-gallery) .xp-utility-titlebar { flex: 0 0 auto; }
+.xp-utility-overlay:has(.xp-gallery) .xp-utility-content {
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: none !important;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 12px 8px;
+}
+.xp-gallery { display:flex; flex:1 1 auto; min-height:0; flex-direction:column; }
+.xp-gallery-frame { flex:1 1 auto; min-height:0; height:auto !important; max-height:none; }
+.xp-gallery-frame img { width:auto; height:auto; max-width:100%; max-height:100%; object-fit:contain; }
+.xp-gallery-thumbnails { flex:0 0 auto; max-height:76px; overflow-x:auto; overflow-y:hidden; }
+.xp-gallery-caption { flex:0 0 auto; }
+.xp-gallery-controls { flex:0 0 auto; }
+
+/* Paint: retain the XP tool rail and palette while using the maximized workspace cleanly. */
+.xp-utility-overlay:has(#xp-paint-canvas) { padding:0; align-items:stretch; justify-content:stretch; }
+.xp-utility-overlay:has(#xp-paint-canvas) .xp-utility-window {
+  width:100vw !important; height:100vh !important; max-width:none !important; max-height:none !important;
+  margin:0; border-radius:0; overflow:hidden; display:flex; flex-direction:column;
+}
+.xp-utility-overlay:has(#xp-paint-canvas) .xp-utility-content {
+  flex:1 1 auto; min-height:0; max-height:none; overflow:hidden; display:flex; flex-direction:column; padding:0 6px 5px;
+}
+.xp-paint-menubar { flex:0 0 auto; margin:0 -6px; padding:4px 7px; }
+.xp-paint-workspace { flex:1 1 auto; min-height:0; grid-template-columns:44px minmax(0,1fr); margin:0 -6px; padding:8px 6px 6px; overflow:hidden; }
+.xp-paint-canvas-wrap { min-width:0; min-height:0; overflow:auto; display:flex; align-items:flex-start; justify-content:flex-start; padding:8px; }
+#xp-paint-canvas { flex:0 0 auto; width:760px; height:430px; max-width:none; }
+.xp-paint-bottom { flex:0 0 auto; padding:6px 0 3px; gap:5px; }
+.xp-paint-colors { max-width:520px; }
+.xp-utility-overlay:has(#xp-paint-canvas) .xp-statusbar { flex:0 0 auto; margin:0 -6px; padding:4px 6px; }
+@media (max-width:700px) {
+  .xp-gallery-frame { min-height:0; }
+  .xp-gallery-thumbnails { max-height:64px; }
+  .xp-paint-workspace { grid-template-columns:44px minmax(0,1fr); }
+  #xp-paint-canvas { width:760px; height:430px; }
+}
+
+/* Classic MS Paint window: keep the taskbar visible and allow normal resizing. */
+.xp-utility-overlay:has(#xp-paint-canvas) {
+  inset: 0 0 42px 0 !important;
+  padding: 12px !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: rgba(0,0,0,.08) !important;
+}
+.xp-utility-overlay:has(#xp-paint-canvas) .xp-utility-window {
+  width: min(900px, calc(100vw - 36px)) !important;
+  height: min(620px, calc(100vh - 76px)) !important;
+  min-width: 520px;
+  min-height: 390px;
+  max-width: calc(100vw - 24px) !important;
+  max-height: calc(100vh - 58px) !important;
+  margin: 0 !important;
+  resize: both;
+  overflow: hidden;
+  border-radius: 7px 7px 2px 2px;
+  display: flex;
+  flex-direction: column;
+}
+.xp-utility-overlay:has(#xp-paint-canvas) .xp-utility-titlebar { flex: 0 0 27px; }
+.xp-utility-overlay:has(#xp-paint-canvas) .xp-utility-content {
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: none !important;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: 0 6px 4px;
+}
+.xp-utility-overlay:has(#xp-paint-canvas) .xp-paint-menubar {
+  flex: 0 0 27px;
+  margin: 0 -6px;
+  padding: 4px 7px;
+  background: #ece9d8;
+  border-bottom: 1px solid #aaa;
+}
+.xp-utility-overlay:has(#xp-paint-canvas) .xp-paint-workspace {
+  flex: 1 1 auto;
+  min-height: 0;
+  grid-template-columns: 38px minmax(0,1fr);
+  gap: 3px;
+  margin: 0 -6px;
+  padding: 6px 5px 4px;
+  overflow: hidden;
+  background: #a6a6a6;
+}
+.xp-utility-overlay:has(#xp-paint-canvas) .xp-paint-tools {
+  grid-template-columns: repeat(2, 17px);
+  grid-auto-rows: 22px;
+  gap: 1px;
+  padding: 2px;
+  border: 1px solid #888;
+  background: #ece9d8;
+}
+.xp-utility-overlay:has(#xp-paint-canvas) .xp-paint-tools button {
+  width: 17px;
+  height: 22px;
+  border: 1px solid #aaa;
+  border-radius: 0;
+  background: linear-gradient(#fff,#dedbd0);
+  font: 13px Tahoma,sans-serif;
+  line-height: 18px;
+}
+.xp-utility-overlay:has(#xp-paint-canvas) .xp-paint-canvas-wrap {
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
+  display: block;
+  padding: 8px;
+  border: 1px solid #eee;
+  background: #a6a6a6;
+}
+.xp-utility-overlay:has(#xp-paint-canvas) #xp-paint-canvas {
+  display: block;
+  width: 760px !important;
+  height: 430px !important;
+  max-width: none !important;
+  border: 1px solid #777;
+  background: #fff;
+  cursor: crosshair;
+}
+.xp-utility-overlay:has(#xp-paint-canvas) .xp-paint-bottom {
+  flex: 0 0 auto;
+  padding: 5px 0 2px;
+  gap: 4px;
+}
+.xp-utility-overlay:has(#xp-paint-canvas) .xp-paint-colors {
+  grid-template-columns: repeat(16, 14px);
+  width: max-content;
+  max-width: 100%;
+  gap: 1px;
+  padding: 2px;
+}
+.xp-utility-overlay:has(#xp-paint-canvas) .xp-paint-colors button { width: 14px; height: 15px; }
+.xp-utility-overlay:has(#xp-paint-canvas) .xp-statusbar { flex: 0 0 auto; margin: 0 -6px; padding: 3px 6px; }
+.xp-utility-window.xp-utility-maximized:has(#xp-paint-canvas) {
+  width: calc(100vw - 12px) !important;
+  height: calc(100vh - 54px) !important;
+  max-width: calc(100vw - 12px) !important;
+  max-height: calc(100vh - 54px) !important;
+  resize: none;
+}
+
+/* MS Paint XP-era toolbox: compact two-column tools and contextual brush options. */
+.xp-utility-overlay:has(#xp-paint-canvas) .xp-paint-tools {
+  align-content: start;
+  grid-template-columns: repeat(2, 22px);
+  grid-auto-rows: 24px;
+  gap: 1px;
+  padding: 3px;
+  background: #ece9d8;
+  border: 1px solid #7f9db9;
+  box-shadow: inset 1px 1px #fff, inset -1px -1px #c5c2b8;
+}
+.xp-utility-overlay:has(#xp-paint-canvas) .xp-paint-tools > button[data-paint-tool] {
+  box-sizing: border-box;
+  width: 22px;
+  height: 22px;
+  min-width: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #111;
+  border: 1px solid transparent;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  font: 17px/20px Tahoma, Arial, sans-serif;
+}
+.xp-utility-overlay:has(#xp-paint-canvas) .xp-paint-tools > button[data-paint-tool]:hover {
+  border-color: #7f9db9;
+  background: #fff;
+}
+.xp-utility-overlay:has(#xp-paint-canvas) .xp-paint-tools > button[data-paint-tool].active {
+  border: 1px solid #316ac5;
+  background: #c1d2ee;
+  box-shadow: inset 1px 1px #fff, inset -1px -1px #7f9db9;
+}
+.xp-paint-tool-options {
+  grid-column: 1 / -1;
+  display: none;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  margin-top: 3px;
+  padding: 3px 2px 4px;
+  border: 1px solid #9b9a91;
+  background: #ece9d8;
+}
+.xp-paint-tool-options.visible { display: grid; }
+.xp-paint-tool-options-title {
+  grid-column: 1 / -1;
+  font: 10px Tahoma, Arial, sans-serif;
+  color: #222;
+  text-align: center;
+  padding-bottom: 2px;
+}
+.xp-utility-overlay:has(#xp-paint-canvas) .xp-paint-tool-options button {
+  height: 22px;
+  min-width: 0;
+  padding: 2px;
+  border: 1px solid #9b9a91;
+  border-radius: 0;
+  background: linear-gradient(#fff, #e5e2d8);
+}
+.xp-paint-tool-options button.active { border: 1px solid #316ac5; background: #c1d2ee; }
+.paint-size-line { display: block; width: 100%; background: #111; }
+.paint-size-line.thin { height: 1px; }
+.paint-size-line.medium { height: 3px; }
+.paint-size-line.thick { height: 6px; }
+
+/* Definitive Paint layout repair: classic MS Paint proportions and a taskbar-safe window. */
+.xp-utility-overlay:has(#xp-paint-canvas) {
+  position: fixed !important;
+  inset: 0 0 42px 0 !important; /* keep the XP taskbar uncovered */
+  z-index: 18000;
+  display: flex;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 12px !important;
+  background: rgba(0,0,0,.06) !important;
+  overflow: auto !important;
+}
+.xp-utility-overlay:has(#xp-paint-canvas) .xp-utility-window {
+  box-sizing: border-box !important;
+  position: relative !important;
+  inset: auto !important;
+  width: min(980px, calc(100vw - 32px)) !important;
+  height: min(680px, calc(100vh - 70px)) !important;
+  min-width: 560px !important;
+  min-height: 420px !important;
+  max-width: calc(100vw - 24px) !important;
+  max-height: calc(100vh - 58px) !important;
+  margin: auto !important;
+  resize: both !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+  border: 1px solid #0a246a !important;
+  border-radius: 6px 6px 2px 2px !important;
+  background: #ece9d8 !important;
+  box-shadow: 2px 3px 10px rgba(0,0,0,.28) !important;
+}
+.xp-utility-overlay:has(#xp-paint-canvas) .xp-utility-titlebar {
+  flex: 0 0 27px !important;
+  min-height: 27px !important;
+}
+.xp-utility-overlay:has(#xp-paint-canvas) .xp-utility-content {
+  box-sizing: border-box !important;
+  flex: 1 1 auto !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  max-height: none !important;
+  padding: 0 6px 4px !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+  background: #ece9d8 !important;
+}
+.xp-utility-overlay:has(#xp-paint-canvas) .xp-paint-menubar {
+  box-sizing: border-box !important;
+  flex: 0 0 27px !important;
+  min-height: 27px !important;
+  margin: 0 -6px !important;
+  padding: 4px 7px !important;
+  background: #ece9d8 !important;
+  color: #111 !important;
+  border-bottom: 1px solid #aaa !important;
+}
+.xp-utility-overlay:has(#xp-paint-canvas) .xp-paint-workspace {
+  box-sizing: border-box !important;
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  grid-template-columns: 46px minmax(0, 1fr) !important;
+  gap: 3px !important;
+  margin: 0 -6px !important;
+  padding: 6px 5px 4px !important;
+  overflow: hidden !important;
+  background: #a6a6a6 !important;
+}
+.xp-utility-overlay:has(#xp-paint-canvas) .xp-paint-tools {
+  box-sizing: border-box !important;
+  width: 42px !important;
+  min-width: 42px !important;
+  align-content: start !important;
+  grid-template-columns: repeat(2, 18px) !important;
+  grid-auto-rows: 22px !important;
+  gap: 1px !important;
+  padding: 2px !important;
+  overflow: hidden auto !important;
+  background: #ece9d8 !important;
+  border: 1px solid #808080 !important;
+  box-shadow: inset 1px 1px #fff, inset -1px -1px #c5c2b8 !important;
+}
+.xp-utility-overlay:has(#xp-paint-canvas) .xp-paint-tools > button[data-paint-tool] {
+  box-sizing: border-box !important;
+  width: 18px !important;
+  height: 21px !important;
+  min-width: 18px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: 1px solid transparent !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  color: #111 !important;
+  font: 15px/18px Arial, sans-serif !important;
+}
+.xp-utility-overlay:has(#xp-paint-canvas) .xp-paint-tools > button[data-paint-tool] span {
+  display: block !important;
+  line-height: 18px !important;
+  transform: none !important;
+}
+.xp-utility-overlay:has(#xp-paint-canvas) .xp-paint-tools > button[data-paint-tool] span svg { width: 17px !important; height: 17px !important; display: block !important; overflow: visible !important; }
+.xp-utility-overlay:has(#xp-paint-canvas) .xp-paint-tools > button[data-paint-tool].active {
+  border: 1px solid #316ac5 !important;
+  background: #c1d2ee !important;
+  box-shadow: inset 1px 1px #fff, inset -1px -1px #7f9db9 !important;
+}
+.xp-utility-overlay:has(#xp-paint-canvas) .xp-paint-tool-options {
+  grid-column: 1 / -1 !important;
+  width: 36px !important;
+  box-sizing: border-box !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 1px !important;
+  margin: 2px 0 0 !important;
+  padding: 2px 1px !important;
+  border: 1px solid #9b9a91 !important;
+  background: #ece9d8 !important;
+}
+.xp-utility-overlay:has(#xp-paint-canvas) .xp-paint-tool-options-title { font: 9px Tahoma, sans-serif !important; }
+.xp-utility-overlay:has(#xp-paint-canvas) .xp-paint-tool-options button { min-width: 0 !important; height: 18px !important; padding: 1px !important; }
+.xp-utility-overlay:has(#xp-paint-canvas) .xp-paint-canvas-wrap {
+  box-sizing: border-box !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  overflow: auto !important;
+  display: block !important;
+  padding: 8px !important;
+  border: 1px solid #888 !important;
+  background: #a6a6a6 !important;
+}
+.xp-utility-overlay:has(#xp-paint-canvas) #xp-paint-canvas {
+  box-sizing: content-box !important;
+  display: block !important;
+  width: 760px !important;
+  height: 430px !important;
+  min-width: 760px !important;
+  max-width: none !important;
+  flex: none !important;
+  border: 1px solid #777 !important;
+  background: #fff !important;
+  image-rendering: auto;
+}
+.xp-utility-overlay:has(#xp-paint-canvas) .xp-paint-bottom {
+  box-sizing: border-box !important;
+  flex: 0 0 auto !important;
+  margin: 0 !important;
+  padding: 5px 0 3px !important;
+  gap: 4px !important;
+  background: #ece9d8 !important;
+}
+.xp-utility-overlay:has(#xp-paint-canvas) .xp-paint-colors {
+  box-sizing: border-box !important;
+  grid-template-columns: repeat(16, 14px) !important;
+  width: max-content !important;
+  max-width: 100% !important;
+  gap: 1px !important;
+  padding: 2px !important;
+  border: 1px solid #888 !important;
+  background: #d4d0c8 !important;
+}
+.xp-utility-overlay:has(#xp-paint-canvas) .xp-paint-colors button { width: 14px !important; height: 15px !important; }
+.xp-utility-overlay:has(#xp-paint-canvas) .xp-statusbar {
+  box-sizing: border-box !important;
+  flex: 0 0 22px !important;
+  min-height: 22px !important;
+  margin: 0 -6px !important;
+  padding: 3px 6px !important;
+  overflow: hidden !important;
+  background: #ece9d8 !important;
+}
+.xp-utility-window.xp-utility-maximized:has(#xp-paint-canvas) {
+  width: calc(100vw - 24px) !important;
+  height: calc(100vh - 70px) !important;
+  max-width: calc(100vw - 24px) !important;
+  max-height: calc(100vh - 58px) !important;
+  resize: none !important;
+}
+@media (max-width: 620px) {
+  .xp-utility-overlay:has(#xp-paint-canvas) .xp-utility-window { min-width: 0 !important; width: calc(100vw - 16px) !important; }
+  .xp-utility-overlay:has(#xp-paint-canvas) .xp-paint-workspace { grid-template-columns: 46px minmax(0,1fr) !important; }
+}
+
+/* Paint final fix: use the available workspace instead of leaving a 760x430 canvas stranded in the corner. */
+.xp-utility-overlay:has(#xp-paint-canvas) .xp-paint-workspace {
+  grid-template-columns: 68px minmax(0, 1fr) !important;
+}
+.xp-utility-overlay:has(#xp-paint-canvas) .xp-paint-tools {
+  width: 64px !important;
+  min-width: 64px !important;
+  grid-template-columns: repeat(2, 27px) !important;
+  grid-auto-rows: 27px !important;
+  gap: 1px !important;
+  padding: 3px !important;
+  align-content: start !important;
+}
+.xp-utility-overlay:has(#xp-paint-canvas) .xp-paint-tools > button[data-paint-tool] {
+  width: 27px !important;
+  min-width: 27px !important;
+  height: 27px !important;
+  font: 17px/24px Arial, sans-serif !important;
+  border: 1px solid #b8b5ac !important;
+  background: linear-gradient(135deg, #fff 0%, #ece9d8 70%) !important;
+  box-shadow: inset 1px 1px #fff, inset -1px -1px #d0cdc4 !important;
+}
+.xp-utility-overlay:has(#xp-paint-canvas) .xp-paint-tools > button[data-paint-tool].active {
+  border: 1px solid #316ac5 !important;
+  background: #c1d2ee !important;
+  box-shadow: inset 1px 1px #7f9db9, inset -1px -1px #fff !important;
+}
+.xp-utility-overlay:has(#xp-paint-canvas) .xp-paint-tool-options {
+  width: 56px !important;
+  grid-template-columns: 1fr !important;
+  gap: 2px !important;
+  margin-top: 5px !important;
+  padding: 3px !important;
+}
+.xp-utility-overlay:has(#xp-paint-canvas) .xp-paint-tool-options-title {
+  font: 10px Tahoma, sans-serif !important;
+  text-align: center !important;
+}
+.xp-utility-overlay:has(#xp-paint-canvas) .xp-paint-tool-options button {
+  width: 100% !important;
+  height: 19px !important;
+}
+.xp-utility-overlay:has(#xp-paint-canvas) .xp-paint-canvas-wrap {
+  display: flex !important;
+  align-items: stretch !important;
+  justify-content: stretch !important;
+  padding: 8px !important;
+  overflow: hidden !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+}
+.xp-utility-overlay:has(#xp-paint-canvas) #xp-paint-canvas {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  flex: 1 1 auto !important;
+  object-fit: fill !important;
+  border: 1px solid #777 !important;
+  background: #fff !important;
+}
+@media (max-width: 620px) {
+  .xp-utility-overlay:has(#xp-paint-canvas) .xp-paint-workspace { grid-template-columns: 62px minmax(0,1fr) !important; }
+  .xp-utility-overlay:has(#xp-paint-canvas) .xp-paint-tools { width: 58px !important; min-width: 58px !important; grid-template-columns: repeat(2, 24px) !important; }
+  .xp-utility-overlay:has(#xp-paint-canvas) .xp-paint-tools > button[data-paint-tool] { width: 24px !important; min-width: 24px !important; }
+}
+
+/* Notepad: usable XP-style editor, contained above the taskbar */
+.xp-utility-overlay:has(.xp-notepad-editor) {
+  inset: 0 0 32px 0 !important;
+  align-items: center;
+  padding: 10px;
+  background: rgba(0,0,0,.18);
+}
+.xp-utility-window.xp-notepad-window {
+  display: flex;
+  flex-direction: column;
+  width: min(820px, calc(100vw - 24px)) !important;
+  height: min(590px, calc(100% - 18px));
+  max-height: calc(100% - 18px) !important;
+  overflow: hidden;
+  resize: both;
+  min-width: 360px;
+  min-height: 260px;
+}
+.xp-notepad-window .xp-utility-titlebar { flex: 0 0 auto; }
+.xp-notepad-window .xp-utility-content {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+  padding: 0;
+  background: #fff;
+}
+.xp-notepad-menu {
+  display: flex;
+  flex: 0 0 27px;
+  align-items: center;
+  gap: 0;
+  margin: 0 !important;
+  padding: 2px 5px !important;
+  border-bottom: 1px solid #c8c5b8;
+  background: #ece9d8;
+  font: 11px Tahoma, sans-serif !important;
+}
+.xp-notepad-menu button {
+  border: 1px solid transparent;
+  padding: 4px 8px;
+  color: #111;
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+}
+.xp-notepad-menu button:hover { border-color: #7f9db9; background: #dbeafe; }
+.xp-notepad-formatbar {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 5px 7px;
+  border-bottom: 1px solid #c8c5b8;
+  background: #f4f1e6;
+  font: 11px Tahoma, sans-serif;
+}
+.xp-notepad-formatbar button, .xp-notepad-formatbar select {
+  height: 24px;
+  border: 1px solid #7f9db9;
+  border-radius: 2px;
+  background: linear-gradient(#fff,#e7e4d8);
+  color: #111;
+  font: 11px Tahoma, sans-serif;
+}
+.xp-notepad-formatbar button { min-width: 26px; padding: 2px 7px; cursor: pointer; }
+.xp-notepad-formatbar button:active { background: #d6e7f8; }
+.xp-notepad-formatbar label { display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; }
+.xp-notepad-formatbar select { max-width: 120px; padding: 2px; }
+.xp-notepad-separator { height: 20px; border-left: 1px solid #c5c0b2; margin: 0 3px; }
+.xp-notepad-color-label { padding: 0 5px; font-weight: bold; font-size: 15px !important; }
+.xp-notepad-color { width: 24px; height: 22px; padding: 1px; border: 1px solid #7f9db9; background: #fff; }
+.xp-notepad-formatbar .xp-notepad-save { margin-left: auto; padding: 2px 9px; }
+.xp-notepad-editor {
+  display: block;
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  overflow: auto;
+  resize: none;
+  border: 0;
+  outline: none;
+  padding: 10px 12px;
+  background: #fff;
+  color: #000;
+  font: 12px Arial, sans-serif;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+.xp-notepad-editor:empty::before { content: ""; }
+.xp-notepad-window .xp-notepad-status { flex: 0 0 auto; margin: 0; padding: 4px 7px; border-top: 1px solid #c8c5b8; background: #ece9d8; font: 10px Tahoma,sans-serif; }
+.xp-utility-window.xp-utility-maximized.xp-notepad-window {
+  width: calc(100vw - 16px) !important;
+  height: calc(100% - 4px) !important;
+  max-height: calc(100% - 4px) !important;
+  resize: none;
+}
+@media (max-width: 520px) {
+  .xp-utility-window.xp-notepad-window { min-width: 0; width: calc(100vw - 12px) !important; }
+  .xp-notepad-formatbar .xp-notepad-save { margin-left: 0; }
+}
+
+/* Notepad: Paint-like classic color swatches */
+.xp-notepad-palette-wrap{display:flex;align-items:center;gap:5px;padding:2px 4px;border:1px solid #c8c5b8;background:#ece9d8}
+.xp-notepad-palette-label{font:10px Tahoma,sans-serif;color:#333;white-space:nowrap}
+.xp-notepad-palette{display:grid;grid-template-columns:repeat(16,11px);grid-template-rows:repeat(2,11px);gap:2px;padding:2px;background:#d4d0c8;border:1px solid #fff;box-shadow:inset 1px 1px #808080}
+.xp-notepad-swatch{display:block;width:11px;height:11px;min-width:0!important;padding:0;border:1px solid rgba(0,0,0,.45)!important;border-radius:0!important;background:var(--swatch)!important;box-shadow:inset 1px 1px rgba(255,255,255,.45);cursor:pointer}
+.xp-notepad-swatch.active{outline:2px solid #316ac5;outline-offset:1px;z-index:1}
+.xp-notepad-swatch:hover{outline:1px solid #111;outline-offset:1px}
+.xp-notepad-formatbar .xp-notepad-save{margin-left:auto}
+/* Calculator: compact, classic XP proportions and clear 5-column key grid */
+.xp-utility-window.xp-utility-fixed-size{width:360px;max-width:calc(100vw - 24px)}
+.xp-utility-window.xp-utility-fixed-size .xp-utility-content{padding:0 16px 12px;background:#ece9d8;overflow:auto}
+.xp-calc-menubar{margin:0 -16px 8px;padding:4px 8px}
+.xp-calc-menubar button{padding:2px 6px;border:1px solid transparent;background:transparent;font:11px Tahoma,sans-serif;color:#111;cursor:pointer}
+.xp-calc-menubar button:hover{border-color:#7f9db9;background:#dbeafe}
+.xp-calculator{box-sizing:border-box;width:100%;max-width:310px;margin:0 auto;padding:7px;background:#ece9d8;border:1px solid #fff;box-shadow:inset -1px -1px #aca899,inset 1px 1px #fff}
+.xp-calculator>input{font-family:Tahoma,Verdana,sans-serif;font-size:21px;height:36px}
+.xp-calc-keys{grid-template-columns:repeat(5,minmax(0,1fr));gap:3px}
+.xp-calc-keys button{min-height:29px;padding:2px 1px;font-size:12px}
+.xp-calc-keys button[data-calc-key="="]{font-weight:bold;background:linear-gradient(#fff,#d3e4f8);border-color:#316ac5}
+.xp-calc-keys button[data-calc-key="MC"],.xp-calc-keys button[data-calc-key="MR"],.xp-calc-keys button[data-calc-key="MS"],.xp-calc-keys button[data-calc-key="M+"]{font-size:10px;color:#183e73}
+@media(max-width:420px){.xp-notepad-palette-label{display:none}.xp-notepad-palette{grid-template-columns:repeat(16,9px);grid-template-rows:repeat(2,9px);gap:1px}.xp-notepad-swatch{width:9px;height:9px}.xp-utility-window.xp-utility-fixed-size{width:calc(100vw - 20px)}}

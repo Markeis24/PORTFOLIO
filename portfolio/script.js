@@ -795,18 +795,17 @@ const FLEX_WINDOWS = [
 ];
 
 function openWindow(id) {
-    const win =
-        document.getElementById(id);
+    const win = document.getElementById(id);
+    if (!win) return;
 
-    if (!win) {
-        return;
-    }
-
-    win.style.display =
-        FLEX_WINDOWS.includes(id)
-            ? "flex"
-            : "block";
+    // A janela pode ter sido minimizada enquanto estava maximizada. Remova o
+    // display:none!important legado e restaure o estado geométrico salvo.
+    const wasMaximized = win.dataset.wasMaximized === "true";
+    win.style.removeProperty("display");
+    win.style.display = FLEX_WINDOWS.includes(id) ? "flex" : "block";
+    win.classList.toggle("maximized", wasMaximized);
     win.classList.add("active-window");
+    win.classList.remove("minimized-window");
 
     bringToFront(win);
     updateTaskbarButton(id);
@@ -829,12 +828,8 @@ function closeWindow(id) {
         return;
     }
 
-    win.classList.remove(
-        "maximized",
-        "active-window",
-        "focused-window"
-    );
-
+    win.classList.remove("maximized", "active-window", "focused-window", "minimized-window");
+    win.dataset.wasMaximized = "false";
     win.style.setProperty("display", "none", "important");
 
     removeTaskbarButton(id);
@@ -849,33 +844,24 @@ function closeWindow(id) {
 }
 
 function minimizeWindow(id) {
-    const win =
-        document.getElementById(id);
+    const win = document.getElementById(id);
+    if (!win) return;
 
-    if (!win) {
-        return;
-    }
-
-    win.style.display = "none";
-
-    win.classList.remove(
-        "active-window",
-        "focused-window"
-    );
-
+    // CSS da tela cheia usa display:flex!important. Guardar o estado e remover
+    // a classe antes de ocultar impede que a janela maximizada continue flutuando.
+    win.dataset.wasMaximized = win.classList.contains("maximized") ? "true" : "false";
+    win.classList.remove("maximized", "active-window", "focused-window");
+    win.classList.add("minimized-window");
+    win.style.setProperty("display", "none", "important");
     updateTaskbarButton(id);
     focusTopVisibleWindow();
 }
 
 function maximizeWindow(id) {
-    const win =
-        document.getElementById(id);
-
-    if (!win) {
-        return;
-    }
-
-    win.classList.toggle("maximized");
+    const win = document.getElementById(id);
+    if (!win || win.dataset.noMaximize === "true") return;
+    const isMaximized = win.classList.toggle("maximized");
+    win.dataset.wasMaximized = isMaximized ? "true" : "false";
     bringToFront(win);
 }
 
@@ -2933,12 +2919,12 @@ function injectGioBuddyStyles() {
     style.id = "giobuddy-styles";
     style.textContent = `
         #giobuddy {
-            position: absolute;
+            position: fixed;
             right: 18px;
             bottom: 42px;
             width: 72px;
             height: 72px;
-            z-index: 9500;
+            z-index: 2147483000;
             cursor: grab;
             user-select: none;
             touch-action: none;
@@ -2974,14 +2960,14 @@ function injectGioBuddyStyles() {
             right: 58px;
             bottom: 48px;
             width: 220px;
-            max-width: min(220px, 58vw);
-            padding: 7px 9px;
+            max-width: min(260px, 58vw);
+            padding: 9px 11px;
             color: #111;
             background: white;
             border: 1px solid #555;
             border-radius: 4px;
             box-shadow: 3px 3px 5px rgba(0,0,0,.35);
-            font: 11px/1.35 Tahoma, Arial, sans-serif;
+            font: 12px/1.45 Tahoma, Arial, sans-serif;
             z-index: 2;
         }
 
@@ -3150,7 +3136,8 @@ function createGioBuddy() {
         />
     `;
 
-    desktop.appendChild(buddy);
+    // Keep GioBuddy above every app window, even when windows create stacking contexts.
+    document.body.appendChild(buddy);
 
     const sprite = document.getElementById("gio-sprite");
 
@@ -3283,7 +3270,7 @@ function scheduleGioBuddyBlink() {
         }
 
         scheduleGioBuddyBlink();
-    }, 3500 + Math.floor(Math.random() * 3500));
+    }, 5000 + Math.floor(Math.random() * 5000));
 }
 
 /* ===================
@@ -3301,47 +3288,23 @@ function stopGioBuddyWandering() {
 
 function getGioBuddyPosition() {
     const buddy = document.getElementById("giobuddy");
-    const desktop = document.getElementById("desktop");
-
-    if (!buddy || !desktop) {
-        return null;
-    }
-
-    const buddyRect = buddy.getBoundingClientRect();
-    const desktopRect = desktop.getBoundingClientRect();
-
-    return {
-        x: buddyRect.left - desktopRect.left,
-        y: buddyRect.top - desktopRect.top
-    };
+    if (!buddy) return null;
+    const rect = buddy.getBoundingClientRect();
+    return { x: rect.left, y: rect.top };
 }
 
 function setGioBuddyPosition(x, y) {
     const buddy = document.getElementById("giobuddy");
-    const desktop = document.getElementById("desktop");
-
-    if (!buddy || !desktop) {
-        return false;
-    }
-
-    const maxX = Math.max(
-        0,
-        desktop.clientWidth - buddy.offsetWidth
-    );
-
-    const maxY = Math.max(
-        0,
-        desktop.clientHeight - 31 - buddy.offsetHeight
-    );
-
-    const safeX = Math.max(0, Math.min(x, maxX));
-    const safeY = Math.max(0, Math.min(y, maxY));
-
-    buddy.style.left = `${safeX}px`;
-    buddy.style.top = `${safeY}px`;
+    if (!buddy) return false;
+    const maxX = Math.max(0, window.innerWidth - buddy.offsetWidth);
+    // Leave the Windows XP taskbar unobstructed.
+    const taskbar = document.querySelector("#taskbar, .taskbar, #task-bar");
+    const taskbarHeight = taskbar ? taskbar.getBoundingClientRect().height : 30;
+    const maxY = Math.max(0, window.innerHeight - taskbarHeight - buddy.offsetHeight);
+    buddy.style.left = `${Math.max(0, Math.min(x, maxX))}px`;
+    buddy.style.top = `${Math.max(0, Math.min(y, maxY))}px`;
     buddy.style.right = "auto";
     buddy.style.bottom = "auto";
-
     return true;
 }
 
@@ -3710,7 +3673,7 @@ function startBuddyRandomEvents() {
             }
 
             schedule();
-        }, 35000 + Math.floor(Math.random() * 20000));
+        }, 75000 + Math.floor(Math.random() * 35000));
     };
 
     schedule();
@@ -3754,11 +3717,9 @@ function startBuddyDrag(event) {
         pointerId:
             event.pointerId,
 
-        desktopLeft:
-            desktopRect.left,
+        desktopLeft: 0,
 
-        desktopTop:
-            desktopRect.top,
+        desktopTop: 0,
 
         offsetX:
             event.clientX -
@@ -3793,20 +3754,10 @@ function startBuddyDrag(event) {
                 return;
             }
 
-            const maxX =
-                Math.max(
-                    0,
-                    desktop.clientWidth -
-                    buddy.offsetWidth
-                );
-
-            const maxY =
-                Math.max(
-                    0,
-                    desktop.clientHeight -
-                    31 -
-                    buddy.offsetHeight
-                );
+            const maxX = Math.max(0, window.innerWidth - buddy.offsetWidth);
+            const taskbar = document.querySelector("#taskbar, .taskbar, #task-bar");
+            const taskbarHeight = taskbar ? taskbar.getBoundingClientRect().height : 30;
+            const maxY = Math.max(0, window.innerHeight - taskbarHeight - buddy.offsetHeight);
 
             const x =
                 eventMove.clientX -
@@ -4514,13 +4465,20 @@ document.addEventListener("click", function handleAllWindowControls(event) {
 
     let xpUtilityWindowCounter = 0;
 
-    function removeXpDialog() {
+    function removeXpDialog(targetOverlay = null) {
+        // Close only the requested utility. Do not destroy unrelated windows
+        // (for example, Control Panel when opening Date and Time).
+        if (targetOverlay) {
+            const id = targetOverlay.dataset.utilityId;
+            targetOverlay.remove();
+            if (id) document.querySelector(`[data-utility-task="${id}"]`)?.remove();
+            return;
+        }
         document.querySelectorAll(".xp-utility-overlay").forEach(el => el.remove());
-        document.querySelectorAll(".xp-restore-window").forEach(el => el.remove());
+        document.querySelectorAll("[data-utility-task]").forEach(el => el.remove());
     }
 
     function makeDialog(title, body, options = {}) {
-        removeXpDialog();
         const overlay = document.createElement("div");
         overlay.className = "xp-utility-overlay";
         overlay.innerHTML = `
@@ -4530,59 +4488,81 @@ document.addEventListener("click", function handleAllWindowControls(event) {
             ${options.footer === false ? "" : `<footer class="xp-utility-footer"><button type="button" class="xp-utility-ok">OK</button></footer>`}
           </section>`;
         document.body.appendChild(overlay);
-        overlay.querySelector(".xp-utility-close")?.addEventListener("click", removeXpDialog);
-        overlay.querySelector(".xp-utility-ok")?.addEventListener("click", removeXpDialog);
+        overlay.querySelector(".xp-utility-ok")?.addEventListener("click", () => removeXpDialog(overlay));
         const minButton = overlay.querySelector(".xp-title-min");
         const utilityWindow = overlay.querySelector(".xp-utility-window");
         const utilityId = `xp-utility-${++xpUtilityWindowCounter}`;
         overlay.dataset.utilityId = utilityId;
 
-        minButton?.addEventListener("click", event => {
-            event.preventDefault();
-            event.stopPropagation();
-            if (!utilityWindow) return;
+        // Run and Calculator are fixed-size classic dialogs, not maximizable.
+        if (["Run", "Calculator"].includes(title)) {
+            utilityWindow?.classList.add("xp-utility-fixed-size");
+            overlay.querySelector(".xp-title-max")?.remove();
+        }
 
-            // Retira o overlay inteiro do viewport ao minimizar. Apenas esconder
-            // o conteúdo deixava uma camada fixa sobre o desktop e causava a faixa
-            // visual bugada acima da taskbar.
+        const taskbar = document.getElementById("taskbar-programs");
+        const taskIcon = title.toLowerCase().includes("paint") ? "Paint.png"
+            : title.toLowerCase().includes("calcul") ? "Calculator.png"
+            : title.toLowerCase().includes("note") ? "Notepad.png"
+            : title.toLowerCase().includes("music") ? "MyMusic.png"
+            : title.toLowerCase().includes("internet") ? "InternetExplorer6.png"
+            : title.toLowerCase().includes("date") ? "DateTime.png"
+            : title.toLowerCase().includes("picture") ? "MyPictures.png"
+            : title.toLowerCase().includes("control") ? "ControlPanel.png"
+            : title.toLowerCase().includes("run") ? "Run.png" : "Explorer.png";
+        let taskButton = null;
+        if (taskbar) {
+            taskButton = document.createElement("button");
+            taskButton.type = "button";
+            taskButton.className = "taskbar-button xp-utility-taskbar-button active";
+            taskButton.dataset.utilityTask = utilityId;
+            taskButton.innerHTML = `<img src="img/icons/${taskIcon}" alt="" class="taskbar-icon-image"><span>${title}</span>`;
+            taskButton.title = title;
+            taskbar.appendChild(taskButton);
+        }
+
+        function restoreUtility() {
+            overlay.style.display = "flex";
+            overlay.classList.remove("xp-utility-minimized-overlay");
+            utilityWindow.hidden = false;
+            overlay.style.zIndex = String(20000 + (++xpUtilityWindowCounter));
+            taskButton?.classList.add("active");
+            if (taskButton) {
+                document.querySelectorAll("#taskbar-programs .taskbar-button").forEach(b => {
+                    if (b !== taskButton) b.classList.remove("active");
+                });
+            }
+        }
+        function minimizeUtility() {
             overlay.classList.add("xp-utility-minimized-overlay");
             utilityWindow.hidden = true;
             overlay.style.display = "none";
-
-            // Cada janela recebe seu próprio botão de restauração; isso evita
-            // que o minimizador de Paint/Calculadora/Notepad reutilize um botão antigo.
-            let restore = document.querySelector(`[data-restore-utility="${utilityId}"]`);
-            if (!restore) {
-                restore = document.createElement("button");
-                restore.type = "button";
-                restore.className = "xp-restore-window";
-                restore.dataset.restoreUtility = utilityId;
-                restore.style.setProperty("--xp-restore-offset", `${(xpUtilityWindowCounter - 1) * 190}px`);
-                const iconName = title.toLowerCase().includes("paint") ? "Paint.png"
-                    : title.toLowerCase().includes("calcul") ? "Calculator.png"
-                    : title.toLowerCase().includes("note") ? "Notepad.png"
-                    : title.toLowerCase().includes("music") ? "MyMusic.png"
-                    : title.toLowerCase().includes("internet") ? "InternetExplorer6.png"
-                    : title.toLowerCase().includes("date") ? "DateTime.png"
-                    : "Explorer.png";
-                restore.innerHTML = `<img src="img/icons/${iconName}" alt="">${title}`;
-                document.body.appendChild(restore);
-            }
-
-            restore.onclick = () => {
-                overlay.style.display = "flex";
-                overlay.classList.remove("xp-utility-minimized-overlay");
-                utilityWindow.hidden = false;
-                restore.remove();
-                overlay.style.zIndex = String(20000 + Date.now() % 10000);
-            };
-        });
-        overlay.querySelector(".xp-title-max")?.addEventListener("click", event => {
+            taskButton?.classList.remove("active");
+        }
+        minButton?.addEventListener("click", event => {
             event.preventDefault();
             event.stopPropagation();
-            utilityWindow?.classList.toggle("xp-utility-maximized");
+            minimizeUtility();
         });
-        overlay.addEventListener("click", e => { if (e.target === overlay) removeXpDialog(); });
+        taskButton?.addEventListener("click", () => {
+            if (overlay.style.display === "none" || utilityWindow.hidden) restoreUtility();
+            else if (taskButton.classList.contains("active")) minimizeUtility();
+            else restoreUtility();
+        });
+        overlay.querySelector(".xp-utility-close")?.addEventListener("click", () => removeXpDialog(overlay));
+        const utilityMaxButton = overlay.querySelector(".xp-title-max");
+        if (title.toLowerCase().includes("calcul")) {
+            // A Calculadora padrão do Windows XP era uma janela fixa, não maximizada.
+            utilityMaxButton?.remove();
+            utilityWindow?.classList.add("xp-utility-fixed-size");
+        } else {
+            utilityMaxButton?.addEventListener("click", event => {
+                event.preventDefault();
+                event.stopPropagation();
+                utilityWindow?.classList.toggle("xp-utility-maximized");
+            });
+        }
+        // Clique fora da janela não deve fechá-la: no Windows XP, somente o X, Cancel/OK ou um comando explícito fecha o aplicativo.
         return overlay;
     }
 
@@ -4723,39 +4703,186 @@ document.addEventListener("click", function handleAllWindowControls(event) {
     function openMiniApp(kind) {
         removeXpDialog();
         if (kind === "notepad") {
-            const overlay=makeDialog("Untitled - Notepad", `<div class="xp-notepad-menu">File　 Edit　 Format　 View　 Help</div><textarea class="xp-notepad-area" aria-label="Notepad document" spellcheck="false"></textarea><div class="xp-statusbar">Windows Notepad · Ready</div>`, {footer:false});
-            overlay.querySelector(".xp-utility-window").style.width="min(680px,96vw)";
-        } else if (kind === "calc") {
-            const calcKeys = ["MC","7","8","9","/","sqrt","4","5","6","*","%","1","2","3","-","1/x","0","+/-",".","+","Back","CE","C","="];
-            const overlay=makeDialog("Calculator", `<div class="xp-calc-menubar"><span>Edit</span><span>View</span><span>Help</span></div><div class="xp-calculator"><div class="xp-calc-mode">Standard</div><input id="xp-calc-display" value="0" readonly aria-label="Calculator display"><div class="xp-calc-memory"><span> M </span><span> </span></div><div class="xp-calc-keys">${calcKeys.map(k=>`<button type="button" data-calc-key="${k}" class="${["/","*","-","+","=","sqrt","%","1/x"].includes(k)?"xp-calc-function":""}">${({sqrt:"√",Back:"←","1/x":"1/x","+/-":"±"})[k]||k}</button>`).join("")}</div></div>`,{footer:false});
-            let expr="", stored=0; const display=overlay.querySelector("#xp-calc-display");
-            overlay.querySelectorAll("[data-calc-key]").forEach(b=>b.addEventListener("click",()=>{
-                const k=b.dataset.calcKey; const current=Number(display.value);
-                if(k==="C"||k==="CE"){expr="";display.value="0"}
-                else if(k==="MC"){stored=0;overlay.querySelector(".xp-calc-memory").firstElementChild.textContent=" "}
-                else if(k==="Back"){expr=expr.slice(0,-1);display.value=expr||"0"}
-                else if(k==="+/-"){display.value=String(-current);expr=display.value}
-                else if(k==="sqrt"){display.value=current<0?"Error":String(Math.sqrt(current));expr=display.value}
-                else if(k==="1/x"){display.value=== "0" ? display.value="Cannot divide by zero" : display.value=String(1/current);expr=display.value}
-                else if(k==="%"){display.value=String(current/100);expr=display.value}
-                else if(k==="="){try{if(!/^[0-9+*/.() -]+$/.test(expr))throw Error(); const result=Function(`"use strict";return (${expr})`)(); if(!Number.isFinite(result))throw Error(); display.value=String(result);expr=display.value}catch{display.value="Error";expr=""}}
-                else if(["+","-","*","/"].includes(k)){expr=(expr||String(current))+k;display.value=expr}
-                else {if(display.value==="Error"||display.value==="Cannot divide by zero") {expr="";display.value="0"} expr+=k;display.value=expr}
+            const overlay = makeDialog("Untitled - Notepad", `
+              <div class="xp-notepad-menu"><button type="button" data-np-menu="File">File</button><button type="button" data-np-menu="Edit">Edit</button><button type="button" data-np-menu="Format">Format</button><button type="button" data-np-menu="View">View</button><button type="button" data-np-menu="Help">Help</button></div>
+              <div class="xp-notepad-formatbar" role="toolbar" aria-label="Text formatting">
+                <button type="button" data-np-cmd="bold" title="Negrito (Ctrl+B)"><b>B</b></button><button type="button" data-np-cmd="italic" title="Itálico (Ctrl+I)"><i>I</i></button><button type="button" data-np-cmd="underline" title="Sublinhado (Ctrl+U)"><u>U</u></button><span class="xp-notepad-separator"></span>
+                <label>Font <select class="xp-notepad-font"><option value="Arial">Arial</option><option value="Tahoma">Tahoma</option><option value="Verdana">Verdana</option><option value="Georgia">Georgia</option><option value="Courier New">Courier New</option><option value="Times New Roman">Times New Roman</option></select></label>
+                <label>Size <select class="xp-notepad-size"><option>10</option><option>11</option><option selected>12</option><option>14</option><option>16</option><option>18</option><option>24</option><option>32</option></select></label>
+                <div class="xp-notepad-palette-wrap" title="Selecione a cor do texto">
+                  <span class="xp-notepad-palette-label">Text color</span>
+                  <div class="xp-notepad-palette" role="group" aria-label="Cores do texto">
+                    ${['#000000','#ffffff','#808080','#c0c0c0','#800000','#ff0000','#808000','#ffff00','#008000','#00ff00','#008080','#00ffff','#000080','#0000ff','#800080','#ff00ff','#804000','#ff8040','#804080','#ff80c0','#004080','#0080ff','#408080','#80ffff','#408000','#80ff00','#808040','#ffff80','#004000','#80ff80','#400080','#c080ff'].map((c,i)=>`<button type="button" class="xp-notepad-swatch${i===0?' active':''}" data-np-color="${c}" style="--swatch:${c}" title="${c}" aria-label="Texto ${c}"></button>`).join('')}
+                  </div>
+                </div>
+                <button type="button" class="xp-notepad-save" title="Salvar como texto">Save .txt</button>
+              </div>
+              <div class="xp-notepad-editor" contenteditable="true" role="textbox" aria-multiline="true" aria-label="Notepad document" spellcheck="false"></div>
+              <div class="xp-statusbar xp-notepad-status">Windows Notepad · Ready</div>`, {footer:false});
+            const npWindow = overlay.querySelector(".xp-utility-window");
+            npWindow.classList.add("xp-notepad-window");
+            npWindow.style.width = "min(820px, calc(100vw - 24px))";
+            const editor = overlay.querySelector(".xp-notepad-editor");
+            const status = overlay.querySelector(".xp-notepad-status");
+            overlay.querySelectorAll("[data-np-cmd]").forEach(button => button.addEventListener("click", () => {
+                editor.focus(); document.execCommand(button.dataset.npCmd, false, null);
             }));
+            overlay.querySelector(".xp-notepad-font").addEventListener("change", e => { editor.focus(); document.execCommand("fontName", false, e.target.value); });
+            overlay.querySelector(".xp-notepad-size").addEventListener("change", e => {
+                editor.focus(); const sizeMap = {"10":"2","11":"2","12":"3","14":"4","16":"4","18":"5","24":"6","32":"7"}; document.execCommand("fontSize", false, sizeMap[e.target.value] || "3");
+            });
+            overlay.querySelectorAll("[data-np-color]").forEach(swatch => swatch.addEventListener("click", () => {
+                const color = swatch.dataset.npColor;
+                overlay.querySelectorAll("[data-np-color]").forEach(item => item.classList.toggle("active", item === swatch));
+                editor.focus();
+                document.execCommand("styleWithCSS", false, true);
+                document.execCommand("foreColor", false, color);
+                status.textContent = `Text color: ${color}`;
+            }));
+            overlay.querySelector(".xp-notepad-save").addEventListener("click", () => {
+                const text = editor.innerText || editor.textContent || "";
+                const blob = new Blob([text], {type:"text/plain;charset=utf-8"});
+                const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href=url; a.download="Untitled.txt"; a.click(); URL.revokeObjectURL(url);
+                status.textContent = "Saved as Untitled.txt · Plain text";
+            });
+            overlay.querySelectorAll("[data-np-menu]").forEach(button => button.addEventListener("click", () => {
+                const menu = button.dataset.npMenu;
+                if (menu === "File") { if (confirm("Save this document as a text file?")) overlay.querySelector(".xp-notepad-save").click(); }
+                else if (menu === "Edit") { editor.focus(); }
+                else if (menu === "Format") { alert("Use the formatting toolbar for bold, italic, underline, font, size and color."); }
+                else if (menu === "View") { editor.focus(); }
+                else { alert("Giovanna OS Notepad · Editor inspired by Windows XP."); }
+            }));
+            editor.addEventListener("input", () => { status.textContent = `Ln ${editor.innerText.split("\n").length}, Col ${((window.getSelection()?.anchorOffset)||0)+1} · Modified`; });
+            editor.addEventListener("keydown", e => {
+                if ((e.ctrlKey || e.metaKey) && ["b","i","u"].includes(e.key.toLowerCase())) { e.preventDefault(); document.execCommand(({b:"bold",i:"italic",u:"underline"})[e.key.toLowerCase()], false, null); }
+                if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "s") { e.preventDefault(); overlay.querySelector(".xp-notepad-save").click(); }
+            });
+        } else if (kind === "calc") {
+            const calcKeys = ["MC","7","8","9","/","sqrt","4","5","6","*","%","1","2","3","-","1/x","0","+/-",".","+","MR","MS","M+","Back","CE","C","="];
+            const overlay = makeDialog("Calculator", `<div class="xp-calc-menubar"><button type="button" data-calc-menu="Edit">Edit</button><button type="button" data-calc-menu="View">View</button><button type="button" data-calc-menu="Help">Help</button></div><div class="xp-calculator"><div class="xp-calc-mode">Standard</div><input id="xp-calc-display" value="0" readonly aria-label="Calculator display"><div class="xp-calc-memory"><span id="xp-calc-memory-indicator"></span><span class="xp-calc-status"> </span></div><div class="xp-calc-keys">${calcKeys.map(k=>`<button type="button" data-calc-key="${k}" class="${["/","*","-","+","=","sqrt","%","1/x"].includes(k)?"xp-calc-function":""}">${({sqrt:"√",Back:"←","1/x":"1/x","+/-":"±"})[k]||k}</button>`).join("")}</div></div>`, {footer:false});
+            const display = overlay.querySelector("#xp-calc-display");
+            const memoryIndicator = overlay.querySelector("#xp-calc-memory-indicator");
+            let accumulator = null, pendingOperator = null, replaceDisplay = true, memory = 0, lastOperand = null, lastOperator = null;
+            const read = () => Number(display.value);
+            const show = value => { display.value = Number.isFinite(value) ? String(Number(value.toPrecision(12))) : "Error"; };
+            const calculate = (a, op, b) => {
+                if (op === "+") return a + b;
+                if (op === "-") return a - b;
+                if (op === "*") return a * b;
+                if (op === "/") return b === 0 ? NaN : a / b;
+                return b;
+            };
+            const digit = key => {
+                if (display.value === "Error" || replaceDisplay) { display.value = key === "." ? "0." : key; replaceDisplay = false; return; }
+                if (key === "." && display.value.includes(".")) return;
+                if (display.value.replace(/[-.]/g, "").length >= 14) return;
+                display.value = key === "." && display.value === "0" ? "0." : display.value + key;
+            };
+            const chooseOperator = op => {
+                const current = read();
+                if (display.value === "Error") return;
+                if (pendingOperator && !replaceDisplay) {
+                    const result = calculate(accumulator, pendingOperator, current);
+                    show(result); accumulator = result;
+                } else accumulator = current;
+                pendingOperator = op; replaceDisplay = true; lastOperator = null; lastOperand = null;
+            };
+            const press = key => {
+                if (/^\d$/.test(key) || key === ".") { digit(key); return; }
+                const current = read();
+                if (["+","-","*","/"].includes(key)) { chooseOperator(key); return; }
+                if (key === "=") {
+                    if (pendingOperator) {
+                        const rhs = replaceDisplay ? accumulator : current;
+                        const result = calculate(accumulator, pendingOperator, rhs);
+                        lastOperator = pendingOperator; lastOperand = rhs; show(result); accumulator = Number(display.value); pendingOperator = null; replaceDisplay = true;
+                    } else if (lastOperator && lastOperand !== null) { show(calculate(current, lastOperator, lastOperand)); replaceDisplay = true; }
+                    return;
+                }
+                if (key === "C") { accumulator = null; pendingOperator = null; lastOperator = null; lastOperand = null; display.value = "0"; replaceDisplay = true; return; }
+                if (key === "CE") { display.value = "0"; replaceDisplay = true; return; }
+                if (key === "Back") { if (!replaceDisplay && display.value !== "Error") display.value = display.value.length > 1 ? display.value.slice(0,-1) : "0"; return; }
+                if (key === "+/-") { if (display.value !== "0" && display.value !== "Error") show(-current); replaceDisplay = false; return; }
+                if (key === "sqrt") { show(current < 0 ? NaN : Math.sqrt(current)); replaceDisplay = true; return; }
+                if (key === "1/x") { show(current === 0 ? NaN : 1/current); replaceDisplay = true; return; }
+                if (key === "%") { show(pendingOperator && accumulator !== null ? accumulator * current / 100 : current / 100); replaceDisplay = true; return; }
+                if (key === "MC") { memory = 0; memoryIndicator.textContent = ""; return; }
+                if (key === "MR") { show(memory); replaceDisplay = true; return; }
+                if (key === "MS") { memory = current; memoryIndicator.textContent = "M"; return; }
+                if (key === "M+") { memory += current; memoryIndicator.textContent = "M"; return; }
+            };
+            overlay.querySelectorAll("[data-calc-key]").forEach(button => button.addEventListener("click", () => press(button.dataset.calcKey)));
+            overlay.querySelectorAll("[data-calc-menu]").forEach(button => button.addEventListener("click", () => {
+                const menu = button.dataset.calcMenu;
+                if (menu === "Edit") alert("Use the keyboard or the calculator buttons to enter values.");
+                else if (menu === "View") alert("Standard Calculator · Windows XP style");
+                else alert("Calculator — Giovanna OS\nKeyboard: 0–9, +, -, *, /, Enter, Backspace, Esc.");
+            }));
+            display.addEventListener("keydown", event => event.preventDefault());
+            overlay.addEventListener("keydown", event => {
+                if (event.ctrlKey || event.altKey || event.metaKey) return;
+                if (/^\d$/.test(event.key) || event.key === ".") { event.preventDefault(); press(event.key); }
+                else if (["+","-","*","/"].includes(event.key)) { event.preventDefault(); press(event.key); }
+                else if (event.key === "Enter" || event.key === "=") { event.preventDefault(); press("="); }
+                else if (event.key === "Backspace") { event.preventDefault(); press("Back"); }
+                else if (event.key === "Escape") { event.preventDefault(); press("C"); }
+                else if (event.key === "%") { event.preventDefault(); press("%"); }
+            });
         } else if (kind === "paint") {
             const overlay=makeDialog("Untitled - Paint", `<div class="xp-paint-menubar"><span>File</span><span>Edit</span><span>View</span><span>Image</span><span>Colors</span><span>Help</span></div><div class="xp-paint-workspace"><aside class="xp-paint-tools" aria-label="Paint tools">${[
-              ['pencil','✎','Pencil'],['brush','🖌','Brush'],['eraser','▰','Eraser'],['fill','▨','Fill with Color'],['eyedropper','◉','Pick Color'],['magnifier','⌕','Magnifier'],['line','／','Line'],['curve','〰','Curve'],['rect','▱','Rectangle'],['filledrect','▰','Filled Rectangle'],['ellipse','◯','Ellipse'],['filledellipse','●','Filled Ellipse'],['text','A','Text']
-            ].map(([id,icon,label],i)=>`<button type="button" data-paint-tool="${id}" title="${label}" class="${i===0?'active':''}">${icon}</button>`).join('')}</aside><div class="xp-paint-canvas-wrap"><canvas id="xp-paint-canvas" width="760" height="430" aria-label="Paint canvas"></canvas></div></div><div class="xp-paint-bottom"><div class="xp-paint-colors" aria-label="Colors">${['#000000','#ffffff','#808080','#c0c0c0','#800000','#ff0000','#808000','#ffff00','#008000','#00ff00','#008080','#00ffff','#000080','#0000ff','#800080','#ff00ff','#804000','#ff8040','#804080','#ff80c0','#004080','#0080ff','#408080','#80ffff','#408000','#80ff00','#808040','#ffff80','#004000','#80ff80','#400080','#c080ff'].map((c,i)=>`<button type="button" data-paint-color="${c}" title="${c}" style="background:${c}" class="${i===0?'active':''}"></button>`).join('')}</div><div class="xp-paint-current"><span id="xp-paint-current-color"></span><label>Size <select id="xp-paint-size"><option value="1">1</option><option value="3" selected>3</option><option value="6">6</option><option value="10">10</option><option value="18">18</option></select></label><button type="button" id="xp-paint-clear">Clear Image</button><button type="button" id="xp-paint-save">Save</button></div></div><div class="xp-statusbar"><span id="xp-paint-status">For Help, click Help Topics on the Help Menu</span><span>760 × 430px</span></div>`,{footer:false});
-            const canvas=overlay.querySelector('#xp-paint-canvas'),ctx=canvas.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);let drawing=false,tool='pencil',color='#000000',startPoint=null,lastPoint=null;
-            const point=e=>{const r=canvas.getBoundingClientRect();return [(e.clientX-r.left)*canvas.width/r.width,(e.clientY-r.top)*canvas.height/r.height]};
+              ['select','<svg viewBox="0 0 24 24"><path d="M3 3L3 19L8 15L11 22L14 21L11 14L18 14Z" fill="#fff" stroke="#222" stroke-width="1.4"/><path d="M5 5V15L8 12L11 19L12 18L9 11L14 11Z" fill="#316ac5"/></svg>','Free-Form Select'],
+              ['rectselect','<svg viewBox="0 0 24 24"><rect x="3" y="4" width="17" height="15" fill="none" stroke="#222" stroke-dasharray="2 2" stroke-width="1.5"/><path d="M5 6H18V17H5Z" fill="#fff" stroke="#316ac5" stroke-width="1"/></svg>','Select'],
+              ['eraser','<svg viewBox="0 0 24 24"><path d="M3 14L12 4Q13 3 14 4L21 11L12 20H8Z" fill="#f5d8e6" stroke="#333" stroke-width="1.4"/><path d="M8 19L15 12" stroke="#333" stroke-width="1.2"/><path d="M12 20H21" stroke="#333"/></svg>','Eraser'],
+              ['fill','<svg viewBox="0 0 24 24"><path d="M4 10L12 3L20 11L12 19Z" fill="#d9d9d9" stroke="#333" stroke-width="1.3"/><path d="M12 19L17 14L21 18L17 22H8Z" fill="#1684c7" stroke="#333" stroke-width="1.2"/><path d="M3 20Q5 16 8 18L6 22H3Z" fill="#e0bd42"/></svg>','Fill With Color'],
+              ['eyedropper','<svg viewBox="0 0 24 24"><path d="M15 3L21 9L18 12L12 6Z" fill="#e8e8e8" stroke="#222" stroke-width="1.3"/><path d="M14 8L7 15L5 20L10 18L17 11Z" fill="#d8d8d8" stroke="#222" stroke-width="1.3"/><path d="M4 20L7 17" stroke="#222" stroke-width="1.4"/><path d="M16 5L19 8" stroke="#316ac5" stroke-width="2"/></svg>','Pick Color'],
+              ['magnifier','<svg viewBox="0 0 24 24"><circle cx="10" cy="10" r="6" fill="#fff" stroke="#222" stroke-width="1.6"/><path d="M14.5 14.5L21 21" stroke="#222" stroke-width="3"/><path d="M7 10H13M10 7V13" stroke="#316ac5" stroke-width="1"/></svg>','Magnifier'],
+              ['pencil','<svg viewBox="0 0 24 24"><path d="M4 17L16 4L20 8L8 21L3 22Z" fill="#f0d16b" stroke="#333" stroke-width="1.2"/><path d="M16 4L18 2L22 6L20 8Z" fill="#e8e8e8" stroke="#333" stroke-width="1.1"/><path d="M3 22L4 17L8 21Z" fill="#333"/></svg>','Pencil'],
+              ['brush','<svg viewBox="0 0 24 24"><path d="M14 3L21 7L13 17L8 14Z" fill="#d8d8d8" stroke="#222" stroke-width="1.2"/><path d="M8 14Q5 15 6 19Q6 22 2 21Q5 18 3 16Q4 13 8 14Z" fill="#d4a15e" stroke="#222" stroke-width="1.1"/><path d="M14 4L19 7" stroke="#316ac5" stroke-width="1.2"/></svg>','Brush'],
+              ['spray','<svg viewBox="0 0 24 24"><path d="M4 10L10 4L17 11L11 17Z" fill="#e6e6e6" stroke="#333" stroke-width="1.2"/><path d="M11 17L16 12L19 15L15 19L9 19Z" fill="#316ac5" stroke="#333" stroke-width="1.2"/><g fill="#222"><circle cx="4" cy="4" r=".8"/><circle cx="7" cy="2" r=".8"/><circle cx="2" cy="8" r=".8"/><circle cx="6" cy="7" r=".8"/><circle cx="2" cy="12" r=".8"/></g></svg>','Airbrush'],
+              ['text','<svg viewBox="0 0 24 24"><path d="M4 5H20M12 5V21M8 21H16" fill="none" stroke="#222" stroke-width="2"/><path d="M7 5L12 3L17 5" fill="none" stroke="#316ac5" stroke-width="1.4"/></svg>','Text'],
+              ['line','<svg viewBox="0 0 24 24"><path d="M3 21L21 3" stroke="#222" stroke-width="2"/><path d="M4 19L19 4" stroke="#fff" stroke-width=".6"/></svg>','Line'],
+              ['curve','<svg viewBox="0 0 24 24"><path d="M3 19Q8 1 13 12T21 5" fill="none" stroke="#222" stroke-width="2"/><path d="M3 18Q8 2 13 13T21 6" fill="none" stroke="#316ac5" stroke-width=".7"/></svg>','Curve'],
+              ['rect','<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" fill="#fff" stroke="#222" stroke-width="1.5"/></svg>','Rectangle'],
+              ['filledrect','<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" fill="#222" stroke="#222" stroke-width="1.2"/></svg>','Filled Rectangle'],
+              ['polygon','<svg viewBox="0 0 24 24"><path d="M3 19L7 5L14 9L21 4L19 19Z" fill="#fff" stroke="#222" stroke-width="1.4"/></svg>','Polygon'],
+              ['ellipse','<svg viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="9" ry="6" fill="#fff" stroke="#222" stroke-width="1.5"/></svg>','Ellipse'],
+              ['filledellipse','<svg viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="9" ry="6" fill="#222" stroke="#222" stroke-width="1.2"/></svg>','Filled Ellipse']
+            ].map(([id,icon,label])=>`<button type="button" data-paint-tool="${id}" title="${label}" class="${id==='pencil'?'active':''}"><span aria-hidden="true">${icon}</span></button>`).join('')}<div class="xp-paint-tool-options" aria-label="Brush options"><div class="xp-paint-tool-options-title">Options</div><button type="button" data-paint-size="1" title="Thin"><span class="paint-size-line thin"></span></button><button type="button" data-paint-size="3" title="Medium"><span class="paint-size-line medium"></span></button><button type="button" data-paint-size="6" title="Thick"><span class="paint-size-line thick"></span></button></div></aside><div class="xp-paint-canvas-wrap"><canvas id="xp-paint-canvas" width="760" height="430" aria-label="Paint canvas"></canvas></div></div><div class="xp-paint-bottom"><div class="xp-paint-colors" aria-label="Colors">${['#000000','#ffffff','#808080','#c0c0c0','#800000','#ff0000','#808000','#ffff00','#008000','#00ff00','#008080','#00ffff','#000080','#0000ff','#800080','#ff00ff','#804000','#ff8040','#804080','#ff80c0','#004080','#0080ff','#408080','#80ffff','#408000','#80ff00','#808040','#ffff80','#004000','#80ff80','#400080','#c080ff'].map((c,i)=>`<button type="button" data-paint-color="${c}" title="${c}" style="background:${c}" class="${i===0?'active':''}"></button>`).join('')}</div><div class="xp-paint-current"><span id="xp-paint-current-color"></span><label>Size <select id="xp-paint-size"><option value="1">1</option><option value="3" selected>3</option><option value="6">6</option><option value="10">10</option><option value="18">18</option></select></label><button type="button" id="xp-paint-clear">Clear Image</button><button type="button" id="xp-paint-save">Save</button></div></div><div class="xp-statusbar"><span id="xp-paint-status">For Help, click Help Topics on the Help Menu</span><span>760 × 430px</span></div>`,{footer:false});
+            const canvas=overlay.querySelector('#xp-paint-canvas'),ctx=canvas.getContext('2d');
+            ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);
+            let drawing=false,tool='pencil',color='#000000',startPoint=null,lastPoint=null,shapeSnapshot=null,curveStage=0,curveControl=null,curveStart=null,polygonPoints=[];
+            const point=e=>{const r=canvas.getBoundingClientRect();return [Math.max(0,Math.min(canvas.width,(e.clientX-r.left)*canvas.width/r.width)),Math.max(0,Math.min(canvas.height,(e.clientY-r.top)*canvas.height/r.height))]};
             const setStatus=t=>{overlay.querySelector('#xp-paint-status').textContent=t};
-            overlay.querySelectorAll('[data-paint-tool]').forEach(b=>b.addEventListener('click',()=>{tool=b.dataset.paintTool;overlay.querySelectorAll('[data-paint-tool]').forEach(x=>x.classList.toggle('active',x===b));setStatus(b.title)}));
+            const lineWidth=()=>Number(overlay.querySelector('#xp-paint-size').value)||1;
+            const setTool=b=>{tool=b.dataset.paintTool;curveStage=0;polygonPoints=[];overlay.querySelectorAll('[data-paint-tool]').forEach(x=>x.classList.toggle('active',x===b));setStatus(b.title);const opts=overlay.querySelector('.xp-paint-tool-options');if(opts)opts.classList.toggle('visible',['brush','eraser','spray'].includes(tool));canvas.style.cursor=({text:'text',magnifier:'zoom-in',eyedropper:'crosshair',fill:'cell',select:'crosshair',rectselect:'crosshair'})[tool]||'crosshair'};
+            overlay.querySelectorAll('[data-paint-tool]').forEach(b=>b.addEventListener('click',()=>setTool(b)));
+            overlay.querySelectorAll('[data-paint-size]').forEach(b=>b.addEventListener('click',()=>{overlay.querySelector('#xp-paint-size').value=b.dataset.paintSize;overlay.querySelectorAll('[data-paint-size]').forEach(x=>x.classList.toggle('active',x===b));}));
             overlay.querySelectorAll('[data-paint-color]').forEach(b=>b.addEventListener('click',()=>{color=b.dataset.paintColor;overlay.querySelectorAll('[data-paint-color]').forEach(x=>x.classList.toggle('active',x===b));overlay.querySelector('#xp-paint-current-color').style.background=color;}));
             overlay.querySelector('#xp-paint-current-color').style.background=color;
-            canvas.addEventListener('pointerdown',e=>{drawing=true;canvas.setPointerCapture(e.pointerId);startPoint=point(e);lastPoint=startPoint;if(tool==='fill'){ctx.fillStyle=color;ctx.fillRect(0,0,canvas.width,canvas.height);drawing=false;return}if(tool==='eyedropper'){const px=ctx.getImageData(...startPoint.map(Math.round),1,1).data;color='#'+[...px.slice(0,3)].map(v=>v.toString(16).padStart(2,'0')).join('');overlay.querySelector('#xp-paint-current-color').style.background=color;drawing=false;return}ctx.beginPath();ctx.moveTo(...startPoint)});
-            canvas.addEventListener('pointermove',e=>{if(!drawing)return;const pt=point(e);ctx.strokeStyle=tool==='eraser'?'#ffffff':color;ctx.lineWidth=Number(overlay.querySelector('#xp-paint-size').value)*(tool==='brush'?2:1);ctx.lineCap='round';ctx.lineJoin='round';if(['line','rect','filledrect','ellipse','filledellipse'].includes(tool)){setStatus('Drawing shape…');return}ctx.lineTo(...pt);ctx.stroke();lastPoint=pt});
-            const finish=e=>{if(!drawing)return;const pt=point(e);if(['line','rect','filledrect','ellipse','filledellipse'].includes(tool)){ctx.strokeStyle=color;ctx.fillStyle=color;ctx.lineWidth=Number(overlay.querySelector('#xp-paint-size').value);ctx.beginPath();if(tool==='line'){ctx.moveTo(...startPoint);ctx.lineTo(...pt);ctx.stroke()}else if(tool.includes('rect')){const x=startPoint[0],y=startPoint[1],w=pt[0]-x,h=pt[1]-y;tool==='filledrect'?ctx.fillRect(x,y,w,h):ctx.strokeRect(x,y,w,h)}else{const x=(startPoint[0]+pt[0])/2,y=(startPoint[1]+pt[1])/2;ctx.ellipse(x,y,Math.abs(pt[0]-startPoint[0])/2,Math.abs(pt[1]-startPoint[1])/2,0,0,Math.PI*2);tool==='filledellipse'?ctx.fill():ctx.stroke()}}drawing=false;setStatus('Ready')};
-            canvas.addEventListener('pointerup',finish);canvas.addEventListener('pointercancel',()=>drawing=false);
+            const drawSpray=(x,y)=>{const radius=Math.max(5,lineWidth()*3),count=Math.max(12,lineWidth()*12);ctx.fillStyle=color;for(let i=0;i<count;i++){const a=Math.random()*Math.PI*2,r=Math.random()*radius;ctx.fillRect(x+Math.cos(a)*r,y+Math.sin(a)*r,1,1)}};
+            const restoreSnapshot=()=>{if(shapeSnapshot){ctx.putImageData(shapeSnapshot,0,0)}};
+            const drawShape=(type,a,b)=>{ctx.strokeStyle=color;ctx.fillStyle=color;ctx.lineWidth=lineWidth();ctx.lineCap='round';ctx.lineJoin='round';const x=Math.min(a[0],b[0]),y=Math.min(a[1],b[1]),w=Math.abs(b[0]-a[0]),h=Math.abs(b[1]-a[1]);ctx.beginPath();if(type==='line'){ctx.moveTo(...a);ctx.lineTo(...b);ctx.stroke()}else if(type==='rect'){ctx.strokeRect(x,y,w,h)}else if(type==='filledrect'){ctx.fillRect(x,y,w,h)}else if(type==='ellipse'||type==='filledellipse'){ctx.ellipse(x+w/2,y+h/2,w/2,h/2,0,0,Math.PI*2);type==='filledellipse'?ctx.fill():ctx.stroke()}};
+            const drawSelection=(a,b,free=false)=>{ctx.save();ctx.strokeStyle='#111';ctx.lineWidth=1;ctx.setLineDash([3,2]);ctx.strokeRect(Math.min(a[0],b[0]),Math.min(a[1],b[1]),Math.abs(b[0]-a[0]),Math.abs(b[1]-a[1]));ctx.restore()};
+            canvas.addEventListener('pointerdown',e=>{
+              const pt=point(e);
+              if(tool==='text'){const text=window.prompt('Enter text:');if(text){ctx.fillStyle=color;ctx.font=`${Math.max(12,lineWidth()*5)}px Arial`;ctx.textBaseline='top';ctx.fillText(text,pt[0],pt[1]);setStatus('Text added')}return}
+              if(tool==='magnifier'){const factor=window.prompt('Magnification (2 or 3):','2');if(factor==='2'||factor==='3'){const n=Number(factor),w=canvas.width/n,h=canvas.height/n;const data=ctx.getImageData(Math.max(0,pt[0]-w/2),Math.max(0,pt[1]-h/2),Math.min(w,canvas.width),Math.min(h,canvas.height));const temp=document.createElement('canvas');temp.width=data.width;temp.height=data.height;temp.getContext('2d').putImageData(data,0,0);ctx.imageSmoothingEnabled=false;ctx.drawImage(temp,pt[0]-data.width*n/2,pt[1]-data.height*n/2,data.width*n,data.height*n);ctx.imageSmoothingEnabled=true;setStatus(`${n}× magnification applied`)}return}
+              if(tool==='eyedropper'){const px=ctx.getImageData(Math.floor(pt[0]),Math.floor(pt[1]),1,1).data;color='#'+[...px.slice(0,3)].map(v=>v.toString(16).padStart(2,'0')).join('');overlay.querySelector('#xp-paint-current-color').style.background=color;overlay.querySelectorAll('[data-paint-color]').forEach(x=>x.classList.toggle('active',x.dataset.paintColor===color));setStatus('Color picked');return}
+              if(tool==='fill'){const image=ctx.getImageData(0,0,canvas.width,canvas.height),data=image.data,w=canvas.width,h=canvas.height,sx=Math.floor(pt[0]),sy=Math.floor(pt[1]),idx=(sy*w+sx)*4,target=[data[idx],data[idx+1],data[idx+2],data[idx+3]],hex=color.match(/[0-9a-f]{2}/gi).map(v=>parseInt(v,16));if(target[0]===hex[0]&&target[1]===hex[1]&&target[2]===hex[2])return;const stack=[[sx,sy]],seen=new Uint8Array(w*h);while(stack.length){const [x,y]=stack.pop();if(x<0||y<0||x>=w||y>=h)continue;const pos=y*w+x;if(seen[pos])continue;seen[pos]=1;const i=pos*4;if(data[i]!==target[0]||data[i+1]!==target[1]||data[i+2]!==target[2]||data[i+3]!==target[3])continue;data[i]=hex[0];data[i+1]=hex[1];data[i+2]=hex[2];data[i+3]=255;stack.push([x+1,y],[x-1,y],[x,y+1],[x,y-1])}ctx.putImageData(image,0,0);setStatus('Filled area');return}
+              if(tool==='polygon'&&polygonPoints.length>0){polygonPoints.push(pt);ctx.strokeStyle=color;ctx.lineWidth=lineWidth();ctx.beginPath();ctx.moveTo(...polygonPoints[polygonPoints.length-2]);ctx.lineTo(...pt);ctx.stroke();setStatus('Click to add points; double-click to finish');return}
+              if(tool==='curve'){if(curveStage===0){curveStart=pt;curveStage=1;setStatus('Click curve control point');return}if(curveStage===1){curveControl=pt;curveStage=2;setStatus('Click end point to finish curve');return}ctx.strokeStyle=color;ctx.lineWidth=lineWidth();ctx.beginPath();ctx.moveTo(...curveStart);ctx.quadraticCurveTo(...curveControl,...pt);ctx.stroke();curveStage=0;setStatus('Curve complete');return}
+              drawing=true;canvas.setPointerCapture(e.pointerId);startPoint=pt;lastPoint=pt;
+              if(['line','rect','filledrect','ellipse','filledellipse','select','rectselect','curve'].includes(tool))shapeSnapshot=ctx.getImageData(0,0,canvas.width,canvas.height);
+              if(tool==='polygon'){polygonPoints=[pt];drawing=false;setStatus('Click to add polygon points; double-click to finish');return}
+              if(tool==='brush'||tool==='pencil'||tool==='eraser'){ctx.beginPath();ctx.moveTo(...pt)}
+              if(tool==='spray')drawSpray(...pt);
+            });
+            canvas.addEventListener('pointermove',e=>{if(!drawing)return;const pt=point(e);if(['line','rect','filledrect','ellipse','filledellipse','select','rectselect'].includes(tool)){restoreSnapshot();if(['select','rectselect'].includes(tool))drawSelection(startPoint,pt);else drawShape(tool,startPoint,pt);return}ctx.strokeStyle=tool==='eraser'?'#ffffff':color;ctx.lineWidth=lineWidth()*(tool==='brush'?2:1);ctx.lineCap='round';ctx.lineJoin='round';if(tool==='spray'){drawSpray(...pt);lastPoint=pt;return}ctx.lineTo(...pt);ctx.stroke();lastPoint=pt});
+            const finish=e=>{if(!drawing)return;const pt=point(e);if(['line','rect','filledrect','ellipse','filledellipse'].includes(tool)){restoreSnapshot();drawShape(tool,startPoint,pt)}else if(['select','rectselect'].includes(tool)){restoreSnapshot();drawSelection(startPoint,pt);setStatus('Selection marked (move/copy not implemented)')}drawing=false;shapeSnapshot=null;setStatus('Ready')};
+            canvas.addEventListener('pointerup',finish);canvas.addEventListener('pointercancel',()=>{drawing=false;shapeSnapshot=null});
+            canvas.addEventListener('dblclick',e=>{if(tool==='polygon'&&polygonPoints.length>=2){const pt=point(e);if(Math.hypot(pt[0]-polygonPoints[polygonPoints.length-1][0],pt[1]-polygonPoints[polygonPoints.length-1][1])>2)polygonPoints.push(pt);ctx.strokeStyle=color;ctx.lineWidth=lineWidth();ctx.beginPath();ctx.moveTo(...polygonPoints[0]);polygonPoints.slice(1).forEach(p=>ctx.lineTo(...p));ctx.closePath();ctx.stroke();polygonPoints=[];setStatus('Polygon complete')}});
+            canvas.addEventListener('contextmenu',e=>{if(tool==='polygon'&&polygonPoints.length>=2){e.preventDefault();ctx.strokeStyle=color;ctx.lineWidth=lineWidth();ctx.beginPath();ctx.moveTo(...polygonPoints[0]);polygonPoints.slice(1).forEach(p=>ctx.lineTo(...p));ctx.closePath();ctx.stroke();polygonPoints=[];setStatus('Polygon complete')}});
             overlay.querySelector('#xp-paint-clear').addEventListener('click',()=>{ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);setStatus('Image cleared')});
             overlay.querySelector('#xp-paint-save').addEventListener('click',()=>{const a=document.createElement('a');a.download='untitled.bmp.png';a.href=canvas.toDataURL('image/png');a.click();});
             overlay.querySelector('.xp-utility-window').style.width='min(900px,98vw)';
@@ -4764,23 +4891,26 @@ document.addEventListener("click", function handleAllWindowControls(event) {
     }
 
     function openRun() {
-        const overlay = makeDialog("Run", `<div class="xp-run-intro"><img src="img/icons/Run.png" alt=""><p>Type the name of a program, folder, document, or Internet resource, and Windows will open it for you.</p></div><form id="xp-run-form" class="xp-utility-form"><label for="xp-run-command">Open:</label><div><input id="xp-run-command" autocomplete="off" autofocus><button type="submit">OK</button><button type="button" id="xp-run-cancel">Cancel</button><button type="button" id="xp-run-browse">Browse...</button></div></form><p class="xp-utility-note">Try: notepad, calc, mspaint, explorer, wmplayer, help</p>`);
-        overlay.querySelector("#xp-run-cancel").addEventListener("click", removeXpDialog);
-        overlay.querySelector("#xp-run-browse").addEventListener("click",()=>{overlay.querySelector("#xp-run-command").value="explorer";});
+        const overlay = makeDialog("Run", `<div class="xp-run-intro"><img src="img/icons/Run.png" alt=""><p>Type the name of a program, folder, document, or Internet resource, and Windows will open it for you.</p></div><form id="xp-run-form" class="xp-utility-form"><label for="xp-run-command">Open:</label><div><input id="xp-run-command" autocomplete="off" autofocus><button type="submit">OK</button><button type="button" id="xp-run-cancel">Cancel</button><button type="button" id="xp-run-browse">Browse...</button></div></form><p class="xp-utility-note">Try: notepad, calc, mspaint, explorer, wmplayer, help</p>`, {footer:false});
+        overlay.querySelector("#xp-run-cancel").addEventListener("click",()=>removeXpDialog(overlay));
+        overlay.querySelector("#xp-run-browse").addEventListener("click",()=>{
+            const picker = document.createElement("input"); picker.type="file"; picker.accept=".txt,.pdf,.html,.htm,.png,.jpg,.jpeg,.webp,.gif,.mp3,.wav";
+            picker.addEventListener("change",()=>{ const file=picker.files?.[0]; if(!file)return; overlay.querySelector("#xp-run-command").value=file.name; overlay.querySelector(".xp-utility-note").textContent=`Selected: ${file.name}. Browser security prevents running local executables.`; }); picker.click();
+        });
         overlay.querySelector("#xp-run-form").addEventListener("submit", e => {
             e.preventDefault();
             const raw=overlay.querySelector("#xp-run-command").value.trim();
             const cmd=raw.toLocaleLowerCase("pt-BR").replace(/\.exe$/i,"");
             const aliases = {about:'[data-window="about-window"]', projects:'[data-window="projects-window"]', skills:'[data-window="skills-window"]', internet:'[data-window="internet-window"]', music:'[data-window="media-window"]', wmplayer:'[data-window="media-window"]', explorer:'[data-window="computer-window"]', "my computer":'[data-window="computer-window"]'};
             if (cmd==="help") { overlay.querySelector(".xp-utility-note").textContent="Available commands: notepad, calc, mspaint, explorer, wmplayer, iexplore, about, projects, skills, internet, music, pictures, documents, control panel."; }
-            else if (["notepad","write"].includes(cmd)) { removeXpDialog(); openMiniApp("notepad"); }
-            else if (["calc","calculator"].includes(cmd)) { removeXpDialog(); openMiniApp("calc"); }
-            else if (["mspaint","paint","pbrush"].includes(cmd)) { removeXpDialog(); openMiniApp("paint"); }
-            else if (aliases[cmd]) { removeXpDialog(); const target=document.querySelector(aliases[cmd]); if(target){ const id=target.dataset.window || target.id; if(typeof openWindow==='function' && id) openWindow(id); else target.click(); } }
-            else if (["iexplore","internet options"].includes(cmd)) { removeXpDialog(); if(typeof openWindow==='function') openWindow("internet-window"); }
-            else if (["pictures","my pictures","fotos","galeria"].includes(cmd)) { removeXpDialog(); buildGallery(); }
-            else if (["documents","my documents","curriculo","currículo"].includes(cmd)) { removeXpDialog(); openDocuments(); }
-            else if (["control panel","controlpanel","painel"].includes(cmd)) { removeXpDialog(); openControlPanel(); }
+            else if (["notepad","write"].includes(cmd)) { removeXpDialog(overlay); openMiniApp("notepad"); }
+            else if (["calc","calculator"].includes(cmd)) { removeXpDialog(overlay); openMiniApp("calc"); }
+            else if (["mspaint","paint","pbrush"].includes(cmd)) { removeXpDialog(overlay); openMiniApp("paint"); }
+            else if (aliases[cmd]) { removeXpDialog(overlay); const target=document.querySelector(aliases[cmd]); if(target){ const id=target.dataset.window || target.id; if(typeof openWindow==='function' && id) openWindow(id); else target.click(); } }
+            else if (["iexplore","internet options"].includes(cmd)) { removeXpDialog(overlay); if(typeof openWindow==='function') openWindow("internet-window"); }
+            else if (["pictures","my pictures","fotos","galeria"].includes(cmd)) { removeXpDialog(overlay); buildGallery(); }
+            else if (["documents","my documents","curriculo","currículo"].includes(cmd)) { removeXpDialog(overlay); openDocuments(); }
+            else if (["control panel","controlpanel","painel"].includes(cmd)) { removeXpDialog(overlay); openControlPanel(); }
             else { overlay.querySelector(".xp-utility-note").textContent = `Windows cannot find '${raw}'. Make sure you typed the name correctly, and then try again.`; }
         });
     }
