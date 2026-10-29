@@ -4664,10 +4664,10 @@ document.addEventListener("click", function handleAllWindowControls(event) {
     function openWallpaperPicker() {
         const wallpapers = [
           {name:'Bliss (default)',file:'../img/bliss.jpg',desktop:'img/bliss.jpg'},
-          {name:'Blue Orbit',file:'img/wallpapers/blue-orbit.svg',desktop:'img/wallpapers/blue-orbit.svg'},
-          {name:'Green Hills',file:'img/wallpapers/green-hills.svg',desktop:'img/wallpapers/green-hills.svg'},
-          {name:'Desert Sunset',file:'img/wallpapers/desert-sunset.svg',desktop:'img/wallpapers/desert-sunset.svg'},
-          {name:'Midnight Space',file:'img/wallpapers/midnight-space.svg',desktop:'img/wallpapers/midnight-space.svg'}
+          {name:'Fall',file:'img/wallpapers/wallpaper1.png',desktop:'img/wallpapers/wallpaper1.png'},
+          {name:'Plains',file:'img/wallpapers/wallpaper2.png',desktop:'img/wallpapers/wallpaper2.png'},
+          {name:'Desert',file:'img/wallpapers/wallpaper3.png',desktop:'img/wallpapers/wallpaper3.png'},
+          {name:'Clouds',file:'img/wallpapers/wallpaper4.png',desktop:'img/wallpapers/wallpaper4.png'}
         ];
         const overlay=makeDialog('Display Properties — Desktop Background', `<p>Select a background for your desktop.</p><div class="xp-wallpaper-grid">${wallpapers.map((w,i)=>`<button type="button" data-wallpaper-index="${i}" class="xp-wallpaper-option"><img src="${i===0?'img/bliss.jpg':w.file}" alt=""><span>${w.name}</span></button>`).join('')}</div><div class="xp-wallpaper-bottom"><label>Position <select id="xp-wallpaper-position"><option value="cover">Stretch</option><option value="contain">Center</option><option value="repeat">Tile</option></select></label><button type="button" id="xp-wallpaper-apply">Apply</button></div>`, {footer:false});
         let selected=0; overlay.querySelectorAll('[data-wallpaper-index]').forEach(b=>b.addEventListener('click',()=>{selected=Number(b.dataset.wallpaperIndex);overlay.querySelectorAll('.xp-wallpaper-option').forEach(x=>x.classList.toggle('selected',x===b));}));
