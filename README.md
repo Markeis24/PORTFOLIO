@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/Markeis24/PORTFOLIO/main/portfolio/img/readme/banner.png" width="100%" alt="Banner inspirado no Windows XP"/>
+<img src="https://raw.githubusercontent.com/Markeis24/PORTFOLIO/main/portfolio/img/readme/bh.png" width="100%" alt="Banner inspirado no Windows XP"/>
 
 <br>
 
