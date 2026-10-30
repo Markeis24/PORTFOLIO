@@ -30,7 +30,7 @@
 
 ## SYSTEM INFORMATION
 
-<table>
+<table align="center">
 <tr>
 <td width="68%" valign="top">
 
@@ -38,13 +38,20 @@
 
 O projeto reúne estudos de interface, desenvolvimento web e referências visuais da computação dos anos 2000.
 
-| Propriedade | Informação |
-|:--|:--|
-| Nome do sistema | Giovanna OS |
-| Tipo | Portfólio web interativo |
-| Interface | Inspirada no Windows XP |
-| Tecnologias principais | HTML5, CSS3 e JavaScript |
-| Publicação | GitHub Pages |
+<div align="center">
+
+<table align="center">
+<thead><tr><th align="center">Propriedade</th><th align="center">Informação</th></tr></thead>
+<tbody>
+<tr><td align="center">Nome do sistema</td><td align="center">Giovanna OS</td></tr>
+<tr><td align="center">Tipo</td><td align="center">Portfólio web interativo</td></tr>
+<tr><td align="center">Interface</td><td align="center">Inspirada no Windows XP</td></tr>
+<tr><td align="center">Tecnologias principais</td><td align="center">HTML5, CSS3 e JavaScript</td></tr>
+<tr><td align="center">Publicação</td><td align="center">GitHub Pages</td></tr>
+</tbody>
+</table>
+
+</div>
 
 </td>
 <td width="32%" align="center" valign="middle">
@@ -69,7 +76,7 @@ O projeto reúne estudos de interface, desenvolvimento web e referências visuai
 
 ## EXPLORE THE SYSTEM
 
-<table>
+<table align="center">
 <tr>
 <td width="50%" valign="top">
 
@@ -126,14 +133,21 @@ Um companheiro virtual que adiciona personalidade e interação à navegação.
 
 </div>
 
-| Tecnologia | Utilização no projeto |
-|:--|:--|
-| HTML5 | Estrutura e organização do conteúdo |
-| CSS3 | Estilização, layout e identidade visual |
-| JavaScript | Interações e funcionalidades da interface |
-| Git e GitHub | Versionamento e gerenciamento do código |
-| GitHub Actions | Automação do processo de publicação |
-| GitHub Pages | Hospedagem da versão online |
+<div align="center">
+
+<table align="center">
+<thead><tr><th align="center">Tecnologia</th><th align="center">Utilização no projeto</th></tr></thead>
+<tbody>
+<tr><td align="center">HTML5</td><td align="center">Estrutura e organização do conteúdo</td></tr>
+<tr><td align="center">CSS3</td><td align="center">Estilização, layout e identidade visual</td></tr>
+<tr><td align="center">JavaScript</td><td align="center">Interações e funcionalidades da interface</td></tr>
+<tr><td align="center">Git e GitHub</td><td align="center">Versionamento e gerenciamento do código</td></tr>
+<tr><td align="center">GitHub Actions</td><td align="center">Automação do processo de publicação</td></tr>
+<tr><td align="center">GitHub Pages</td><td align="center">Hospedagem da versão online</td></tr>
+</tbody>
+</table>
+
+</div>
 
 ## PROJECT STRUCTURE
 
