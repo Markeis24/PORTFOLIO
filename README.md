@@ -1,308 +1,209 @@
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/Markeis24/PORTFOLIO/main/portfolio/img/readme/banner.png" width="100%" alt="Wallpaper clássico do Windows XP"/>
+<img src="https://raw.githubusercontent.com/Markeis24/PORTFOLIO/main/portfolio/img/readme/banner.png" width="100%" alt="Banner inspirado no Windows XP"/>
 
-<br><br>
+<br>
 
-<img width="100%" src="https://capsule-render.vercel.app/api?type=rect&color=0:00FF00,100:00A8FF&height=4" />
-
-<br><br>
-
-<img src="https://raw.githubusercontent.com/Markeis24/PORTFOLIO/main/portfolio/img/icons/MyComputer.png" width="58" alt="Meu Computador"/>
+<img src="https://capsule-render.vercel.app/api?type=rect&color=0:0054E3,100:3C9D23&height=5" width="100%" alt="Divisor azul e verde"/>
 
 <h1>GIOVANNA OS</h1>
+<h3>PERSONAL PORTFOLIO · WINDOWS XP INSPIRED</h3>
 
-<h3>PERSONAL PORTFOLIO SYSTEM</h3>
-
-<code>WINDOWS XP INTERFACE • WEB DEVELOPMENT • INTERACTIVE EXPERIENCE</code>
-
-<br>
+<p>Um portfólio interativo com a nostalgia dos computadores dos anos 2000.</p>
 
 <a href="https://markeis24.github.io/PORTFOLIO/">
-<img src="https://img.shields.io/badge/OPEN_GIOVANNA_OS-3C9D23?style=for-the-badge&logo=windowsxp&logoColor=white" alt="Abrir Giovanna OS"/>
+  <img src="https://img.shields.io/badge/ABRIR_PORTFOLIO-3C9D23?style=for-the-badge&logo=windowsxp&logoColor=white" alt="Abrir portfólio"/>
 </a>
-
 <a href="https://github.com/Markeis24/PORTFOLIO">
-<img src="https://img.shields.io/badge/VIEW_SOURCE_CODE-0054E3?style=for-the-badge&logo=github&logoColor=white" alt="Código-fonte"/>
+  <img src="https://img.shields.io/badge/VER_CÓDIGO-0054E3?style=for-the-badge&logo=github&logoColor=white" alt="Ver código"/>
 </a>
 
 <br><br>
 
-<img src="https://img.shields.io/badge/SYSTEM-WINDOWS_XP-0054E3?style=flat-square" alt="Windows XP"/>
-<img src="https://img.shields.io/badge/STATUS-ONLINE-3C9D23?style=flat-square" alt="Online"/>
-<img src="https://img.shields.io/badge/PLATFORM-GITHUB_PAGES-2678F5?style=flat-square" alt="GitHub Pages"/>
+<img src="https://img.shields.io/badge/STATUS-ONLINE-3C9D23?style=flat-square" alt="Status online"/>
+<img src="https://img.shields.io/badge/FEITO_COM-HTML%20%7C%20CSS%20%7C%20JS-0054E3?style=flat-square" alt="Tecnologias"/>
+<img src="https://img.shields.io/badge/HOST-GITHUB_PAGES-2678F5?style=flat-square" alt="Hospedagem"/>
 
 </div>
 
-<br><br>
+---
 
-<img width="100%" src="https://capsule-render.vercel.app/api?type=rect&color=0:00FF00,100:00A8FF&height=4" />
+## SYSTEM INFORMATION
 
-<br>
+<table>
+<tr>
+<td width="68%" valign="top">
+
+**Giovanna OS** é meu portfólio pessoal desenvolvido como uma experiência inspirada na interface do Windows XP. A ideia é ir além de uma página tradicional: a pessoa visitante pode explorar minhas informações por meio de uma área de trabalho, ícones e janelas que remetem ao sistema clássico.
+
+O projeto reúne estudos de interface, desenvolvimento web e referências visuais da computação dos anos 2000.
+
+| Propriedade | Informação |
+|:--|:--|
+| Nome do sistema | Giovanna OS |
+| Tipo | Portfólio web interativo |
+| Interface | Inspirada no Windows XP |
+| Tecnologias principais | HTML5, CSS3 e JavaScript |
+| Publicação | GitHub Pages |
+
+</td>
+<td width="32%" align="center" valign="middle">
+
+<img src="https://raw.githubusercontent.com/Markeis24/PORTFOLIO/main/portfolio/img/icons/MyComputer.png" width="100" alt="Ícone Meu Computador"/>
+
+**MY COMPUTER**
+
+</td>
+</tr>
+</table>
+
+## DESKTOP PREVIEW
 
 <div align="center">
 
-<h2>SYSTEM INFORMATION</h2>
+<img src="https://raw.githubusercontent.com/Markeis24/PORTFOLIO/main/portfolio/img/wallpapers/wallpaper1.png" width="100%" alt="Papel de parede utilizado na área de trabalho do Giovanna OS"/>
+
+<sub>A identidade visual do projeto combina o desktop clássico, os atalhos e as janelas interativas do Windows XP.</sub>
 
 </div>
 
-<img align="right" width="110" src="https://raw.githubusercontent.com/Markeis24/PORTFOLIO/main/portfolio/img/icons/MyComputer.png" alt="Meu Computador"/>
+## EXPLORE THE SYSTEM
 
-<strong>System name:</strong> Giovanna OS  
-<strong>System type:</strong> Interactive personal portfolio  
-<strong>Interface:</strong> Microsoft Windows XP inspired  
-<strong>Developer:</strong> Giovanna Marques  
-<strong>Primary technologies:</strong> HTML5, CSS3 and JavaScript  
-<strong>Hosting:</strong> GitHub Pages
+<table>
+<tr>
+<td width="50%" valign="top">
 
-O Giovanna OS é um portfólio interativo inspirado no Windows XP. Em vez de apresentar minhas informações em uma página convencional, o projeto transforma a navegação em uma experiência baseada na área de trabalho, nos ícones, nas janelas e nos programas que marcaram os computadores dos anos 2000.
+<h3><img src="https://raw.githubusercontent.com/Markeis24/PORTFOLIO/main/portfolio/img/icons/MyComputer.png" width="28" align="center" alt="Meu Computador"/> My Computer</h3>
 
-<br clear="right"/>
+O ponto de entrada para navegar pelas áreas e funcionalidades do portfólio.
+
+<h3><img src="https://raw.githubusercontent.com/Markeis24/PORTFOLIO/main/portfolio/img/icons/ControlPanel.png" width="28" align="center" alt="Painel de Controle"/> Skills</h3>
+
+Uma área para apresentar conhecimentos técnicos e tecnologias estudadas.
+
+<h3><img src="https://raw.githubusercontent.com/Markeis24/PORTFOLIO/main/portfolio/img/icons/MyDocuments.png" width="28" align="center" alt="Meus Documentos"/> Projects</h3>
+
+Um espaço dedicado aos projetos acadêmicos e pessoais, organizados dentro da experiência visual do sistema.
+
+</td>
+<td width="50%" valign="top">
+
+<h3><img src="https://raw.githubusercontent.com/Markeis24/PORTFOLIO/main/portfolio/img/icons/InternetExplorer6.png" width="28" align="center" alt="Internet Explorer"/> Internet Explorer</h3>
+
+Uma seção inspirada nos navegadores clássicos, com acesso aos meus perfis profissionais.
 
 <div align="center">
 
-<br><br>
-
-<img width="100%" src="https://capsule-render.vercel.app/api?type=rect&color=0:00FF00,100:00A8FF&height=4" />
-
-<br>
-
-<h2>DESKTOP</h2>
+<a href="https://github.com/Markeis24"><img src="https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=github&logoColor=white" alt="GitHub"/></a>
+<a href="https://www.linkedin.com/in/giovanna-marques-221998397"><img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=flat-square&logo=linkedin&logoColor=white" alt="LinkedIn"/></a>
 
 </div>
 
-<img src="https://raw.githubusercontent.com/Markeis24/PORTFOLIO/main/portfolio/img/wallpapers/wallpaper1.png" width="100%" alt="Wallpaper do Giovanna OS"/>
+<h3><img src="https://raw.githubusercontent.com/Markeis24/PORTFOLIO/main/portfolio/img/icons/WindowsMediaPlayer10.png" width="28" align="center" alt="Windows Media Player"/> Windows Media Player</h3>
 
-A interface foi desenvolvida para reproduzir a identidade visual de um sistema operacional clássico, reunindo diferentes áreas do portfólio em um ambiente interativo.
+Uma experiência musical com visual retrô, inspirada nos antigos players de mídia e em suas visualizações.
 
-<br>
+<h3><img src="https://raw.githubusercontent.com/Markeis24/PORTFOLIO/main/portfolio/img/GioBuddy/frames/happy/happy-1.png" width="28" align="center" alt="Giobuddy"/> Giobuddy</h3>
 
-<div align="center">
+Um companheiro virtual que adiciona personalidade e interação à navegação.
 
-<table><thead><tr><th>Application</th><th>Description</th></tr></thead><tbody><tr><td>Desktop</td><td>Área de trabalho e atalhos para as funcionalidades.</td></tr><tr><td>Skills</td><td>Apresentação dos conhecimentos técnicos.</td></tr><tr><td>Projects</td><td>Acesso aos projetos desenvolvidos.</td></tr><tr><td>Internet</td><td>Área dedicada aos perfis profissionais.</td></tr><tr><td>Windows Media Player</td><td>Reprodutor de músicas inspirado no Media Player 9 Series.</td></tr><tr><td>Giobuddy</td><td>Companheiro virtual integrado à experiência.</td></tr></tbody></table>
+</td>
+</tr>
+</table>
 
-</div>
-
-<br><br>
-
-<img width="100%" src="https://capsule-render.vercel.app/api?type=rect&color=0:00FF00,100:00A8FF&height=4" />
-
-<br>
-
-<div align="center">
-
-<h2>APPLICATIONS</h2>
-
-</div>
-
-<h3>MY COMPUTER</h3>
-
-<img src="https://raw.githubusercontent.com/Markeis24/PORTFOLIO/main/portfolio/img/icons/MyComputer.png" width="54" alt="Meu Computador"/>
-
-O ponto de partida para explorar o Giovanna OS. A interface reúne os atalhos e as diferentes áreas do portfólio em uma experiência inspirada no desktop do Windows XP.
-
-<h3>GIOBUDDY</h3>
-
-<img src="https://raw.githubusercontent.com/Markeis24/PORTFOLIO/main/portfolio/img/GioBuddy/frames/happy/happy-1.png" width="54" alt="Ajuda"/>
-
-O Giobuddy é o companheiro virtual do projeto. Ele acrescenta personalidade à interface e torna a experiência de navegação mais próxima da interação com um computador pessoal.
-
-<h3>INTERNET</h3>
-
-<img src="https://raw.githubusercontent.com/Markeis24/PORTFOLIO/main/portfolio/img/icons/InternetExplorer6.png" width="54" alt="Internet Explorer"/>
-
-Uma área inspirada nos navegadores clássicos, voltada à exploração dos meus perfis profissionais e à descoberta dos meus projetos.
-
-<div align="center">
-
-<a href="https://github.com/Markeis24">
-<img src="https://img.shields.io/badge/GITHUB-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub"/>
-</a>
-
-<a href="https://www.linkedin.com/in/giovanna-marques-221998397">
-<img src="https://img.shields.io/badge/LINKEDIN-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn"/>
-</a>
-
-</div>
-
-<h3>WINDOWS MEDIA PLAYER 9 SERIES</h3>
-
-<img src="https://raw.githubusercontent.com/Markeis24/PORTFOLIO/main/portfolio/img/icons/WindowsMediaPlayer10.png" width="54" alt="Windows Media Player"/>
-
-Uma experiência musical inspirada no Windows Media Player 9 Series, com uma interface retrô e referências visuais aos antigos reprodutores de mídia.
-
-O projeto explora a integração de músicas e efeitos visuais inspirados nas visualizações clássicas dos players da época.
-
-<h3>PROJECTS</h3>
-
-<img src="https://raw.githubusercontent.com/Markeis24/PORTFOLIO/main/portfolio/img/icons/MyDocuments.png" width="54" alt="Meus Documentos"/>
-
-O portfólio também funciona como um ponto de acesso aos projetos acadêmicos e pessoais desenvolvidos durante minha trajetória de aprendizagem.
-
-A proposta é apresentar esses trabalhos dentro da própria identidade visual do Giovanna OS, mantendo a experiência consistente do desktop às aplicações.
-
-<h3>SKILLS</h3>
-
-<img src="https://raw.githubusercontent.com/Markeis24/PORTFOLIO/main/portfolio/img/icons/ControlPanel.png" width="54" alt="Painel de Controle"/>
-
-A seção de habilidades reúne os conhecimentos e as tecnologias explorados durante meus estudos e projetos.
-
-O objetivo é apresentar minha evolução técnica em um formato integrado à interface do sistema.
-
-<br><br>
-
-<img width="100%" src="https://capsule-render.vercel.app/api?type=rect&color=0:00FF00,100:00A8FF&height=4" />
-
-<br>
-
-<div align="center">
-
-<h2>TECHNOLOGY STACK</h2>
-
-</div>
+## TECHNOLOGY STACK
 
 <div align="center">
 
 <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white" alt="HTML5"/>
 <img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white" alt="CSS3"/>
 <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" alt="JavaScript"/>
-
 <br>
-
-<img src="https://img.shields.io/badge/GIT-F05032?style=for-the-badge&logo=git&logoColor=white" alt="Git"/>
-<img src="https://img.shields.io/badge/GITHUB-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub"/>
-<img src="https://img.shields.io/badge/GITHUB_ACTIONS-2088FF?style=for-the-badge&logo=githubactions&logoColor=white" alt="GitHub Actions"/>
-<img src="https://img.shields.io/badge/GITHUB_PAGES-222222?style=for-the-badge&logo=githubpages&logoColor=white" alt="GitHub Pages"/>
-
-</div>
-
-<div align="center">
-
-<table><thead><tr><th>Technology</th><th>Purpose</th></tr></thead><tbody><tr><td>HTML5</td><td>Estrutura das interfaces.</td></tr><tr><td>CSS3</td><td>Estilização e identidade visual inspirada no Windows XP.</td></tr><tr><td>JavaScript</td><td>Interatividade e funcionalidades do sistema.</td></tr><tr><td>Git</td><td>Controle de versão.</td></tr><tr><td>GitHub</td><td>Hospedagem do código-fonte.</td></tr><tr><td>GitHub Actions</td><td>Automação da publicação.</td></tr><tr><td>GitHub Pages</td><td>Disponibilização do portfólio na web.</td></tr></tbody></table>
+<img src="https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white" alt="Git"/>
+<img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub"/>
+<img src="https://img.shields.io/badge/GitHub_Actions-2088FF?style=for-the-badge&logo=githubactions&logoColor=white" alt="GitHub Actions"/>
+<img src="https://img.shields.io/badge/GitHub_Pages-222222?style=for-the-badge&logo=githubpages&logoColor=white" alt="GitHub Pages"/>
 
 </div>
 
-<br><br>
+| Tecnologia | Utilização no projeto |
+|:--|:--|
+| HTML5 | Estrutura e organização do conteúdo |
+| CSS3 | Estilização, layout e identidade visual |
+| JavaScript | Interações e funcionalidades da interface |
+| Git e GitHub | Versionamento e gerenciamento do código |
+| GitHub Actions | Automação do processo de publicação |
+| GitHub Pages | Hospedagem da versão online |
 
-<img width="100%" src="https://capsule-render.vercel.app/api?type=rect&color=0:00FF00,100:00A8FF&height=4" />
+## PROJECT STRUCTURE
 
-<br>
-
-<div align="center">
-
-<h2>PROJECT STRUCTURE</h2>
-
-</div>
-
-```
-
+```text
 PORTFOLIO/
-|
-+-- .github/
-|   +-- workflows/
-|       +-- deploy.yml
-|
-+-- portfolio/
-|   +-- index.html
-|   +-- style.css
-|   +-- script.js
-|   |
-|   +-- documents/
-|   +-- img/
-|   |   +-- GioBuddy/
-|   |   +-- icons/
-|   |   +-- imgpessoal/
-|   |   +-- wallpapers/
-|   |   +-- bliss.jpg
-|   |
-|   +-- songs/
-|
-+-- README.md
-
+├── .github/
+│   └── workflows/
+│       └── deploy.yml
+├── portfolio/
+│   ├── index.html
+│   ├── style.css
+│   ├── script.js
+│   ├── documents/
+│   ├── songs/
+│   └── img/
+│       ├── GioBuddy/
+│       ├── icons/
+│       ├── imgpessoal/
+│       ├── readme/
+│       └── wallpapers/
+└── README.md
 ```
 
-<br><br>
+## RUN LOCALLY
 
-<img width="100%" src="https://capsule-render.vercel.app/api?type=rect&color=0:00FF00,100:00A8FF&height=4" />
+Você pode executar o projeto localmente com estes comandos:
 
-<br>
-
-<div align="center">
-
-<h2>INSTALLATION</h2>
-
-</div>
-
-Para executar o projeto localmente:
-
-<pre><code>git clone https://github.com/Markeis24/PORTFOLIO.git
+```bash
+git clone https://github.com/Markeis24/PORTFOLIO.git
 cd PORTFOLIO/portfolio
-</code></pre>
+```
 
-Abra o arquivo <code>index.html</code> no navegador ou utilize o Live Server no Visual Studio Code.
+Depois, abra o arquivo `index.html` no navegador ou execute a pasta com a extensão **Live Server** do Visual Studio Code.
 
-<div align="center">
-
-<h2>DEPLOYMENT</h2>
-
-</div>
-
-O Giovanna OS é publicado pelo GitHub Pages, com um workflow do GitHub Actions responsável por enviar os arquivos da pasta <code>portfolio/</code> para publicação.
-
-Acesse a versão online:
+## LIVE VERSION
 
 <div align="center">
 
 <a href="https://markeis24.github.io/PORTFOLIO/">
-<img src="https://img.shields.io/badge/START_GIOVANNA_OS-3C9D23?style=for-the-badge&logo=windowsxp&logoColor=white" alt="Iniciar Giovanna OS"/>
+  <img src="https://img.shields.io/badge/START_GIOVANNA_OS-3C9D23?style=for-the-badge&logo=windowsxp&logoColor=white" alt="Iniciar Giovanna OS"/>
 </a>
 
-</div>
-
-<br><br>
-
-<img width="100%" src="https://capsule-render.vercel.app/api?type=rect&color=0:00FF00,100:00A8FF&height=4" />
-
-<br>
-
-<div align="center">
-
-<h2>DEVELOPER INFORMATION</h2>
+<p>O projeto está publicado no GitHub Pages.</p>
 
 </div>
 
+---
+
+## ABOUT THE DEVELOPER
+
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/Markeis24/PORTFOLIO/main/portfolio/img/readme/face.png" width="350" alt="Giovanna Marques"/>
+<img src="https://raw.githubusercontent.com/Markeis24/PORTFOLIO/main/portfolio/img/readme/face.png" width="220" alt="Foto de Giovanna Marques"/>
 
 <h3>GIOVANNA MARQUES</h3>
+<strong>Database Systems Student · Aspiring Software Developer</strong>
 
-<strong>Database Systems Student | Aspiring Software Developer</strong>
+</div>
 
-Estudante de Banco de Dados na FATEC, interessada em desenvolvimento de software, bancos de dados e tecnologia.
+Sou estudante de Banco de Dados na FATEC e tenho interesse em desenvolvimento de software, bancos de dados e criação de experiências digitais. O Giovanna OS reúne meu interesse por tecnologia e design em um projeto pessoal que transforma a apresentação do portfólio em uma interface interativa.
 
-O Giovanna OS representa a combinação entre aprendizado técnico, criatividade e nostalgia, utilizando uma interface clássica para apresentar meus projetos e minha trajetória.
+<div align="center">
 
-<a href="https://github.com/Markeis24">
-<img src="https://img.shields.io/badge/GITHUB-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub"/>
-</a>
-
-<a href="https://www.linkedin.com/in/giovanna-marques-221998397">
-<img src="https://img.shields.io/badge/LINKEDIN-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn"/>
-</a>
+<a href="https://github.com/Markeis24"><img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub"/></a>
+<a href="https://www.linkedin.com/in/giovanna-marques-221998397"><img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn"/></a>
 
 <br><br>
 
-<img width="100%" src="https://capsule-render.vercel.app/api?type=rect&color=0:00FF00,100:00A8FF&height=4" />
+<img src="https://raw.githubusercontent.com/Markeis24/PORTFOLIO/main/portfolio/img/readme/Tulips.png" width="100%" alt="Imagem de tulipas para encerrar o README"/>
 
-<br>
-
-<img src="https://raw.githubusercontent.com/Markeis24/PORTFOLIO/main/portfolio/img/readme/banner-footer.jpeg" width="100%" alt="Windows XP Bliss wallpaper"/>
-
-<h3>THANK YOU FOR VISITING</h3>
-
-<code>END OF TRANSMISSION</code>
-
-<sub>Giovanna OS — Personal Portfolio — 2026</sub>
+<sub>GIOVANNA OS · PERSONAL PORTFOLIO · 2026</sub>
 
 </div>
